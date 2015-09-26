@@ -136,32 +136,23 @@ public class XboxController extends GenericHID {
 	}
 
 	// Returns from -1 to 1
-	// negative because y axises are backward
 	public double getLeftY() {
 		double temp = controller.getRawAxis(AXIS_LEFT_Y);
 		double scaledVal = scaleAxis(temp);
 		return -scaledVal;
 	}
 
-	// Not really sure what this return, I read somewhere that it returns
-	// rightTrigger - leftTrigger where each trigger returns from 0 to 1
-
 	public double getRightTrigger() {
 		double temp = controller.getRawAxis(AXIS_TRIGGER_RIGHT);
 		return temp;
-		// double scaledVal = scaleAxis(temp);
-		// return scaledVal;
 	}
 
 	public double getLeftTrigger() {
 		double temp = controller.getRawAxis(AXIS_TRIGGER_LEFT);
 		return temp;
-		// double scaledVal = scaleAxis(temp);
-		// return scaledVal;
 	}
 
 	// Returns from -1 to 1
-
 	public double getRightX() {
 		double temp = controller.getRawAxis(AXIS_RIGHT_X);
 		double scaledVal = scaleAxis(temp);
@@ -169,28 +160,16 @@ public class XboxController extends GenericHID {
 	}
 
 	// Returns from -1 to 1
-
 	public double getRightY() {
 		double temp = controller.getRawAxis(AXIS_RIGHT_Y);
 		double scaledVal = scaleAxis(temp);
 		return -scaledVal;
 	}
 
-	// btw this is your deadband
-	static final double DEADBAND = .1;
-
-	// here is the scaling method used in axes
 	private double scaleAxis(double value) {
-		// if the joystick is not pressed enough, don't move. We dont like
-		// crawling spider robots.
-		/*
-		 * if (Math.abs(value) < DEADBAND) { return 0; }
-		 */
-		// this spot would be where you could scale stuff
 		return value;
 	}
 
-	// required to work
 	public double getX(Hand hand) {
 		if (hand.equals(Hand.kLeft)) {
 			return getLeftX();
@@ -253,13 +232,11 @@ public class XboxController extends GenericHID {
 
 	@Override
 	public int getPOV(int pov) {
-		// TODO Auto-generated method stub
 		return controller.getPOV(0);
 	}
 
 	@Override
 	public int getPOV() {
-		// TODO Auto-generated method stub
 		return controller.getPOV(0);
 	}
 	
