@@ -17,7 +17,7 @@ public class BlankController extends Controller{
 	}
 	
 	@Override
-	public OutputSignal getOutputState(InputState inputState) {
+	public OutputSignal getOutputSignal(InputState inputState) {
 		return new OutputSignal();
 	}
 

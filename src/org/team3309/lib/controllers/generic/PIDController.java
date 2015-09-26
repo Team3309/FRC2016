@@ -28,7 +28,7 @@ public class PIDController extends Controller{
 	}
 
 	@Override
-	public OutputSignal getOutputState(InputState inputState) {
+	public OutputSignal getOutputSignal(InputState inputState) {
 		double error = inputState.getError();
 		// Calculate the derivative and log previous error
 		double pidDerivative = error - previousError;

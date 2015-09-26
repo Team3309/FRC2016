@@ -20,6 +20,7 @@ public class InputState extends HashMap<String, Double> {
 		return this.get("error");
 	}
 	
+	// For Drives (and whatever else may use them)
 	public void setX(double x) {
 		this.put("x", x);
 	}
@@ -36,4 +37,53 @@ public class InputState extends HashMap<String, Double> {
 		return this.get("y");
 	}
 	
+	public void setAngularVel(double w) {
+		this.put("angVel", w);
+	}
+	
+	// Vel for Drive
+	public double getAngularVel() {
+		return this.get("angVel");
+	}
+	
+	public void setLeftVel(double leftVel) {
+		this.put("leftVel", leftVel);
+	}
+	
+	public double getLeftVel() {
+		return this.get("leftVel");
+	}
+	
+	public void setRightVel(double rightVel) {
+		this.put("rightVel", rightVel);
+	}
+	
+	public double getRightVel() {
+		return this.get("rightVel");
+	}
+	
+	// Pos for Drive
+	public void setAngularPos(double heading) {
+		this.put("heading", heading);
+	}
+	
+	public double getAngularPos() {
+		return this.get("heading");
+	}
+	
+	public void setLeftPos(double leftPos) {
+		this.put("leftPos", leftPos);
+	}
+	
+	public double getLeftPos() {
+		return this.get("leftPos");
+	}
+	
+	public void setRightPos(double rightPos) {
+		this.put("rightPos", rightPos);
+	}
+	
+	public double getRightPos() {
+		return this.get("rightPos");
+	}
 }

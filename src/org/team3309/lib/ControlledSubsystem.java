@@ -2,8 +2,7 @@ package org.team3309.lib;
 
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.generic.BlankController;
-
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.team3309.lib.controllers.statesandsignals.InputState;
 
 public abstract class ControlledSubsystem extends KragerSubsystem {
 	protected Controller mController;
@@ -13,4 +12,5 @@ public abstract class ControlledSubsystem extends KragerSubsystem {
 	}
 
 	public abstract void update();
+	public abstract InputState getInputState();
 }
