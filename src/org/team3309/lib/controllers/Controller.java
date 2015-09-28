@@ -22,7 +22,20 @@ public abstract class Controller {
 	 */
 	public abstract void reset();
 
+	/**
+	 * Should be ran one time each loop, tells the subsystem what to do based
+	 * off of the controller.
+	 * 
+	 * @param inputState
+	 *            The state of the ControlledSubsystem
+	 * @return The signal sent to the ControlledSubsystem
+	 */
 	public abstract OutputSignal getOutputSignal(InputState inputState);
 
+	/**
+	 * Tells if the controller is done executed its specified task.
+	 * 
+	 * @return boolean telling if controller is done or not
+	 */
 	public abstract boolean isCompleted();
 }
