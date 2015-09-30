@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.Gyro;
  *
  */
 public class Sensors {
-	public Gyro gyro = new Gyro(0);
-	public Encoder leftDrive = new Encoder(0, 1, false);
-	public Encoder rightDrive = new Encoder(2, 3, false);
+	public Gyro gyro = new Gyro(RobotMap.GYRO_ANALOG_PORT);
+	public Encoder leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
+	public Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL, false);
 	
 	public double getAngularVel() {
 		return gyro.getRate();
