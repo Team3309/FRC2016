@@ -128,7 +128,8 @@ public abstract class PIDController extends Controller {
 	 * @param tIME_TO_BE_COMPLETE_MILLISECONDS
 	 *            time
 	 */
-	public void setTIME_TO_BE_COMPLETE_MILLISECONDS(double tIME_TO_BE_COMPLETE_MILLISECONDS) {
+	public void setTIME_TO_BE_COMPLETE_MILLISECONDS(
+			double tIME_TO_BE_COMPLETE_MILLISECONDS) {
 		TIME_TO_BE_COMPLETE_MILLISECONDS = tIME_TO_BE_COMPLETE_MILLISECONDS;
 	}
 

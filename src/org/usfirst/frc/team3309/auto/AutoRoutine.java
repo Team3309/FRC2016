@@ -23,6 +23,7 @@ public abstract class AutoRoutine {
 	 * @throws TimedOutException
 	 *             if waits for more than specified timeout
 	 */
+	
 	public void waitForDrive(double timeout) throws TimedOutException {
 		Timer waitTimer = new Timer();
 		waitTimer.start();

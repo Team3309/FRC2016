@@ -27,7 +27,7 @@ public abstract class Controller {
 	 * @return The signal sent to the ControlledSubsystem
 	 */
 	public abstract OutputSignal getOutputSignal(InputState inputState);
-	
+
 	/**
 	 * Tells if the controller is done executed its specified task.
 	 * 

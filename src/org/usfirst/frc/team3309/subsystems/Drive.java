@@ -52,53 +52,6 @@ public class Drive extends ControlledSubsystem {
 		mController = new DriveAngularAndForwardVelocityEquationController();
 	}
 
-	/**
-	 * Sets motors left then right
-	 * 
-	 * @param left
-	 *            leftMotorSpeed
-	 * @param right
-	 *            rightMotorSpeed
-	 */
-	private void setLeftRight(double left, double right) {
-		setRightLeft(right, left);
-	}
-
-	/**
-	 * Sets motors right then left
-	 * 
-	 * @param right
-	 *            rightMotorSpeed
-	 * @param left
-	 *            leftMotorSpeed
-	 */
-	private void setRightLeft(double right, double left) {
-		setLeft(left);
-		setRight(right);
-	}
-
-	/**
-	 * Sets the right side of the drive
-	 * 
-	 * @param right
-	 *            rightMotorSpeed
-	 */
-	private void setRight(double right) {
-		rightFront.set(right);
-		rightBack.set(right);
-	}
-
-	/**
-	 * Sets the left side of the drive
-	 * 
-	 * @param left
-	 *            leftMotorSpeed
-	 */
-	private void setLeft(double left) {
-		leftFront.set(left);
-		leftBack.set(left);
-	}
-
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
 		// if mController is Completed and has not already been made blank, then
@@ -126,6 +79,10 @@ public class Drive extends ControlledSubsystem {
 		input.setRightVel(Sensors.rightDrive.getDistance());
 		input.setRightPos(Sensors.rightDrive.getRate());
 		return input;
+	}
+	
+	public void setSetpoint(double encoders) {
+		
 	}
 
 	/**
@@ -177,5 +134,60 @@ public class Drive extends ControlledSubsystem {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Stops current running controller and sets motors to zero
+	 */
+	public void stopDrive() {
+		mController = new BlankController();
+		setLeftRight(0, 0);
+	}
+
+	/**
+	 * Sets motors left then right
+	 * 
+	 * @param left
+	 *            leftMotorSpeed
+	 * @param right
+	 *            rightMotorSpeed
+	 */
+	private void setLeftRight(double left, double right) {
+		setRightLeft(right, left);
+	}
+
+	/**
+	 * Sets motors right then left
+	 * 
+	 * @param right
+	 *            rightMotorSpeed
+	 * @param left
+	 *            leftMotorSpeed
+	 */
+	private void setRightLeft(double right, double left) {
+		setLeft(left);
+		setRight(right);
+	}
+
+	/**
+	 * Sets the right side of the drive
+	 * 
+	 * @param right
+	 *            rightMotorSpeed
+	 */
+	private void setRight(double right) {
+		rightFront.set(right);
+		rightBack.set(right);
+	}
+
+	/**
+	 * Sets the left side of the drive
+	 * 
+	 * @param left
+	 *            leftMotorSpeed
+	 */
+	private void setLeft(double left) {
+		leftFront.set(left);
+		leftBack.set(left);
 	}
 }
