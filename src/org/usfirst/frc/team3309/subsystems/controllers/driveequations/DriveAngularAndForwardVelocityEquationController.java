@@ -29,15 +29,24 @@ public class DriveAngularAndForwardVelocityEquationController extends Controller
 
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
-		aimAngularVelocity = MAX_ANGULAR_VELOCITY * Controls.driverController.getLeftX();
+		aimAngularVelocity = MAX_ANGULAR_VELOCITY * Controls.driverController.getRightX();
+		aimRightVelocity = MAX_RIGHT_VELOCITY * Controls.driverController.getLeftY();
+		aimLeftVelocity = MAX_LEFT_VELOCITY * Controls.driverController.getLeftY();
+		// Input States for the three controllers
 		InputState inputForLeftVel = inputState;
+		InputState inputForRightVel = inputState;
 		InputState inputForAng = inputState;
-		inputForLeftVel.setError(aim);
+		// Add the error for each controller from the inputState
+		inputForLeftVel.setError(aimLeftVelocity - inputState.getLeftVel());
+		inputForRightVel.setError(aimRightVelocity - inputState.getRightVel());
 		inputForAng.setError(aimAngularVelocity - inputState.getAngularVel());
+		OutputSignal leftOutput = leftController.getOutputSignal(inputForLeftVel);
+		OutputSignal rightOutput = rightController.getOutputSignal(inputForRightVel);
 		OutputSignal angularOutput = angController.getOutputSignal(inputState);
+		// Prepare the output
 		OutputSignal signal = new OutputSignal();
-		signal.setLeftMotor(Controls.driverController.getLeftY() - angularOutput.getMotor());
-		signal.setRightMotor(Controls.driverController.getLeftY() + angularOutput.getMotor());
+		signal.setLeftMotor(leftOutput.getMotor() - angularOutput.getMotor());
+		signal.setRightMotor(rightOutput.getMotor() + angularOutput.getMotor());
 		return signal;
 	}
 

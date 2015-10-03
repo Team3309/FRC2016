@@ -1,10 +1,12 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.subsystems.controllers.driveequations.DriveAngularAndForwardVelocityEquationController;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Victor;
@@ -16,12 +18,29 @@ import edu.wpi.first.wpilibj.Victor;
  *
  */
 public class Drive extends ControlledSubsystem {
+	/**
+	 * Used to give a certain gap that the drive would be ok with being within
+	 * its goal encoder averageÏ.
+	 */
+	private static final double DRIVE_ENCODER_LENIENCY = 40;
+
+	/**
+	 * Used to give a certain gap that the drive would be ok with being within
+	 * its goal angle
+	 */
+	private static final double DRIVE_GYRO_LENIENCY = 10;
+
 	private static Drive instance;
 	private Victor leftFront = new Victor(RobotMap.LEFT_FRONT_MOTOR);
 	private Victor rightFront = new Victor(RobotMap.RIGHT_FRONT_MOTOR);
 	private Victor leftBack = new Victor(RobotMap.LEFT_BACK_MOTOR);
 	private Victor rightBack = new Victor(RobotMap.RIGHT_BACK_MOTOR);
 
+	/**
+	 * Singleton Pattern
+	 * 
+	 * @return the single instance
+	 */
 	public static Drive getInstance() {
 		if (instance == null)
 			instance = new Drive("Drive");
@@ -30,6 +49,7 @@ public class Drive extends ControlledSubsystem {
 
 	private Drive(String name) {
 		super(name);
+		mController = new DriveAngularAndForwardVelocityEquationController();
 	}
 
 	/**
@@ -81,7 +101,12 @@ public class Drive extends ControlledSubsystem {
 
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
-
+		// if mController is Completed and has not already been made blank, then
+		// make it blank
+		if (mController.isCompleted()
+				&& !(mController instanceof BlankController)) {
+			mController = new BlankController();
+		}
 	}
 
 	@Override
@@ -103,4 +128,54 @@ public class Drive extends ControlledSubsystem {
 		return input;
 	}
 
+	/**
+	 * Returns the Angle the robot is at
+	 * 
+	 * @return Angle robot is at
+	 */
+	public double getAngle() {
+		return Sensors.getAngle();
+	}
+
+	/**
+	 * Returns the average of the two encoders to see the ditstance traveled
+	 * 
+	 * @return the average of the left and right to get the distance traveled
+	 */
+	public double getDistanceTraveled() {
+		return (Sensors.leftDrive.get() + Sensors.rightDrive.get()) / 2;
+	}
+
+	/**
+	 * returns if the current average of encoders (aka distance traveled) is
+	 * close to the encoderGoal. Uses DRIVE_ENCODER_LENIENCY to tell if it is
+	 * close.
+	 * 
+	 * @param encoderGoal
+	 *            Encoder drive should be at
+	 * @return
+	 */
+	public boolean isEncoderCloseTo(double encoderGoal) {
+		if (getDistanceTraveled() < encoderGoal + DRIVE_ENCODER_LENIENCY
+				&& getDistanceTraveled() > encoderGoal - DRIVE_ENCODER_LENIENCY) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * returns if the current angle is close to the angleGoal. Uses
+	 * DRIVE_ANGLE_LENIENCY to tell if it is close.
+	 * 
+	 * @param angleGoal
+	 *            Angle drive should be at
+	 * @return
+	 */
+	public boolean isAngleCloseTo(double angleGoal) {
+		if (getAngle() < angleGoal + DRIVE_GYRO_LENIENCY
+				&& getDistanceTraveled() > angleGoal - DRIVE_GYRO_LENIENCY) {
+			return true;
+		}
+		return false;
+	}
 }

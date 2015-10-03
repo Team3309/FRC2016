@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
+import org.usfirst.frc.team3309.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -24,6 +25,7 @@ public class Robot extends IterativeRobot {
 
 	// Init to Auto
 	public void autonomousInit() {
+		
 	}
 
 	// This function is called periodically during autonomous
@@ -32,10 +34,13 @@ public class Robot extends IterativeRobot {
 
 	// Init to Tele
 	public void teleopInit() {
+		
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 		Compressor c = new Compressor(0);
+		// Update the subsystems
+		Drive.getInstance().update();
 	}
 }

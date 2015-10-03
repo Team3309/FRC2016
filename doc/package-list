@@ -2,6 +2,7 @@ org.team3309.lib
 org.team3309.lib.controllers
 org.team3309.lib.controllers.generic
 org.team3309.lib.controllers.statesandsignals
+org.usfirst.frc.team3309.auto
 org.usfirst.frc.team3309.driverstation
 org.usfirst.frc.team3309.robot
 org.usfirst.frc.team3309.subsystems

@@ -25,6 +25,6 @@ public class BlankController extends Controller {
 
 	@Override
 	public boolean isCompleted() {
-		return false; // Never ends
+		return true; // Is always complete
 	}
 }

@@ -11,10 +11,6 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
  * 
  */
 public abstract class Controller {
-	/**
-	 * Tells if Controller is enabled or not.
-	 */
-	public boolean mEnabled = false;
 
 	/**
 	 * Resets the Controller. For example, reseting the integral term back to
@@ -31,7 +27,7 @@ public abstract class Controller {
 	 * @return The signal sent to the ControlledSubsystem
 	 */
 	public abstract OutputSignal getOutputSignal(InputState inputState);
-
+	
 	/**
 	 * Tells if the controller is done executed its specified task.
 	 * 

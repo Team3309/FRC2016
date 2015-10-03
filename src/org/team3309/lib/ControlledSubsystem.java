@@ -33,4 +33,8 @@ public abstract class ControlledSubsystem extends KragerSubsystem {
 	 *         Controller object.
 	 */
 	public abstract InputState getInputState();
+	
+	public boolean isOnTarget() {
+		return mController.isCompleted();
+	}
 }
