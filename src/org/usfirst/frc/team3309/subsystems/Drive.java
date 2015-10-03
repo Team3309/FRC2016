@@ -6,6 +6,7 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.subsystems.controllers.drive.DriveEncodersController;
 import org.usfirst.frc.team3309.subsystems.controllers.driveequations.DriveAngularAndForwardVelocityEquationController;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -80,9 +81,15 @@ public class Drive extends ControlledSubsystem {
 		input.setRightPos(Sensors.rightDrive.getRate());
 		return input;
 	}
-	
+
+	/**
+	 * Creates and runs a controller that gets the drive to the given setoiunt
+	 * 
+	 * @param encoders
+	 *            goal encoder values
+	 */
 	public void setSetpoint(double encoders) {
-		
+		mController = new DriveEncodersController(encoders);
 	}
 
 	/**
@@ -135,7 +142,7 @@ public class Drive extends ControlledSubsystem {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Stops current running controller and sets motors to zero
 	 */
