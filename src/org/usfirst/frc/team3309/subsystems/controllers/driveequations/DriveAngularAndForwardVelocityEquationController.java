@@ -24,7 +24,6 @@ public class DriveAngularAndForwardVelocityEquationController extends Controller
 
 	@Override
 	public void reset() {
-
 	}
 
 	@Override
@@ -52,7 +51,6 @@ public class DriveAngularAndForwardVelocityEquationController extends Controller
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

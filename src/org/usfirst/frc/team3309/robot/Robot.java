@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 
 	// Init to Auto
 	public void autonomousInit() {
-		
+
 	}
 
 	// This function is called periodically during autonomous
@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
 
 	// Init to Tele
 	public void teleopInit() {
-		
+
 	}
 
 	// This function is called periodically during operator control
