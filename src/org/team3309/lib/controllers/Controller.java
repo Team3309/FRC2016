@@ -12,6 +12,8 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
  */
 public abstract class Controller {
 
+	private String name = "";
+
 	/**
 	 * Resets the Controller. For example, reseting the integral term back to
 	 * zero in a PID Loop
@@ -34,4 +36,15 @@ public abstract class Controller {
 	 * @return boolean telling if controller is done or not
 	 */
 	public abstract boolean isCompleted();
+
+	public void sendToSmartDash() {
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

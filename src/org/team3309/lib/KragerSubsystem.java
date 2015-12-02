@@ -28,4 +28,6 @@ public abstract class KragerSubsystem {
 	 * Method ran through each loop to control a certain subsystem
 	 */
 	public abstract void update();
+	
+	public abstract void sendToSmartDash();
 }

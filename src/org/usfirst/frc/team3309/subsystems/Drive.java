@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.Victor;
 public class Drive extends ControlledSubsystem {
 	/**
 	 * Used to give a certain gap that the drive would be ok with being within
-	 * its goal encoder averageÏ.
+	 * its goal encoder averageÃ�.
 	 */
 	private static final double DRIVE_ENCODER_LENIENCY = 40;
 
@@ -196,5 +196,10 @@ public class Drive extends ControlledSubsystem {
 	private void setLeft(double left) {
 		leftFront.set(left);
 		leftBack.set(left);
+	}
+
+	@Override
+	public void sendToSmartDash() {
+		mController.sendToSmartDash();
 	}
 }

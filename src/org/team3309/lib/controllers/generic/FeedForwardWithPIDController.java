@@ -3,6 +3,8 @@ package org.team3309.lib.controllers.generic;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class FeedForwardWithPIDController extends PIDController {
 	private double kA = 0.0, kV = 0.0;
 	private double aimAcc = 0.0, aimVel = 0.0;
@@ -71,5 +73,13 @@ public class FeedForwardWithPIDController extends PIDController {
 
 	public void setAimVel(double aimVel) {
 		this.aimVel = aimVel;
+	}
+	
+	public void sendToSmartDash() {
+		super.sendToSmartDash();
+		SmartDashboard.putNumber(this.getName() + " kA", kA);
+		SmartDashboard.putNumber(this.getName() + " kV", kV);
+		kA = SmartDashboard.getNumber(this.getName() + " kA", kA);
+		kV = SmartDashboard.getNumber(this.getName() + " kV", kV);
 	}
 }

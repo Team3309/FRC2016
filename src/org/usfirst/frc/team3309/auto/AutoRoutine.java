@@ -2,6 +2,8 @@ package org.usfirst.frc.team3309.auto;
 
 import org.usfirst.frc.team3309.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public abstract class AutoRoutine {
 	/**
 	 * Tracks how long auto has been running
@@ -12,8 +14,10 @@ public abstract class AutoRoutine {
 
 	/**
 	 * The entire auto routine.
+	 * @throws InterruptedException 
+	 * @throws TimedOutException 
 	 */
-	public abstract void routine();
+	public abstract void routine() throws TimedOutException, InterruptedException;
 
 	/**
 	 * Waits for drive train to complete its current controller's task
@@ -22,9 +26,10 @@ public abstract class AutoRoutine {
 	 *            if it hits this (ms) , then it will timeout
 	 * @throws TimedOutException
 	 *             if waits for more than specified timeout
+	 * @throws InterruptedException 
 	 */
 	
-	public void waitForDrive(double timeout) throws TimedOutException {
+	public void waitForDrive(double timeout) throws TimedOutException, InterruptedException {
 		Timer waitTimer = new Timer();
 		waitTimer.start();
 		while (!mDrive.isOnTarget()) {
@@ -41,7 +46,11 @@ public abstract class AutoRoutine {
 		while (!mDrive.isEncoderCloseTo(encoderGoal)) {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
-			Thread.sleep(100);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		;
 	}
@@ -51,7 +60,11 @@ public abstract class AutoRoutine {
 		waitTimer.start();
 		while(!mDrive.isAngleCloseTo(angleGoal)) {
 			if(waitTimer.get() > timeout) throw new TimedOutException();
-			Thread.sleep(100);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		};
 	}
 }

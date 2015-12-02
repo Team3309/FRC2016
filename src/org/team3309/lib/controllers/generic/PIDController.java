@@ -5,6 +5,7 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Basic PID Controller. The isCompleted Method will always return false.
@@ -154,4 +155,13 @@ public abstract class PIDController extends Controller {
 		return false;
 	}
 
+	@Override
+	public void sendToSmartDash() {
+		SmartDashboard.putNumber(this.getName() + " kP", kP);
+		SmartDashboard.putNumber(this.getName() + " kI", kI);
+		SmartDashboard.putNumber(this.getName() + " kD", kD);
+		kP = SmartDashboard.getNumber(this.getName() + " kP", kP);
+		kI = SmartDashboard.getNumber(this.getName() + " kI", kI);
+		kD = SmartDashboard.getNumber(this.getName() + " kD", kD);
+	}
 }
