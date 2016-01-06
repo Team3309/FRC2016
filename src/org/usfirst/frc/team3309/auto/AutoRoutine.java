@@ -14,8 +14,9 @@ public abstract class AutoRoutine {
 
 	/**
 	 * The entire auto routine.
-	 * @throws InterruptedException 
-	 * @throws TimedOutException 
+	 * 
+	 * @throws InterruptedException
+	 * @throws TimedOutException
 	 */
 	public abstract void routine() throws TimedOutException, InterruptedException;
 
@@ -26,9 +27,8 @@ public abstract class AutoRoutine {
 	 *            if it hits this (ms) , then it will timeout
 	 * @throws TimedOutException
 	 *             if waits for more than specified timeout
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
-	
 	public void waitForDrive(double timeout) throws TimedOutException, InterruptedException {
 		Timer waitTimer = new Timer();
 		waitTimer.start();
@@ -39,8 +39,16 @@ public abstract class AutoRoutine {
 		}
 	}
 
-	public void waitForDriveEncoder(double encoderGoal, double timeout)
-			throws TimedOutException {
+	/**
+	 * Waits for drive train to meet its encoder goal
+	 * 
+	 * @param timeout
+	 *            if it hits this (ms) , then it will timeout
+	 * @throws TimedOutException
+	 *             if waits for more than specified timeout
+	 * @throws InterruptedException
+	 */
+	public void waitForDriveEncoder(double encoderGoal, double timeout) throws TimedOutException {
 		Timer waitTimer = new Timer();
 		waitTimer.start();
 		while (!mDrive.isEncoderCloseTo(encoderGoal)) {
@@ -52,19 +60,28 @@ public abstract class AutoRoutine {
 				e.printStackTrace();
 			}
 		}
-		;
 	}
 
-	public void waitForDriveAngle(double angleGoal, double timeout) throws TimedOutException{
+	/**
+	 * Waits for drive train to meet its angle oder goal
+	 * 
+	 * @param timeout
+	 *            if it hits this (ms) , then it will timeout
+	 * @throws TimedOutException
+	 *             if waits for more than specified timeout
+	 * @throws InterruptedException
+	 */
+	public void waitForDriveAngle(double angleGoal, double timeout) throws TimedOutException {
 		Timer waitTimer = new Timer();
 		waitTimer.start();
-		while(!mDrive.isAngleCloseTo(angleGoal)) {
-			if(waitTimer.get() > timeout) throw new TimedOutException();
+		while (!mDrive.isAngleCloseTo(angleGoal)) {
+			if (waitTimer.get() > timeout)
+				throw new TimedOutException();
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		};
+		}
 	}
 }
