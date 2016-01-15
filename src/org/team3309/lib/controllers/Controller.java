@@ -39,12 +39,16 @@ public abstract class Controller {
 
 	public void sendToSmartDash() {
 	}
-	
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void print(String print) {
+		System.out.println(this.getName() + " " + print);
 	}
 }

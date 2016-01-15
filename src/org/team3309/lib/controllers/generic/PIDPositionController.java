@@ -1,7 +1,5 @@
 package org.team3309.lib.controllers.generic;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
  * Used to maintain a position of an error. Returns just the direct PID Value.
  * 

@@ -160,6 +160,7 @@ public abstract class PIDController extends Controller {
 		SmartDashboard.putNumber(this.getName() + " kP", kP);
 		SmartDashboard.putNumber(this.getName() + " kI", kI);
 		SmartDashboard.putNumber(this.getName() + " kD", kD);
+		SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
 		kP = SmartDashboard.getNumber(this.getName() + " kP", kP);
 		kI = SmartDashboard.getNumber(this.getName() + " kI", kI);
 		kD = SmartDashboard.getNumber(this.getName() + " kD", kD);

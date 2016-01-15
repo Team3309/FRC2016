@@ -30,4 +30,8 @@ public abstract class KragerSubsystem {
 	public abstract void update();
 	
 	public abstract void sendToSmartDash();
+	
+	public void print(String print) {
+		System.out.println(this.getName() + " " + print);
+	}
 }

@@ -74,7 +74,7 @@ public class FeedForwardWithPIDController extends PIDController {
 	public void setAimVel(double aimVel) {
 		this.aimVel = aimVel;
 	}
-
+	
 	public void sendToSmartDash() {
 		super.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " kA", kA);

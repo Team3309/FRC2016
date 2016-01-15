@@ -94,4 +94,12 @@ public class InputState extends HashMap<String, Double> {
 	public double getRightPos() {
 		return this.get("rightPos");
 	}
+	
+	public void setTime(double time) {
+		this.put("time", time);
+	}
+	
+	public double getTime() {
+		return this.get("time");
+	}
 }
