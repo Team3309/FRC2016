@@ -22,7 +22,6 @@ public class DriveCurvatureFollower extends Controller {
 		
 	}
 
-
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		OutputSignal output = new OutputSignal();
