@@ -13,7 +13,7 @@ import org.usfirst.frc.team3309.robot.Sensors;
  * @author Krager
  *
  */
-public class DriveEncodersController {
+public class DriveEncodersController extends Controller{
 
 	private PIDPositionController leftController = new PIDPositionController(.3, 0, 0);
 	private PIDPositionController rightController = new PIDPositionController(.2, 0, 0);
@@ -29,7 +29,6 @@ public class DriveEncodersController {
 		goalAngle = Sensors.getAngle();
 	}
 
-	@Override
 	public void reset() {
 
 	}
