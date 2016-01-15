@@ -38,9 +38,16 @@ public abstract class ControlledSubsystem extends KragerSubsystem {
 		this.mController = mController;
 	}
 	
+	/**
+	 * Tells if the controller is where it is supposed to be
+	 * @return
+	 */
 	public boolean isOnTarget() {
 		return mController.isCompleted();
 	}
 
+	/**
+	 * Use this to send controllers to the smartdash for live tuning
+	 */
 	public abstract void sendToSmartDash();
 }

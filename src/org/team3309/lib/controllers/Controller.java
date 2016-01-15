@@ -37,6 +37,9 @@ public abstract class Controller {
 	 */
 	public abstract boolean isCompleted();
 
+	/**
+	 * Sends info of controller to smartdash for looks on data and tuning
+	 */
 	public void sendToSmartDash() {
 	}
 

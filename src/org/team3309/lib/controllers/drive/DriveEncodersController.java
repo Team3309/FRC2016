@@ -6,13 +6,20 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.Sensors;
 
-public class DriveEncodersController extends Controller {
+/**
+ * Use this class to drive the robot an exact amount of encoders Uses three PID
+ * controllers, one for angle, one for left, one for right.
+ * 
+ * @author Krager
+ *
+ */
+public class DriveEncodersController {
 
 	private PIDPositionController leftController = new PIDPositionController(.3, 0, 0);
 	private PIDPositionController rightController = new PIDPositionController(.2, 0, 0);
-	private PIDPositionController angController = new PIDPositionController(.2, 0, 0);
-	private double goalEncoder;
-	private double goalAngle;
+	protected PIDPositionController angController = new PIDPositionController(.2, 0, 0);
+	protected double goalEncoder;
+	protected double goalAngle;
 
 	public DriveEncodersController(double goal) {
 		leftController.setName("left");
@@ -51,7 +58,7 @@ public class DriveEncodersController extends Controller {
 	public boolean isCompleted() {
 		return leftController.isCompleted() && rightController.isCompleted() && angController.isCompleted();
 	}
-	
+
 	@Override
 	public void sendToSmartDash() {
 		leftController.sendToSmartDash();

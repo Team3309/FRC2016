@@ -29,8 +29,15 @@ public abstract class KragerSubsystem {
 	 */
 	public abstract void update();
 	
+	/**
+	 * Send to smart dash to see all of the aspects of this subsystem
+	 */
 	public abstract void sendToSmartDash();
 	
+	/** 
+	 * Prints logged with what subsystem printed it
+	 * @param print string to print
+	 */
 	public void print(String print) {
 		System.out.println(this.getName() + " " + print);
 	}
