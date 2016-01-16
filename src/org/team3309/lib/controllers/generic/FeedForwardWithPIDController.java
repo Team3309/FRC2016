@@ -9,12 +9,29 @@ public class FeedForwardWithPIDController extends PIDController {
 	private double kA = 0.0, kV = 0.0;
 	private double aimAcc = 0.0, aimVel = 0.0;
 
+	/**
+	 * 
+	 * @param kV
+	 * @param kA
+	 * @param kP
+	 * @param kI
+	 * @param kD
+	 */
 	public FeedForwardWithPIDController(double kV, double kA, double kP, double kI, double kD) {
 		super(kP, kI, kD);
 		this.kA = kA;
 		this.kV = kV;
 	}
 
+	/**
+	 * 
+	 * @param kV
+	 * @param kA
+	 * @param kP
+	 * @param kI
+	 * @param kD
+	 * @param kILimit
+	 */
 	public FeedForwardWithPIDController(double kV, double kA, double kP, double kI, double kD, double kILimit) {
 		super(kP, kI, kD, kILimit);
 		this.kA = kA;
@@ -74,9 +91,11 @@ public class FeedForwardWithPIDController extends PIDController {
 	public void setAimVel(double aimVel) {
 		this.aimVel = aimVel;
 	}
-	
+
 	public void sendToSmartDash() {
 		super.sendToSmartDash();
+		SmartDashboard.putNumber(this.getName() + " aimVel", this.aimVel);
+		SmartDashboard.putNumber(this.getName() + " aimAcc", this.aimAcc);
 		SmartDashboard.putNumber(this.getName() + " kA", kA);
 		SmartDashboard.putNumber(this.getName() + " kV", kV);
 		kA = SmartDashboard.getNumber(this.getName() + " kA", kA);

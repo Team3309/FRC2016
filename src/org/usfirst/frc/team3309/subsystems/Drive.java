@@ -1,21 +1,21 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.controllers.drive.DriveEncodersController;
+import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
-import org.usfirst.frc.team3309.subsystems.controllers.drive.DriveEncodersController;
-import org.usfirst.frc.team3309.subsystems.controllers.driveequations.DriveAngularAndForwardVelocityEquationController;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Drive Train
  * 
- * @author TheMkrage
+ * @author Krager
  *
  */
 public class Drive extends ControlledSubsystem {
@@ -50,15 +50,14 @@ public class Drive extends ControlledSubsystem {
 
 	private Drive(String name) {
 		super(name);
-		mController = new DriveAngularAndForwardVelocityEquationController();
+		mController = new DriveCheezyDriveEquation();
 	}
 
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
 		// if mController is Completed and has not already been made blank, then
 		// make it blank
-		if (mController.isCompleted()
-				&& !(mController instanceof BlankController)) {
+		if (mController.isCompleted() && !(mController instanceof BlankController)) {
 			mController = new BlankController();
 		}
 	}
@@ -136,8 +135,7 @@ public class Drive extends ControlledSubsystem {
 	 * @return
 	 */
 	public boolean isAngleCloseTo(double angleGoal) {
-		if (getAngle() < angleGoal + DRIVE_GYRO_LENIENCY
-				&& getDistanceTraveled() > angleGoal - DRIVE_GYRO_LENIENCY) {
+		if (getAngle() < angleGoal + DRIVE_GYRO_LENIENCY && getDistanceTraveled() > angleGoal - DRIVE_GYRO_LENIENCY) {
 			return true;
 		}
 		return false;
@@ -201,5 +199,13 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public void sendToSmartDash() {
 		mController.sendToSmartDash();
+		SmartDashboard.putNumber(this.getName() + " Left Side Pow", leftBack.get());
+		SmartDashboard.putNumber(this.getName() + " Right Side Pow", rightBack.get());
+		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
+		SmartDashboard.putNumber(this.getName() + " Anglular Vel", Sensors.getAngularVel());
+		SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.leftDrive.getDistance());
+		SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.leftDrive.getRate());
+		SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.rightDrive.getDistance());
+		SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.rightDrive.getRate());
 	}
 }
