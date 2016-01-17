@@ -94,11 +94,12 @@ public class FeedForwardWithPIDController extends PIDController {
 
 	public void sendToSmartDash() {
 		super.sendToSmartDash();
+		
+		kA = SmartDashboard.getNumber(this.getName() + " kA", kA);
+		kV = SmartDashboard.getNumber(this.getName() + " kV", kV);
 		SmartDashboard.putNumber(this.getName() + " aimVel", this.aimVel);
 		SmartDashboard.putNumber(this.getName() + " aimAcc", this.aimAcc);
 		SmartDashboard.putNumber(this.getName() + " kA", kA);
 		SmartDashboard.putNumber(this.getName() + " kV", kV);
-		kA = SmartDashboard.getNumber(this.getName() + " kA", kA);
-		kV = SmartDashboard.getNumber(this.getName() + " kV", kV);
 	}
 }

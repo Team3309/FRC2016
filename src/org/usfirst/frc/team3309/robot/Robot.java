@@ -2,9 +2,10 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
-import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
@@ -13,6 +14,7 @@ public class Robot extends IterativeRobot {
 
 	// Runs when Robot is turned on
 	public void robotInit() {
+		//Sensors.navX = new AHRS(I2C.Port.kMXP);
 	}
 
 	// When first put into disabled mode
@@ -34,13 +36,22 @@ public class Robot extends IterativeRobot {
 
 	// Init to Tele
 	public void teleopInit() {
-
+		//Sensors.shooterCounter.
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 		Compressor c = new Compressor(0);
-		// Update the subsystems
-		Drive.getInstance().update();
+		
+		//System.out.println("Sensors: " + Sensors.shooterCounter.get());
+		/* Display 6-axis Processed Angle Data                                      */
+        /*SmartDashboard.putBoolean(  "IMU_Connected",        Sensors.navX.isConnected());
+        SmartDashboard.putBoolean(  "IMU_IsCalibrating",    Sensors.navX.isCalibrating());
+        SmartDashboard.putNumber(   "IMU_Yaw",              Sensors.navX.getYaw());
+        SmartDashboard.putNumber(   "IMU_Pitch",            Sensors.navX.getPitch());
+        SmartDashboard.putNumber(   "IMU_Roll",             Sensors.navX.getRoll());
+		// Update the subsystems*/
+		//Drive.getInstance().update();
+		Shooter.getInstance().update();
 	}
 }

@@ -72,12 +72,12 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState input = new InputState();
-		input.setAngularPos(Sensors.getAngle());
-		input.setAngularVel(Sensors.getAngularVel());
-		input.setLeftPos(Sensors.leftDrive.getDistance());
-		input.setLeftVel(Sensors.leftDrive.getRate());
-		input.setRightVel(Sensors.rightDrive.getDistance());
-		input.setRightPos(Sensors.rightDrive.getRate());
+		//input.setAngularPos(Sensors.getAngle());
+		//input.setAngularVel(Sensors.getAngularVel());
+		//input.setLeftPos(Sensors.leftDrive.getDistance());
+		//input.setLeftVel(Sensors.leftDrive.getRate());
+		//input.setRightVel(Sensors.rightDrive.getDistance());
+		//input.setRightPos(Sensors.rightDrive.getRate());
 		return input;
 	}
 

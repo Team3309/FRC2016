@@ -7,6 +7,7 @@ import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,14 +22,16 @@ public class Shooter extends ControlledSubsystem {
 	/**
 	 * Shooter for singleton pattern
 	 */
-	private Shooter mShooter;
+	private static Shooter mShooter;
 	private Victor leftVictor = new Victor(RobotMap.LEFT_SHOOTER_MOTOR);
 	private Victor rightVictor = new Victor(RobotMap.RIGHT_SHOOTER_MOTOR);
 
-	private double maxVelRPM = 0.0;
-	private double maxAccRPM = 0.0;
-	private double aimVelRPM = 0.0;
-	private double aimAccRPM = 0.0;
+	private double maxVelRPS = 0.0;
+	private double maxAccRPS = 0.0;
+	private double aimVelRPS = 0.0;
+	private double aimAccRPS = 0.0;
+	
+	private double pastVel = 0;
 
 	/**
 	 * Value added to maxVelRPM
@@ -45,45 +48,47 @@ public class Shooter extends ControlledSubsystem {
 	 * 
 	 * @return the single instance
 	 */
-	public Shooter getInstance() {
+	public static Shooter getInstance() {
 		if (mShooter == null) {
 			mShooter = new Shooter("Shooter");
 		}
 		return mShooter;
 	}
+	
+	double curVel = 0;
 
 	@Override
 	public void update() {
-		double curVel = this.getRPM();
+		curVel = this.getRPS();
 
 		// Find our base aim vel
 		if (Controls.driverController.getA()) {
-			aimVelRPM = 600;
+			aimVelRPS = 68;
 		} else if (Controls.driverController.getB()) {
-			aimVelRPM = 800;
+			aimVelRPS = 88;
 		} else if (Controls.driverController.getXBut()) {
-			aimVelRPM = 1000;
+			aimVelRPS = 90;
 		} else if (Controls.driverController.getYBut()) {
-			aimVelRPM = 1200;
+			aimVelRPS = 100;
 		} else {
 			offset = 0;
-			aimVelRPM = 0;
-			aimAccRPM = 0;
+			aimVelRPS = 0;
+			aimAccRPS = 0;
 		}
 
 		// Based off of cur vel and aim vel, find aim acc
-		double error = this.aimVelRPM - curVel;
+		double error = this.aimVelRPS - curVel;
 		if (Math.abs(error) > 1000) {
 			if (error > 0) {
-				aimAccRPM = maxAccRPM;
+				aimAccRPS = maxAccRPS;
 			} else if (error < 0) {
-				aimAccRPM = -maxAccRPM;
+				aimAccRPS = -maxAccRPS;
 			}
 		} else {
 			if (error > 0) {
-				aimAccRPM = maxAccRPM/4;
+				aimAccRPS = maxAccRPS/4;
 			} else if (error < 0) {
-				aimAccRPM = -maxAccRPM/4;
+				aimAccRPS= -maxAccRPS/4;
 			}
 		}
 
@@ -97,12 +102,13 @@ public class Shooter extends ControlledSubsystem {
 
 		// Send our aim's to the mController
 		if (this.mController instanceof FeedForwardWithPIDController) {
-			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPM);
-			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPM + offset);
+			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPS);
+			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS + offset);
 		}
 
+
 		// Get value and set to motors
-		if (aimVelRPM != 0) {
+		if (aimVelRPS == 0) {
 			this.setShooter(0);
 		} else {
 			this.setShooter(this.mController.getOutputSignal(getInputState()).getMotor());
@@ -114,23 +120,34 @@ public class Shooter extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState input = new InputState();
-		input.setError(getRPM() - aimVelRPM);
+		input.setError( aimVelRPS - curVel);
 		return input;
 	}
 
 	@Override
+	
 	public void sendToSmartDash() {
 		mController.sendToSmartDash();
-		SmartDashboard.putNumber(this.getName() + " RPM", getRPM());
-		SmartDashboard.putNumber(this.getName() + " RPS", getRPS());
+		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
+		SmartDashboard.putNumber(this.getName() + " RPS", curVel);
+		SmartDashboard.putNumber(this.getName() + " Lef", leftVictor.getSpeed());
+		SmartDashboard.putNumber(this.getName() + " Right", rightVictor.getSpeed());
 	}
-
+	
+	Counter shooterCounter = new Counter(RobotMap.SHOOTER_COUNTER);
+	
 	private double getRPS() {
-		return 1 / Sensors.shooterCounter.getPeriod();
+	
+			pastVel = 1 /  shooterCounter.getPeriod();
+			return pastVel;
+		
 	}
 
 	private double getRPM() {
-		return 60 / Sensors.shooterCounter.getPeriod();
+		System.out.println("Sensors: " + shooterCounter.get());
+		System.out.println("Sensors: " + shooterCounter.getRate());
+		
+		return 60 / shooterCounter.getPeriod();
 	}
 
 	private void setShooter(double power) {

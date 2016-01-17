@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.robot;
 
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 
@@ -16,7 +17,8 @@ public class Sensors {
 			RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
 	public static Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL,
 			RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL, false);
-	public static Counter shooterCounter = new Counter(RobotMap.SHOOTER_COUNTER);
+	//public static Counter shooterCounter = new Counter(RobotMap.SHOOTER_COUNTER);
+	//public static AHRS navX;
 
 	public static double getAngularVel() {
 		return gyro.getRate();

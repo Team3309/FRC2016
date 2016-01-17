@@ -12,7 +12,7 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
  */
 public abstract class Controller {
 
-	private String name = "";
+	private String name = "Default";
 
 	/**
 	 * Resets the Controller. For example, reseting the integral term back to
