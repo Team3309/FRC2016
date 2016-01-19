@@ -5,7 +5,6 @@ import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
-import org.usfirst.frc.team3309.robot.Sensors;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Victor;
@@ -30,7 +29,7 @@ public class Shooter extends ControlledSubsystem {
 	private double maxAccRPS = 0.0;
 	private double aimVelRPS = 0.0;
 	private double aimAccRPS = 0.0;
-	
+
 	private double pastVel = 0;
 
 	/**
@@ -54,7 +53,7 @@ public class Shooter extends ControlledSubsystem {
 		}
 		return mShooter;
 	}
-	
+
 	double curVel = 0;
 
 	@Override
@@ -86,9 +85,9 @@ public class Shooter extends ControlledSubsystem {
 			}
 		} else {
 			if (error > 0) {
-				aimAccRPS = maxAccRPS/4;
+				aimAccRPS = maxAccRPS / 4;
 			} else if (error < 0) {
-				aimAccRPS= -maxAccRPS/4;
+				aimAccRPS = -maxAccRPS / 4;
 			}
 		}
 
@@ -100,12 +99,11 @@ public class Shooter extends ControlledSubsystem {
 			offset += 50;
 		}
 
-		// Send our aim's to the mController
+		// Send our target velocity to the mController
 		if (this.mController instanceof FeedForwardWithPIDController) {
 			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPS);
 			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS + offset);
 		}
-
 
 		// Get value and set to motors
 		if (aimVelRPS == 0) {
@@ -120,12 +118,11 @@ public class Shooter extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState input = new InputState();
-		input.setError( aimVelRPS - curVel);
+		input.setError(aimVelRPS - curVel);
 		return input;
 	}
 
 	@Override
-	
 	public void sendToSmartDash() {
 		mController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
@@ -133,20 +130,17 @@ public class Shooter extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " Lef", leftVictor.getSpeed());
 		SmartDashboard.putNumber(this.getName() + " Right", rightVictor.getSpeed());
 	}
-	
+
 	Counter shooterCounter = new Counter(RobotMap.SHOOTER_COUNTER);
-	
+
 	private double getRPS() {
-	
-			pastVel = 1 /  shooterCounter.getPeriod();
-			return pastVel;
-		
+
+		pastVel = 1 / shooterCounter.getPeriod();
+		return pastVel;
+
 	}
 
 	private double getRPM() {
-		System.out.println("Sensors: " + shooterCounter.get());
-		System.out.println("Sensors: " + shooterCounter.getRate());
-		
 		return 60 / shooterCounter.getPeriod();
 	}
 

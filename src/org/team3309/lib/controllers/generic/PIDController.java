@@ -1,5 +1,6 @@
 package org.team3309.lib.controllers.generic;
 
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
@@ -36,14 +37,6 @@ public abstract class PIDController extends Controller {
 	 */
 	protected boolean completable = true;
 	/**
-	 * Timer to count how much time the error has been low.
-	 */
-	protected Timer doneTimer = new Timer();
-	/**
-	 * Tells if doneTimer has been started.
-	 */
-	protected boolean timerStarted = false;
-	/**
 	 * Margin of how close the error can be close to 0.
 	 */
 	protected double THRESHOLD = 30;
@@ -51,11 +44,18 @@ public abstract class PIDController extends Controller {
 	 * Time the error must stay between the certain margin within the threshold.
 	 */
 	protected double TIME_TO_BE_COMPLETE_MILLISECONDS = 250;
+	/**
+	 * Timer to count how much time the error has been low.
+	 */
+	protected KragerTimer doneTimer = new KragerTimer(TIME_TO_BE_COMPLETE_MILLISECONDS);
 
 	public PIDController(double kP, double kI, double kD) {
 		this.kP = kP;
 		this.kI = kI;
 		this.kD = kD;
+		SmartDashboard.putNumber(this.getName() + " kP", kP);
+		SmartDashboard.putNumber(this.getName() + " kI", kI);
+		SmartDashboard.putNumber(this.getName() + " kD", kD);
 	}
 
 	public PIDController(double kP, double kI, double kD, double kILimit) {
@@ -63,6 +63,9 @@ public abstract class PIDController extends Controller {
 		this.kI = kI;
 		this.kD = kD;
 		this.kILimit = kILimit;
+		SmartDashboard.putNumber(this.getName() + " kP", kP);
+		SmartDashboard.putNumber(this.getName() + " kI", kI);
+		SmartDashboard.putNumber(this.getName() + " kD", kD);
 	}
 
 	// You would want to set the mIntegral and previousError to zero when
@@ -76,11 +79,9 @@ public abstract class PIDController extends Controller {
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		double error = inputState.getError();
-		// Calculate the derivative and log previous error
-		double pidDerivative = error - previousError;
-		previousError = error;
+
 		// Add to mIntegral term
-		mIntegral = error + mIntegral;
+		mIntegral += error;
 
 		// Check for integral hitting the limit
 		if (mIntegral > kILimit)
@@ -91,15 +92,10 @@ public abstract class PIDController extends Controller {
 
 		// Make OutputSignal and fill it with calculated values
 		OutputSignal signal = new OutputSignal();
-		signal.setMotor((kP * error) + (kI * mIntegral) + (kD * pidDerivative));
+		double output = (kP * error) + (kI * mIntegral) + (kD * (error - previousError));
+		signal.setMotor(output);
+		previousError = error;
 		return signal;
-	}
-
-	/**
-	 * @return if doneTimer has started
-	 */
-	public boolean isTimerStarted() {
-		return timerStarted;
 	}
 
 	/**
@@ -129,9 +125,14 @@ public abstract class PIDController extends Controller {
 	 * @param tIME_TO_BE_COMPLETE_MILLISECONDS
 	 *            time
 	 */
-	public void setTIME_TO_BE_COMPLETE_MILLISECONDS(
-			double tIME_TO_BE_COMPLETE_MILLISECONDS) {
+	public void setTIME_TO_BE_COMPLETE_MILLISECONDS(double tIME_TO_BE_COMPLETE_MILLISECONDS) {
 		TIME_TO_BE_COMPLETE_MILLISECONDS = tIME_TO_BE_COMPLETE_MILLISECONDS;
+	}
+
+	public void setConstants(double kP, double kI, double kD) {
+		this.kP = kP;
+		this.kI = kI;
+		this.kD = kD;
 	}
 
 	@Override
@@ -139,18 +140,7 @@ public abstract class PIDController extends Controller {
 		// If the Controller is completable, then the error will need to be
 		// between a certain threshold before isCompleted return true
 		if (completable) {
-			if (Math.abs(previousError) < THRESHOLD) {
-				if (timerStarted) {
-					if (doneTimer.get() > TIME_TO_BE_COMPLETE_MILLISECONDS) {
-						return true;
-					}
-				} else {
-					doneTimer.start();
-					timerStarted = true;
-				}
-			} else {
-				timerStarted = false;
-			}
+			this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
 		}
 		return false;
 	}
