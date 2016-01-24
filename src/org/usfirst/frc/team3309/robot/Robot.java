@@ -2,14 +2,12 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
-import org.usfirst.frc.team3309.subsystems.Shooter;
+import org.usfirst.frc.team3309.subsystems.Drive;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	XboxController driverController = Controls.driverController;
@@ -17,8 +15,8 @@ public class Robot extends IterativeRobot {
 
 	// Runs when Robot is turned on
 	public void robotInit() {
-		Sensors.navX = new AHRS(SerialPort.Port.kMXP);	
-		
+		Sensors.navX = new AHRS(SerialPort.Port.kMXP);
+
 	}
 
 	// When first put into disabled mode
@@ -45,10 +43,9 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-		Compressor c = new Compressor(0);
-  
 		// Update the subsystems
-		// Drive.getInstance().update();
-		Shooter.getInstance().update();
+		Drive.getInstance().update();
+		Sensors.printNavX();
+		// Shooter.getInstance().update();
 	}
 }

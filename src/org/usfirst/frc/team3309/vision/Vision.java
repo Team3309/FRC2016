@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package org.usfirst.frc.team3309;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+package org.usfirst.frc.team3309.vision;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -26,6 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Vision implements Runnable {
 

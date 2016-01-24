@@ -9,6 +9,7 @@ import java.util.HashMap;
  * @author TheMkrage
  *
  */
+@SuppressWarnings("serial")
 public class OutputSignal extends HashMap<String, Double> {
 
 	public OutputSignal() {

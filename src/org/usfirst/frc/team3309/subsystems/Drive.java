@@ -181,8 +181,8 @@ public class Drive extends ControlledSubsystem {
 	 *            rightMotorSpeed
 	 */
 	private void setRight(double right) {
-		rightFront.set(right);
-		rightBack.set(right);
+		rightFront.set(-right);
+		rightBack.set(-right);
 	}
 
 	/**

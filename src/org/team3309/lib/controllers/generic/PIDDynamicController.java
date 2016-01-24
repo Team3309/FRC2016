@@ -4,7 +4,6 @@ import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PIDDynamicController extends PIDController {
@@ -40,6 +39,9 @@ public class PIDDynamicController extends PIDController {
 		SmartDashboard.putNumber(this.getName() + " kP Trans", kPTrans);
 		SmartDashboard.putNumber(this.getName() + " kI Trans", kITrans);
 		SmartDashboard.putNumber(this.getName() + " kD Trans", kDTrans);
+		SmartDashboard.putNumber(this.getName() + " kP Impulse", kPImpulse);
+		SmartDashboard.putNumber(this.getName() + " kI Impulse", kIImpulse);
+		SmartDashboard.putNumber(this.getName() + " kD Impulse", kDImpulse);
 		SmartDashboard.putNumber(this.getName() + " CONSTANTCHANGING", CONSTANT_CHANGING_THRESHOLD);
 	}
 

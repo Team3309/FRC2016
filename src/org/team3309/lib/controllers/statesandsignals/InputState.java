@@ -10,6 +10,7 @@ import java.util.HashMap;
  * @author TheMkrage
  * 
  */
+@SuppressWarnings("serial")
 public class InputState extends HashMap<String, Double> {
 
 	public InputState() {

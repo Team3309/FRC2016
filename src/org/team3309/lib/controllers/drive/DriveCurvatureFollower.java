@@ -2,7 +2,6 @@ package org.team3309.lib.controllers.drive;
 
 import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.Controller;
-import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 

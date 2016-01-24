@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.usfirst.frc.team3309;
+package org.usfirst.frc.team3309.vision;
 
 /**
  * Created by vmagro on 1/17/16.
