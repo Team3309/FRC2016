@@ -27,12 +27,16 @@ public class PIDDynamicController extends PIDController {
 	private boolean hasSwitchedToTransient = false;
 
 	private double kPTrans, kITrans, kDTrans;
+	private double kPImpulse, kIImpulse, kDImpulse;
 
-	public PIDDynamicController(double kP, double kI, double kD, double kPTrans, double kITrans, double kDTrans) {
-		super(kP, kI, kD);
+	public PIDDynamicController(double kPImpulse, double kIImpulse, double kDImpulse, double kPTrans, double kITrans, double kDTrans) {
+		super(kPImpulse, kIImpulse, kDImpulse);
 		this.kPTrans = kPTrans;
 		this.kITrans = kITrans;
 		this.kDTrans = kDTrans;
+		this.kPImpulse = kPImpulse;
+		this.kIImpulse = kIImpulse;
+		this.kDImpulse = kDImpulse;
 		SmartDashboard.putNumber(this.getName() + " kP Trans", kPTrans);
 		SmartDashboard.putNumber(this.getName() + " kI Trans", kITrans);
 		SmartDashboard.putNumber(this.getName() + " kD Trans", kDTrans);
@@ -56,15 +60,22 @@ public class PIDDynamicController extends PIDController {
 		return signal;
 	}
 
-	public void sendToSmart() {
+	public void sendToSmartDash() {
 		super.sendToSmartDash();
 		kPTrans = SmartDashboard.getNumber(this.getName() + " kP Trans");
 		kITrans = SmartDashboard.getNumber(this.getName() + " kI Trans");
 		kDTrans = SmartDashboard.getNumber(this.getName() + " kD Trans");
+		kPImpulse = SmartDashboard.getNumber(this.getName() + " kP Impulse");
+		kIImpulse = SmartDashboard.getNumber(this.getName() + " kI Impulse");
+		kDImpulse = SmartDashboard.getNumber(this.getName() + " kD Impulse");
 		CONSTANT_CHANGING_THRESHOLD = SmartDashboard.getNumber(this.getName() + " CONSTANTCHANGING");
 		SmartDashboard.putNumber(this.getName() + " kP Trans", kPTrans);
 		SmartDashboard.putNumber(this.getName() + " kI Trans", kITrans);
 		SmartDashboard.putNumber(this.getName() + " kD Trans", kDTrans);
+		SmartDashboard.putNumber(this.getName() + " kP Impulse", kPImpulse);
+		SmartDashboard.putNumber(this.getName() + " kI Impulse", kIImpulse);
+		SmartDashboard.putNumber(this.getName() + " kD Impulse", kDImpulse);
 		SmartDashboard.putNumber(this.getName() + " CONSTANTCHANGING", CONSTANT_CHANGING_THRESHOLD);
+		
 	}
 }

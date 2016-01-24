@@ -23,5 +23,5 @@ public class RobotMap {
 	public static final int ENCODERS_B_RIGHT_DRIVE_DIGITAL = 1;
 	public static final int ENCODERS_A_LEFT_DRIVE_DIGITAL = 2;
 	public static final int ENCODERS_B_LEFT_DRIVE_DIGITAL = 3;
-	public static final int SHOOTER_COUNTER = 0;
+	public static final int SHOOTER_COUNTER = 4;
 }
