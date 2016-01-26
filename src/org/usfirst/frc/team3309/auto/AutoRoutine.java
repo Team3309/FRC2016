@@ -12,6 +12,11 @@ public abstract class AutoRoutine {
 	// All the subsystems
 	protected Drive mDrive = Drive.getInstance();
 
+	public void start() throws TimedOutException, InterruptedException {
+		autoTimer.start();
+		routine();
+	}
+	
 	/**
 	 * The entire auto routine.
 	 * 
@@ -81,6 +86,16 @@ public abstract class AutoRoutine {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void waitForEndOfAuto() {
+		while (autoTimer.get() < 14900) {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+
 			}
 		}
 	}
