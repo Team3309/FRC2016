@@ -12,6 +12,11 @@ public abstract class AutoRoutine {
 	// All the subsystems
 	protected Drive mDrive = Drive.getInstance();
 
+	/**
+	 * Start auto timer and routine
+	 * @throws TimedOutException
+	 * @throws InterruptedException
+	 */
 	public void start() throws TimedOutException, InterruptedException {
 		autoTimer.start();
 		routine();

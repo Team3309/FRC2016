@@ -211,6 +211,8 @@ public class Drive extends ControlledSubsystem {
 			break;
 		case DRAW_BRIDGE:
 			break;
+		default:
+			break;
 		}
 	}
 
