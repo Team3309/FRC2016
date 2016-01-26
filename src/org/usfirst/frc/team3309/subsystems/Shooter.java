@@ -18,10 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Shooter extends ControlledSubsystem {
 
-	/**
-	 * Shooter for singleton pattern
-	 */
-	private static Shooter mShooter;
+	
 	private Victor leftVictor = new Victor(RobotMap.LEFT_SHOOTER_MOTOR);
 	private Victor rightVictor = new Victor(RobotMap.RIGHT_SHOOTER_MOTOR);
 
@@ -36,6 +33,11 @@ public class Shooter extends ControlledSubsystem {
 	 * Value added to maxVelRPM
 	 */
 	private double offset = 0;
+	
+	/**
+	 * Shooter for singleton pattern
+	 */
+	private static Shooter mShooter;
 
 	private Shooter(String name) {
 		super(name);

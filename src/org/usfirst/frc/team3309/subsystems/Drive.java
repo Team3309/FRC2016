@@ -6,6 +6,7 @@ import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.usfirst.frc.team3309.auto.Defense;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
@@ -194,6 +195,23 @@ public class Drive extends ControlledSubsystem {
 	private void setLeft(double left) {
 		leftFront.set(left);
 		leftBack.set(left);
+	}
+	
+	public void driveOverDefense(Defense d) {
+		switch (d) {
+		case CHEVAL_DE_FRISE: 
+			break;
+		case PORTCULLIS:
+			break;
+		case MOAT: case ROUGH_TERRAIN: case ROCK_WALL:
+			break;
+		case LOW_BAR:
+			break; 
+		case SALLY_PORT:
+			break;
+		case DRAW_BRIDGE:
+			break;
+		}
 	}
 
 	@Override
