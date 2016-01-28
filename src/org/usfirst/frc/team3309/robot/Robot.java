@@ -7,6 +7,8 @@ import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.Shooter;
+import org.usfirst.frc.team3309.vision.Vision;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -54,20 +56,32 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
 	}
 
 	// Init to Tele
 	public void teleopInit() {
+		//Vision.getInstance().start();
 		// Sensors.shooterCounter.
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
+		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
 		// Update the subsystems
-		Drive.getInstance().update();
+		//Drive.getInstance().update();
+		Drive.getInstance().sendToSmartDash();
+		Shooter.getInstance().update();
+		Shooter.getInstance().sendToSmartDash();
 		Sensors.printNavX();
 		// Shooter.getInstance().update();
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

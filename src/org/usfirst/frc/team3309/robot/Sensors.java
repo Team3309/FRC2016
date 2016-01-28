@@ -18,6 +18,8 @@ public class Sensors {
 			RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
 	public static Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL,
 			RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL, false);
+	public static Encoder shooterEncoder = new Encoder(RobotMap.ENCODERS_A_SHOOTER_DIGITAL,
+			RobotMap.ENCODERS_B_SHOOTER_DIGITAL, true);
 	// public static Counter shooterCounter = new
 	// Counter(RobotMap.SHOOTER_COUNTER);
 	public static AHRS navX;

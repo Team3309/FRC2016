@@ -5,6 +5,7 @@ import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.robot.Sensors;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Victor;
@@ -18,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Shooter extends ControlledSubsystem {
 
-	
 	private Victor leftVictor = new Victor(RobotMap.LEFT_SHOOTER_MOTOR);
 	private Victor rightVictor = new Victor(RobotMap.RIGHT_SHOOTER_MOTOR);
 
@@ -33,7 +33,7 @@ public class Shooter extends ControlledSubsystem {
 	 * Value added to maxVelRPM
 	 */
 	private double offset = 0;
-	
+
 	/**
 	 * Shooter for singleton pattern
 	 */
@@ -64,13 +64,13 @@ public class Shooter extends ControlledSubsystem {
 
 		// Find our base aim vel
 		if (Controls.driverController.getA()) {
-			aimVelRPS = 68;
+			aimVelRPS = 200;
 		} else if (Controls.driverController.getB()) {
-			aimVelRPS = 88;
+			aimVelRPS = 220;
 		} else if (Controls.driverController.getXBut()) {
-			aimVelRPS = 90;
+			aimVelRPS = 260;
 		} else if (Controls.driverController.getYBut()) {
-			aimVelRPS = 100;
+			aimVelRPS = 320;
 		} else {
 			offset = 0;
 			aimVelRPS = 0;
@@ -137,9 +137,8 @@ public class Shooter extends ControlledSubsystem {
 
 	private double getRPS() {
 
-		pastVel = 1 / shooterCounter.getPeriod();
-		return pastVel;
-
+		pastVel = Sensors.shooterEncoder.getRate() ;
+		return Sensors.shooterEncoder.getRate() ;
 	}
 
 	private double getRPM() {
