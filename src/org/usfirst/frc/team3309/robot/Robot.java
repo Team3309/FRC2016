@@ -72,10 +72,10 @@ public class Robot extends IterativeRobot {
 		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
 		// Update the subsystems
 		//Drive.getInstance().update();
-		Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().update();
-		Shooter.getInstance().sendToSmartDash();
-		Sensors.printNavX();
+		//Drive.getInstance().sendToSmartDash();
+		Drive.getInstance().update();
+		//Shooter.getInstance().sendToSmartDash();
+		//Sensors.printNavX();
 		// Shooter.getInstance().update();
 		try {
 			Thread.sleep(100);
