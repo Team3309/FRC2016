@@ -137,8 +137,8 @@ public class Shooter extends ControlledSubsystem {
 
 	private double getRPS() {
 
-		pastVel = Sensors.shooterEncoder.getRate() ;
-		return Sensors.shooterEncoder.getRate() ;
+		pastVel = Sensors.shooterEncoder.getRate();
+		return Sensors.shooterEncoder.getRate();
 	}
 
 	private double getRPM() {

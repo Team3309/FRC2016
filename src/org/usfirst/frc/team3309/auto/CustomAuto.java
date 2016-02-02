@@ -2,8 +2,6 @@ package org.usfirst.frc.team3309.auto;
 
 public class CustomAuto extends AutoRoutine {
 
-	
-
 	private Defense defense;
 	private int startingPosition = 1;
 	private int[] turningAngles = { 0, -45, -30, -10, 10, 45 }; // Give it the
@@ -11,7 +9,7 @@ public class CustomAuto extends AutoRoutine {
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-		
+
 	}
 
 	public Defense getDefense() {

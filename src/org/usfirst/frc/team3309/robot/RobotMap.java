@@ -17,6 +17,9 @@ public class RobotMap {
 	public static final int LEFT_SHOOTER_MOTOR = 4;
 	public static final int RIGHT_SHOOTER_MOTOR = 5;
 
+	public static final int INTAKE_FRONT_MOTOR = 6;
+	public static final int INTAKE_SIDE_MOTOR = 7;
+
 	// Sensors
 	public static final int GYRO_ANALOG_PORT = 0;
 	public static final int ENCODERS_A_RIGHT_DRIVE_DIGITAL = 4;
