@@ -2,8 +2,8 @@ package org.usfirst.frc.team3309.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Sensors {
-	public static Gyro gyro = new Gyro(RobotMap.GYRO_ANALOG_PORT);
+	public static AnalogGyro gyro = new AnalogGyro(RobotMap.GYRO_ANALOG_PORT);
 	public static Encoder leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL,
 			RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
 	public static Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL,
