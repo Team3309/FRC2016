@@ -13,9 +13,12 @@ import org.usfirst.frc.team3309.vision.Vision;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	XboxController driverController = Controls.driverController;
@@ -24,6 +27,8 @@ public class Robot extends IterativeRobot {
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
+	
+	private CANTalon test = new CANTalon(0);
 
 	// Runs when Robot is turned on
 	public void robotInit() {
@@ -49,7 +54,6 @@ public class Robot extends IterativeRobot {
 																	// have
 																	// special
 																	// privileges
-
 		} else {
 			try {
 				((AutoRoutine) mainAutoChooser.getSelected()).start();
@@ -68,17 +72,23 @@ public class Robot extends IterativeRobot {
 	// Init to Tele
 	public void teleopInit() {
 		// Vision.getInstance().start();
+		
 		// Sensors.shooterCounter.
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-		System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
+		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
+		double encoderIn360 = test.getPulseWidthPosition() * (360/4096);
+		double posTest = test.getPulseWidthPosition();
+		System.out.println("Abs Pos (scaled): " + encoderIn360);
+		SmartDashboard.putNumber("POSITION:", posTest);
+		//System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
 		Drive.getInstance().update();
-		Intake.getInstance().update();
-		Shooter.getInstance().update();
-		Shooter.getInstance().sendToSmartDash();
+		//Intake.getInstance().update();
+		//Shooter.getInstance().update();
+		//Shooter.getInstance().sendToSmartDash();
 		Sensors.printNavX();
 		try {
 			Thread.sleep(100);

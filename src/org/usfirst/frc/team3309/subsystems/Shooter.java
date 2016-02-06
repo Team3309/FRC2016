@@ -42,6 +42,7 @@ public class Shooter extends ControlledSubsystem {
 	private Shooter(String name) {
 		super(name);
 		this.mController = new FeedForwardWithPIDController(.008, 0, .005, 0, 0);
+		SmartDashboard.putNumber("POWER", power);
 	}
 
 	/**
@@ -57,9 +58,21 @@ public class Shooter extends ControlledSubsystem {
 	}
 
 	double curVel = 0;
-
+	double power = 0;
 	@Override
 	public void update() {
+		//power = SmartDashboard.getNumber("POWER", power);
+		//SmartDashboard.putNumber("POWER", power);
+		if (Controls.driverController.getA()) {
+			power = .7;
+		}else if (Controls.driverController.getB()) {
+			power = .4;
+		}else {
+			power = 0;
+		}
+		this.rightVictor.set(power);
+		this.leftVictor.set(power);
+		/*
 		curVel = this.getRPS();
 
 		// Find our base aim vel
@@ -114,7 +127,7 @@ public class Shooter extends ControlledSubsystem {
 			this.setShooter(this.mController.getOutputSignal(getInputState()).getMotor());
 		}
 
-		this.sendToSmartDash();
+		this.sendToSmartDash();*/
 	}
 
 	@Override
@@ -147,7 +160,7 @@ public class Shooter extends ControlledSubsystem {
 
 	private void setShooter(double power) {
 		leftVictor.set(power);
-		rightVictor.set(power);
+		rightVictor.set(-power);
 	}
 
 }
