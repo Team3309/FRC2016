@@ -71,6 +71,7 @@ public class Robot extends IterativeRobot {
 
 	// Init to Tele
 	public void teleopInit() {
+		test.setPulseWidthPosition(0);
 		// Vision.getInstance().start();
 		
 		// Sensors.shooterCounter.
@@ -79,10 +80,16 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
-		double encoderIn360 = test.getPulseWidthPosition() * (360/4096);
+		double encoderIn360 = ((double)test.getPulseWidthPosition()) * (360.0/4096.0);
 		double posTest = test.getPulseWidthPosition();
-		System.out.println("Abs Pos (scaled): " + encoderIn360);
+		SmartDashboard.putNumber("Abs Pos (scaled): ", encoderIn360);
 		SmartDashboard.putNumber("POSITION:", posTest);
+		
+		if (encoderIn360 < 270) {
+			this.test.set(-.2);
+		}else {
+			this.test.set(0);
+		}
 		//System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
 		Drive.getInstance().update();
