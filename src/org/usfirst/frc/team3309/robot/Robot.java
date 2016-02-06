@@ -1,9 +1,13 @@
 package org.usfirst.frc.team3309.robot;
 
+import org.team3309.lib.controllers.generic.PIDController;
+import org.team3309.lib.controllers.generic.PIDPositionController;
+import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
+import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
@@ -27,15 +31,18 @@ public class Robot extends IterativeRobot {
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
-	
-	private CANTalon test = new CANTalon(0);
+
+	//private CANTalon test = new CANTalon(0);
+	//private PIDPositionController pidController = new PIDPositionController(.00001, 0, 0);
 
 	// Runs when Robot is turned on
 	public void robotInit() {
 		Sensors.navX = new AHRS(SerialPort.Port.kMXP);
 		// Set up new Autos in sendable Chooser
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
-
+		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
+		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
+		SmartDashboard.putData("Auto Modes", mainAutoChooser);
 	}
 
 	// When first put into disabled mode
@@ -71,31 +78,32 @@ public class Robot extends IterativeRobot {
 
 	// Init to Tele
 	public void teleopInit() {
-		test.setPulseWidthPosition(0);
 		// Vision.getInstance().start();
-		
+
 		// Sensors.shooterCounter.
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
-		double encoderIn360 = ((double)test.getPulseWidthPosition()) * (360.0/4096.0);
+		// System.out.println("JSON ARRAYS: " +
+		// Vision.getInstance().getGoals());
+		/*double encoderIn360 = ((double) test.getPulseWidthPosition()) * (360.0 / 4096.0);
 		double posTest = test.getPulseWidthPosition();
 		SmartDashboard.putNumber("Abs Pos (scaled): ", encoderIn360);
 		SmartDashboard.putNumber("POSITION:", posTest);
-		
-		if (encoderIn360 < 270) {
-			this.test.set(-.2);
-		}else {
-			this.test.set(0);
-		}
-		//System.out.println("ANALONG: " + test.getAnalogInPosition());
+		InputState state = new InputState();
+		state.setError(270 - encoderIn360);
+		double toMotor = pidController.getOutputSignal(state).getMotor();
+		SmartDashboard.putNumber("POWER", toMotor);
+		pidController.sendToSmartDash();
+		this.test.set(toMotor);*/
+
+		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
 		Drive.getInstance().update();
-		//Intake.getInstance().update();
-		//Shooter.getInstance().update();
-		//Shooter.getInstance().sendToSmartDash();
+		// Intake.getInstance().update();
+		// Shooter.getInstance().update();
+		// Shooter.getInstance().sendToSmartDash();
 		Sensors.printNavX();
 		try {
 			Thread.sleep(100);

@@ -16,13 +16,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public abstract class PIDController extends Controller {
 	/**
+	 * if small gain, help with smartdash
+	 */
+	private boolean isSmallGain = false;
+	/**
 	 * Gains
 	 */
 	private double kP, kD, kI;
 	/**
 	 * Limit of the Integral. mIntegral is capped off at the kILimit.
 	 */
-	private double kILimit;
+	private double kILimit = .1;
 	/**
 	 * Stores previous error
 	 */
@@ -48,24 +52,30 @@ public abstract class PIDController extends Controller {
 	 * Timer to count how much time the error has been low.
 	 */
 	protected KragerTimer doneTimer = new KragerTimer(TIME_TO_BE_COMPLETE_MILLISECONDS);
-
+	private double factor = 0;
 	public PIDController(double kP, double kI, double kD) {
+		if (kP < .001 || kI < .001 || kD < .001) {
+			this.isSmallGain = true;
+		}else {
+			this.isSmallGain = false;
+		}
 		this.kP = kP;
 		this.kI = kI;
 		this.kD = kD;
-		SmartDashboard.putNumber(this.getName() + " kP", kP);
-		SmartDashboard.putNumber(this.getName() + " kI", kI);
-		SmartDashboard.putNumber(this.getName() + " kD", kD);
+		
+		if (isSmallGain) {
+			factor = 10;
+		}else {
+			factor = 0;
+		}
+		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3) );
+		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
+		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 	}
 
 	public PIDController(double kP, double kI, double kD, double kILimit) {
-		this.kP = kP;
-		this.kI = kI;
-		this.kD = kD;
+		this(kP, kI, kD);
 		this.kILimit = kILimit;
-		SmartDashboard.putNumber(this.getName() + " kP", kP);
-		SmartDashboard.putNumber(this.getName() + " kI", kI);
-		SmartDashboard.putNumber(this.getName() + " kD", kD);
 	}
 
 	// You would want to set the mIntegral and previousError to zero when
@@ -84,11 +94,11 @@ public abstract class PIDController extends Controller {
 		mIntegral += error;
 
 		// Check for integral hitting the limit
-		if (mIntegral > kILimit)
-			mIntegral = kILimit;
+		if (mIntegral * kI > kILimit)
+			mIntegral = kILimit/kI;
 
-		if (mIntegral < -kILimit)
-			mIntegral = -kILimit;
+		if (mIntegral * kI < -kILimit)
+			mIntegral = -kILimit/kI;
 
 		// Make OutputSignal and fill it with calculated values
 		OutputSignal signal = new OutputSignal();
@@ -147,12 +157,12 @@ public abstract class PIDController extends Controller {
 
 	@Override
 	public void sendToSmartDash() {
-		kP = SmartDashboard.getNumber(this.getName() + " kP", kP);
-		kI = SmartDashboard.getNumber(this.getName() + " kI", kI);
-		kD = SmartDashboard.getNumber(this.getName() + " kD", kD);
-		SmartDashboard.putNumber(this.getName() + " kP", kP);
-		SmartDashboard.putNumber(this.getName() + " kI", kI);
-		SmartDashboard.putNumber(this.getName() + " kD", kD);
+		kP = SmartDashboard.getNumber(this.getName() + " kP", kP) * Math.pow(factor, -3);
+		kI = SmartDashboard.getNumber(this.getName() + " kI", kI) * Math.pow(factor, -3);
+		kD = SmartDashboard.getNumber(this.getName() + " kD", kD) * Math.pow(factor, -3);
+		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3));
+		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
+		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
 	}
 }
