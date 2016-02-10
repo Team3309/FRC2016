@@ -21,6 +21,7 @@ public class Shooter extends ControlledSubsystem {
 
 	private Victor leftVictor = new Victor(RobotMap.LEFT_SHOOTER_MOTOR);
 	private Victor rightVictor = new Victor(RobotMap.RIGHT_SHOOTER_MOTOR);
+	private Victor hoodVictor = new Victor(RobotMap.HOOD_MOTOR);
 
 	private double maxVelRPS = 0.0;
 	private double maxAccRPS = 0.0;
@@ -63,15 +64,27 @@ public class Shooter extends ControlledSubsystem {
 	public void update() {
 		//power = SmartDashboard.getNumber("POWER", power);
 		//SmartDashboard.putNumber("POWER", power);
-		if (Controls.driverController.getA()) {
+		/*if (Controls.driverController.getA()) {
 			power = .7;
 		}else if (Controls.driverController.getB()) {
 			power = .4;
 		}else {
 			power = 0;
+		}*/
+		if (Controls.driverController.getA()) {
+			power = .7;
+		} else if (Controls.driverController.getB()) {
+			power = .8;
+		} else if (Controls.driverController.getXBut()) {
+			power = .9;
+		} else if (Controls.driverController.getYBut()) {
+			power = 1;
+		} else {
+			power = 0;
 		}
 		this.rightVictor.set(power);
 		this.leftVictor.set(power);
+		this.hoodVictor.set(Controls.driverController.getLeftY());
 		/*
 		curVel = this.getRPS();
 

@@ -5,6 +5,7 @@ import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
+import org.usfirst.frc.team3309.auto.Defense;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
@@ -32,8 +33,9 @@ public class Robot extends IterativeRobot {
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
 
-	//private CANTalon test = new CANTalon(0);
-	//private PIDPositionController pidController = new PIDPositionController(.00001, 0, 0);
+	// private CANTalon test = new CANTalon(0);
+	// private PIDPositionController pidController = new
+	// PIDPositionController(.00001, 0, 0);
 
 	// Runs when Robot is turned on
 	public void robotInit() {
@@ -42,7 +44,23 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
-		SmartDashboard.putData("Auto Modes", mainAutoChooser);
+		SmartDashboard.putData("Auto", mainAutoChooser);
+		startingPositionAutoChooser.addDefault("1", 1);
+		startingPositionAutoChooser.addObject("2", 2);
+		startingPositionAutoChooser.addObject("3", 3);
+		startingPositionAutoChooser.addObject("4", 4);
+		startingPositionAutoChooser.addObject("5", 5);
+		SmartDashboard.putData("Starting Position", startingPositionAutoChooser);
+		defenseAutoChooser.addDefault("Low Bar", Defense.LOW_BAR);
+		defenseAutoChooser.addObject("Cheval De Frise", Defense.CHEVAL_DE_FRISE);
+		defenseAutoChooser.addObject("Draw Bridge", Defense.DRAW_BRIDGE);
+		defenseAutoChooser.addObject("Moat", Defense.MOAT);
+		defenseAutoChooser.addObject("Portcullis", Defense.PORTCULLIS);
+		defenseAutoChooser.addObject("Ramparts", Defense.RAMPARTS);
+		defenseAutoChooser.addObject("Rock Wall", Defense.ROCK_WALL);
+		defenseAutoChooser.addObject("Rough Terrain", Defense.ROUGH_TERRAIN);
+		defenseAutoChooser.addObject("Sally Port", Defense.SALLY_PORT);
+		SmartDashboard.putData("Defense", defenseAutoChooser);
 	}
 
 	// When first put into disabled mode
@@ -57,10 +75,16 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
-																	// autos
-																	// have
-																	// special
-																	// privileges
+			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
+			auto.setDefense((Defense) defenseAutoChooser.getSelected());
+			auto.setStartingPosition((int) startingPositionAutoChooser.getSelected());
+			try {
+				auto.start();
+			} catch (TimedOutException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		} else {
 			try {
 				((AutoRoutine) mainAutoChooser.getSelected()).start();
@@ -70,6 +94,7 @@ public class Robot extends IterativeRobot {
 				e.printStackTrace();
 			}
 		}
+
 	}
 
 	// This function is called periodically during autonomous
@@ -87,20 +112,21 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// System.out.println("JSON ARRAYS: " +
 		// Vision.getInstance().getGoals());
-		/*double encoderIn360 = ((double) test.getPulseWidthPosition()) * (360.0 / 4096.0);
-		double posTest = test.getPulseWidthPosition();
-		SmartDashboard.putNumber("Abs Pos (scaled): ", encoderIn360);
-		SmartDashboard.putNumber("POSITION:", posTest);
-		InputState state = new InputState();
-		state.setError(270 - encoderIn360);
-		double toMotor = pidController.getOutputSignal(state).getMotor();
-		SmartDashboard.putNumber("POWER", toMotor);
-		pidController.sendToSmartDash();
-		this.test.set(toMotor);*/
+		/*
+		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
+		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();
+		 * SmartDashboard.putNumber("Abs Pos (scaled): ", encoderIn360);
+		 * SmartDashboard.putNumber("POSITION:", posTest); InputState state =
+		 * new InputState(); state.setError(270 - encoderIn360); double toMotor
+		 * = pidController.getOutputSignal(state).getMotor();
+		 * SmartDashboard.putNumber("POWER", toMotor);
+		 * pidController.sendToSmartDash(); this.test.set(toMotor);
+		 */
 
 		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
-		Drive.getInstance().update();
+		//Drive.getInstance().update();
+		Shooter.getInstance().update();
 		// Intake.getInstance().update();
 		// Shooter.getInstance().update();
 		// Shooter.getInstance().sendToSmartDash();
