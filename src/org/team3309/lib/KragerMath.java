@@ -34,4 +34,11 @@ public class KragerMath {
 	public static double tanDeg(double a) {
 		return Math.tan(a * (180 / Math.PI));
 	}
+	
+	public static double threshold(double input) {
+		if (Math.abs(input) < .1) {
+			return 0;
+		}
+		return input;
+	}
 }

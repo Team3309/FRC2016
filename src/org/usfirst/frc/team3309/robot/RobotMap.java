@@ -21,6 +21,8 @@ public class RobotMap {
 	public static final int INTAKE_FRONT_MOTOR = 6;
 	public static final int INTAKE_SIDE_MOTOR = 7;
 	
+	
+	public static final int INTAKE_PIVOT_ID = 0;
 
 	// Sensors
 	public static final int GYRO_ANALOG_PORT = 0;

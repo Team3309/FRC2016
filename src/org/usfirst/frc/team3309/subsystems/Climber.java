@@ -2,7 +2,6 @@ package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.statesandsignals.InputState;
-import org.usfirst.frc.team3309.driverstation.Controls;
 
 public class Climber extends ControlledSubsystem{
 	private static Climber instance;

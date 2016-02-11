@@ -9,7 +9,7 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -32,10 +32,10 @@ public class Drive extends ControlledSubsystem {
 	private static final double DRIVE_GYRO_LENIENCY = 10;
 
 	private static Drive instance;
-	private Victor leftFront = new Victor(RobotMap.LEFT_FRONT_MOTOR);
-	private Victor rightFront = new Victor(RobotMap.RIGHT_FRONT_MOTOR);
-	private Victor leftBack = new Victor(RobotMap.LEFT_BACK_MOTOR);
-	private Victor rightBack = new Victor(RobotMap.RIGHT_BACK_MOTOR);
+	private Spark leftFront = new Spark(RobotMap.LEFT_FRONT_MOTOR);
+	private Spark rightFront = new Spark(RobotMap.RIGHT_FRONT_MOTOR);
+	private Spark leftBack = new Spark(RobotMap.LEFT_BACK_MOTOR);
+	private Spark rightBack = new Spark(RobotMap.RIGHT_BACK_MOTOR);
 
 	/**
 	 * Singleton Pattern
