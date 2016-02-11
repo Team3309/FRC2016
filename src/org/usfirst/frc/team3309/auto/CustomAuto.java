@@ -1,22 +1,24 @@
 package org.usfirst.frc.team3309.auto;
 
+import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
+
 public class CustomAuto extends AutoRoutine {
 
-	private Defense defense;
+	private Operation defense;
 	private int startingPosition = 1;
 	private int[] turningAngles = { 0, -45, -30, -10, 10, 45 }; // Give it the
 																// startingPosition
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-
+		
 	}
 
-	public Defense getDefense() {
+	public Operation getDefense() {
 		return defense;
 	}
 
-	public void setDefense(Defense defense) {
+	public void setDefense(Operation defense) {
 		this.defense = defense;
 	}
 

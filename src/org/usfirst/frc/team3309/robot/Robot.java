@@ -1,27 +1,28 @@
 package org.usfirst.frc.team3309.robot;
 
-import org.team3309.lib.controllers.generic.PIDController;
-import org.team3309.lib.controllers.generic.PIDPositionController;
-import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
-import org.usfirst.frc.team3309.auto.Defense;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossDrawBridge;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossLowBar;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossMoat;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossPortcullis;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossRamparts;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossRockWall;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossRoughTerrain;
+import org.usfirst.frc.team3309.auto.operations.defenses.CrossSallyPort;
+import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
-import org.usfirst.frc.team3309.subsystems.Drive;
-import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
-import org.usfirst.frc.team3309.vision.Vision;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -51,15 +52,15 @@ public class Robot extends IterativeRobot {
 		startingPositionAutoChooser.addObject("4", 4);
 		startingPositionAutoChooser.addObject("5", 5);
 		SmartDashboard.putData("Starting Position", startingPositionAutoChooser);
-		defenseAutoChooser.addDefault("Low Bar", Defense.LOW_BAR);
-		defenseAutoChooser.addObject("Cheval De Frise", Defense.CHEVAL_DE_FRISE);
-		defenseAutoChooser.addObject("Draw Bridge", Defense.DRAW_BRIDGE);
-		defenseAutoChooser.addObject("Moat", Defense.MOAT);
-		defenseAutoChooser.addObject("Portcullis", Defense.PORTCULLIS);
-		defenseAutoChooser.addObject("Ramparts", Defense.RAMPARTS);
-		defenseAutoChooser.addObject("Rock Wall", Defense.ROCK_WALL);
-		defenseAutoChooser.addObject("Rough Terrain", Defense.ROUGH_TERRAIN);
-		defenseAutoChooser.addObject("Sally Port", Defense.SALLY_PORT);
+		defenseAutoChooser.addDefault("Low Bar", new CrossLowBar());
+		defenseAutoChooser.addObject("Cheval De Frise", new CrossChevelDeFrise());
+		defenseAutoChooser.addObject("Draw Bridge", new CrossDrawBridge());
+		defenseAutoChooser.addObject("Moat", new CrossMoat());
+		defenseAutoChooser.addObject("Portcullis", new CrossPortcullis());
+		defenseAutoChooser.addObject("Ramparts", new CrossRamparts());
+		defenseAutoChooser.addObject("Rock Wall", new CrossRockWall());
+		defenseAutoChooser.addObject("Rough Terrain", new CrossRoughTerrain());
+		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
 		SmartDashboard.putData("Defense", defenseAutoChooser);
 	}
 
@@ -76,7 +77,7 @@ public class Robot extends IterativeRobot {
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
-			auto.setDefense((Defense) defenseAutoChooser.getSelected());
+			auto.setDefense((Operation) defenseAutoChooser.getSelected());
 			auto.setStartingPosition((int) startingPositionAutoChooser.getSelected());
 			try {
 				auto.start();
@@ -125,7 +126,7 @@ public class Robot extends IterativeRobot {
 
 		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
-		//Drive.getInstance().update();
+		// Drive.getInstance().update();
 		Shooter.getInstance().update();
 		// Intake.getInstance().update();
 		// Shooter.getInstance().update();
