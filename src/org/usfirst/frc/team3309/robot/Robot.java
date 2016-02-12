@@ -21,7 +21,9 @@ import org.usfirst.frc.team3309.subsystems.Shooter;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.GearTooth;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,11 +32,12 @@ public class Robot extends IterativeRobot {
 	XboxController driverController = Controls.driverController;
 	XboxController operatorController = Controls.operatorController;
 
+	PWM x = new PWM(0);
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
 
-	// private CANTalon test = new CANTalon(0);
+	// private GearTooth test = new GearTooth(0);
 	// private PIDPositionController pidController = new
 	// PIDPositionController(.00001, 0, 0);
 
@@ -111,6 +114,7 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
+		//x.
 		// System.out.println("JSON ARRAYS: " +
 		// Vision.getInstance().getGoals());
 		/*

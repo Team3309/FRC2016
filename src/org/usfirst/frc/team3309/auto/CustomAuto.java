@@ -11,6 +11,10 @@ public class CustomAuto extends AutoRoutine {
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
+		// Perform Defense
+		defense.perform();
+	
+		
 		
 	}
 
