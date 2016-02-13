@@ -52,9 +52,9 @@ public abstract class PIDController extends Controller {
 	 * Timer to count how much time the error has been low.
 	 */
 	protected KragerTimer doneTimer = new KragerTimer(TIME_TO_BE_COMPLETE_MILLISECONDS);
-	private double factor = 0;
+	private double factor = 1;
 	public PIDController(double kP, double kI, double kD) {
-		if (kP < .001 || kI < .001 || kD < .001) {
+		if ((kP < .001 || kI < .001 || kD < .001) && kP != 0 && kI != 0 && kD != 0) {
 			this.isSmallGain = true;
 		}else {
 			this.isSmallGain = false;
@@ -66,7 +66,7 @@ public abstract class PIDController extends Controller {
 		if (isSmallGain) {
 			factor = 10;
 		}else {
-			factor = 0;
+			factor = 1;
 		}
 		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3) );
 		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
@@ -164,5 +164,7 @@ public abstract class PIDController extends Controller {
 		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
+		SmartDashboard.putNumber(this.getName() + " FACTOR", factor);
+		
 	}
 }

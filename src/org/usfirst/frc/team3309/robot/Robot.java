@@ -2,7 +2,6 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
-import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
 import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
@@ -19,6 +18,7 @@ import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.vision.Vision;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -109,8 +109,7 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 		// x.
-		// System.out.println("JSON ARRAYS: " +
-		// Vision.getInstance().getGoals());
+		System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();

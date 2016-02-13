@@ -5,6 +5,7 @@ import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
 import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
+import org.team3309.lib.controllers.generic.PIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
@@ -99,6 +100,7 @@ public class Drive extends ControlledSubsystem {
 	
 	public void setAngleSetpoint(double goalAngle) {
 		mController = new DriveAngleController(goalAngle);
+		// ((PIDController) mController).setCompletable(false);
 		mController.setName("Drive Controller");
 	}
 
