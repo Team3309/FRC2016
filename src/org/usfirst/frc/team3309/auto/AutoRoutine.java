@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3309.auto;
 
-public abstract class AutoRoutine extends RoutineBased {
+public abstract class AutoRoutine extends RoutineBased implements Runnable {
 
 	/**
 	 * Start auto timer and routine
@@ -20,5 +20,12 @@ public abstract class AutoRoutine extends RoutineBased {
 	 */
 	public abstract void routine() throws TimedOutException, InterruptedException;
 
+	public void run() {
+		try {
+			start();
+		} catch (TimedOutException | InterruptedException e) {
+			e.printStackTrace();
+		}
+    }
 	
 }

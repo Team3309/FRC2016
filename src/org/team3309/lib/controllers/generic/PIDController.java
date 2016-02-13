@@ -26,7 +26,7 @@ public abstract class PIDController extends Controller {
 	/**
 	 * Limit of the Integral. mIntegral is capped off at the kILimit.
 	 */
-	private double kILimit = .1;
+	private double kILimit = .5;
 	/**
 	 * Stores previous error
 	 */
@@ -47,7 +47,7 @@ public abstract class PIDController extends Controller {
 	/**
 	 * Time the error must stay between the certain margin within the threshold.
 	 */
-	protected double TIME_TO_BE_COMPLETE_MILLISECONDS = 250;
+	protected double TIME_TO_BE_COMPLETE_MILLISECONDS = .250;
 	/**
 	 * Timer to count how much time the error has been low.
 	 */
@@ -150,7 +150,7 @@ public abstract class PIDController extends Controller {
 		// If the Controller is completable, then the error will need to be
 		// between a certain threshold before isCompleted return true
 		if (completable) {
-			this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
+			return this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
 		}
 		return false;
 	}

@@ -9,14 +9,14 @@ package org.usfirst.frc.team3309.robot;
 public class RobotMap {
 	// Motor Controllers
 	// Drive
-	public static final int RIGHT_BACK_MOTOR = 8;
-	public static final int RIGHT_FRONT_MOTOR = 9;
-	public static final int LEFT_BACK_MOTOR = 4;
-	public static final int LEFT_FRONT_MOTOR = 5;
+	public static final int RIGHT_BACK_MOTOR = 2;
+	public static final int RIGHT_FRONT_MOTOR = 3;
+	public static final int LEFT_BACK_MOTOR = 0;
+	public static final int LEFT_FRONT_MOTOR = 1;
 	// Shooter
-	public static final int LEFT_SHOOTER_MOTOR = 2;
-	public static final int RIGHT_SHOOTER_MOTOR = 3;
-	public static final int HOOD_MOTOR = 0;
+	public static final int LEFT_SHOOTER_MOTOR = 9;
+	public static final int RIGHT_SHOOTER_MOTOR = 5;
+	public static final int HOOD_MOTOR = 4;
 
 	public static final int INTAKE_FRONT_MOTOR = 6;
 	public static final int INTAKE_SIDE_MOTOR = 7;

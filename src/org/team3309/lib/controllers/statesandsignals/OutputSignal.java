@@ -15,6 +15,7 @@ public class OutputSignal extends HashMap<String, Double> {
 	public OutputSignal() {
 		super();
 		this.setMotor(0);
+		this.setLeftRightMotor(0, 0);
 	}
 
 	// Default Key Methods

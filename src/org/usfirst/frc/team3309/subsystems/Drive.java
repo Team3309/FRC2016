@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
 import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
@@ -52,6 +53,10 @@ public class Drive extends ControlledSubsystem {
 		super(name);
 		mController = new DriveCheezyDriveEquation();
 	}
+	
+	public void toTeleop() {
+		mController = new DriveCheezyDriveEquation();
+	}
 
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
@@ -65,6 +70,7 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public void update() {
 		updateController();
+		//System.out.println("SET MOTORS");
 		OutputSignal output = mController.getOutputSignal(getInputState());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
@@ -72,8 +78,8 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState input = new InputState();
-		//input.setAngularPos(Sensors.getAngle());
-		//input.setAngularVel(Sensors.getAngularVel());
+		input.setAngularPos(Sensors.getAngle());
+		input.setAngularVel(Sensors.getAngularVel());
 		//input.setLeftPos(Sensors.leftDrive.getDistance());
 		//input.setLeftVel(Sensors.leftDrive.getRate());
 		//input.setRightVel(Sensors.rightDrive.getDistance());
@@ -89,6 +95,11 @@ public class Drive extends ControlledSubsystem {
 	 */
 	public void setSetpoint(double encoders) {
 		mController = new DriveEncodersController(encoders);
+	}
+	
+	public void setAngleSetpoint(double goalAngle) {
+		mController = new DriveAngleController(goalAngle);
+		mController.setName("Drive Controller");
 	}
 
 	/**

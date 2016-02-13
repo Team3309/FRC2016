@@ -49,6 +49,7 @@ public abstract class Controller {
 
 	public void setName(String name) {
 		this.name = name;
+		System.out.println("SET NAME: " + this.name);
 	}
 
 	public void print(String print) {

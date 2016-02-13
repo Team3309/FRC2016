@@ -51,10 +51,12 @@ public class Sensors {
 	}
 
 	public static double getAngularVel() {
-		return gyro.getRate();
+		return navX.getRate();
 	}
 
 	public static double getAngle() {
-		return gyro.getAngle();
+		return navX.getFusedHeading();
+		
+		
 	}
 }

@@ -79,7 +79,7 @@ public class RoutineBased {
 	}
 	
 	public void waitForEndOfAuto() {
-		while (autoTimer.get() < 14900) {
+		while (autoTimer.get() < 14.900) {
 			try {
 				Thread.sleep(100);
 			} catch (Exception e) {

@@ -10,7 +10,9 @@ public class KragerMath {
 
 	/**
 	 * Sin of degrees
-	 * @param a degrees
+	 * 
+	 * @param a
+	 *            degrees
 	 * @return
 	 */
 	public static double sinDeg(double a) {
@@ -19,7 +21,9 @@ public class KragerMath {
 
 	/**
 	 * Cos of degrees
-	 * @param a degrees
+	 * 
+	 * @param a
+	 *            degrees
 	 * @return
 	 */
 	public static double cosDeg(double a) {
@@ -28,17 +32,27 @@ public class KragerMath {
 
 	/**
 	 * Tan of Degrees
-	 * @param a degrees
+	 * 
+	 * @param a
+	 *            degrees
 	 * @return
 	 */
 	public static double tanDeg(double a) {
 		return Math.tan(a * (180 / Math.PI));
 	}
-	
+
 	public static double threshold(double input) {
 		if (Math.abs(input) < .1) {
 			return 0;
 		}
 		return input;
+	}
+
+	public static double sign(double error) {
+		if (error > 0)
+			return 1;
+		else if (error < 0)
+			return -1;
+		return 0;
 	}
 }

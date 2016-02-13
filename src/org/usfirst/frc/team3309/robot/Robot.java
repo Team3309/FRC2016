@@ -4,6 +4,7 @@ import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
+import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossDrawBridge;
@@ -17,13 +18,11 @@ import org.usfirst.frc.team3309.auto.operations.defenses.CrossSallyPort;
 import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
-import org.usfirst.frc.team3309.subsystems.Shooter;
+import org.usfirst.frc.team3309.subsystems.Drive;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.GearTooth;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +31,7 @@ public class Robot extends IterativeRobot {
 	XboxController driverController = Controls.driverController;
 	XboxController operatorController = Controls.operatorController;
 
-	PWM x = new PWM(0);
+	// PWM x = new PWM(0);
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
@@ -48,6 +47,7 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
+		mainAutoChooser.addObject("Angle", new TurnToAngleAutoMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
 		startingPositionAutoChooser.addObject("2", 2);
@@ -64,6 +64,7 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Rock Wall", new CrossRockWall());
 		defenseAutoChooser.addObject("Rough Terrain", new CrossRoughTerrain());
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
+
 		SmartDashboard.putData("Defense", defenseAutoChooser);
 	}
 
@@ -82,31 +83,24 @@ public class Robot extends IterativeRobot {
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
 			auto.setDefense((Operation) defenseAutoChooser.getSelected());
 			auto.setStartingPosition((int) startingPositionAutoChooser.getSelected());
-			try {
-				auto.start();
-			} catch (TimedOutException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			(new Thread(auto)).start();
 		} else {
-			try {
-				((AutoRoutine) mainAutoChooser.getSelected()).start();
-			} catch (TimedOutException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			(new Thread((AutoRoutine) mainAutoChooser.getSelected())).start();
 		}
 
 	}
 
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
+		//System.out.println("AUTO PERIODIC");
+		//Sensors.printNavX();
+		Drive.getInstance().update();
+		Drive.getInstance().sendToSmartDash();
 	}
 
 	// Init to Tele
 	public void teleopInit() {
+		Drive.getInstance().toTeleop();
 		// Vision.getInstance().start();
 
 		// Sensors.shooterCounter.
@@ -114,7 +108,7 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-		//x.
+		// x.
 		// System.out.println("JSON ARRAYS: " +
 		// Vision.getInstance().getGoals());
 		/*
@@ -130,12 +124,13 @@ public class Robot extends IterativeRobot {
 
 		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
-		// Drive.getInstance().update();
-		Shooter.getInstance().update();
+		Drive.getInstance().update();
+		Drive.getInstance().sendToSmartDash();
+		// Shooter.getInstance().update();
 		// Intake.getInstance().update();
 		// Shooter.getInstance().update();
 		// Shooter.getInstance().sendToSmartDash();
-		Sensors.printNavX();
+		// Sensors.printNavX();
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
