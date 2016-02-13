@@ -16,6 +16,9 @@
 
 package org.usfirst.frc.team3309.vision;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -23,9 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class Vision implements Runnable {
 
@@ -60,10 +60,13 @@ public class Vision implements Runnable {
         try {
             DatagramSocket socket = new DatagramSocket(3309);
             System.out.println("Vision server started.");
+            byte[] ackBuf = "{\"ack\": true}".getBytes();
             while (true) {
                 byte[] buf = new byte[2048];
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
+                DatagramPacket ack = new DatagramPacket(ackBuf, ackBuf.length, packet.getAddress(), 9033);
+                socket.send(ack);
 
                 String messageString = new String(packet.getData(), 0, packet.getLength());
                 JSONArray goalsJson = new JSONArray(messageString);
