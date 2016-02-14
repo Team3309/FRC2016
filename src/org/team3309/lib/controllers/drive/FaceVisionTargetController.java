@@ -46,7 +46,7 @@ public class FaceVisionTargetController extends PIDPositionController {
 				System.out.println("");
 				// TIME TO FIND THE TARGET
 				this.completable = false;
-				//signal.setLeftRightMotor(lastDirection * -.33, .33 * lastDirection);
+				signal.setLeftRightMotor(lastDirection * -.33, .33 * lastDirection);
 			}
 		}
 		return signal;
