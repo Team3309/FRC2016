@@ -3,7 +3,7 @@ package org.usfirst.frc.team3309.robot;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
-import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
+import org.usfirst.frc.team3309.auto.modes.TurnToVisionMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossDrawBridge;
@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
-		mainAutoChooser.addObject("Angle", new TurnToAngleAutoMode());
+		mainAutoChooser.addObject("Angle", new TurnToVisionMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
 		startingPositionAutoChooser.addObject("2", 2);
@@ -66,6 +66,7 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
 
 		SmartDashboard.putData("Defense", defenseAutoChooser);
+		Vision.getInstance().start();
 	}
 
 	// When first put into disabled mode
@@ -94,6 +95,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//System.out.println("AUTO PERIODIC");
 		//Sensors.printNavX();
+		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
 	}
@@ -101,15 +103,13 @@ public class Robot extends IterativeRobot {
 	// Init to Tele
 	public void teleopInit() {
 		Drive.getInstance().toTeleop();
-		// Vision.getInstance().start();
-
-		// Sensors.shooterCounter.
+		
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 		// x.
-		System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
+		
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();

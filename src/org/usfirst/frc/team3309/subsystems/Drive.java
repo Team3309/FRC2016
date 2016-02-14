@@ -54,7 +54,7 @@ public class Drive extends ControlledSubsystem {
 		super(name);
 		mController = new DriveCheezyDriveEquation();
 	}
-	
+
 	public void toTeleop() {
 		mController = new DriveCheezyDriveEquation();
 	}
@@ -71,8 +71,9 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public void update() {
 		updateController();
-		//System.out.println("SET MOTORS");
+		// System.out.println("SET MOTORS");
 		OutputSignal output = mController.getOutputSignal(getInputState());
+		//System.out.println("LEFT: " + output.getLeftMotor());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
 
@@ -81,10 +82,10 @@ public class Drive extends ControlledSubsystem {
 		InputState input = new InputState();
 		input.setAngularPos(Sensors.getAngle());
 		input.setAngularVel(Sensors.getAngularVel());
-		//input.setLeftPos(Sensors.leftDrive.getDistance());
-		//input.setLeftVel(Sensors.leftDrive.getRate());
-		//input.setRightVel(Sensors.rightDrive.getDistance());
-		//input.setRightPos(Sensors.rightDrive.getRate());
+		// input.setLeftPos(Sensors.leftDrive.getDistance());
+		// input.setLeftVel(Sensors.leftDrive.getRate());
+		// input.setRightVel(Sensors.rightDrive.getDistance());
+		// input.setRightPos(Sensors.rightDrive.getRate());
 		return input;
 	}
 
@@ -97,7 +98,7 @@ public class Drive extends ControlledSubsystem {
 	public void setSetpoint(double encoders) {
 		mController = new DriveEncodersController(encoders);
 	}
-	
+
 	public void setAngleSetpoint(double goalAngle) {
 		mController = new DriveAngleController(goalAngle);
 		// ((PIDController) mController).setCompletable(false);

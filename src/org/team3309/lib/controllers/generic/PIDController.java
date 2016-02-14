@@ -53,22 +53,23 @@ public abstract class PIDController extends Controller {
 	 */
 	protected KragerTimer doneTimer = new KragerTimer(TIME_TO_BE_COMPLETE_MILLISECONDS);
 	private double factor = 1;
+
 	public PIDController(double kP, double kI, double kD) {
 		if ((kP < .001 || kI < .001 || kD < .001) && kP != 0 && kI != 0 && kD != 0) {
 			this.isSmallGain = true;
-		}else {
+		} else {
 			this.isSmallGain = false;
 		}
 		this.kP = kP;
 		this.kI = kI;
 		this.kD = kD;
-		
+
 		if (isSmallGain) {
 			factor = 10;
-		}else {
+		} else {
 			factor = 1;
 		}
-		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3) );
+		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 	}
@@ -95,10 +96,10 @@ public abstract class PIDController extends Controller {
 
 		// Check for integral hitting the limit
 		if (mIntegral * kI > kILimit)
-			mIntegral = kILimit/kI;
+			mIntegral = kILimit / kI;
 
 		if (mIntegral * kI < -kILimit)
-			mIntegral = -kILimit/kI;
+			mIntegral = -kILimit / kI;
 
 		// Make OutputSignal and fill it with calculated values
 		OutputSignal signal = new OutputSignal();
@@ -149,10 +150,12 @@ public abstract class PIDController extends Controller {
 	public boolean isCompleted() {
 		// If the Controller is completable, then the error will need to be
 		// between a certain threshold before isCompleted return true
+		
 		if (completable) {
+			System.out.println("PREVIOUS Error " + previousError);
 			return this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
-		}
-		return false;
+		}		
+		return this.doneTimer.isConditionMaintained(false);
 	}
 
 	@Override
@@ -165,6 +168,6 @@ public abstract class PIDController extends Controller {
 		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
 		SmartDashboard.putNumber(this.getName() + " FACTOR", factor);
-		
+
 	}
 }
