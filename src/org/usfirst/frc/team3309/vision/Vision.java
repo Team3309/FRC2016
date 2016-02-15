@@ -65,7 +65,6 @@ public class Vision implements Runnable {
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
 
-<<<<<<< HEAD
 				String messageString = new String(packet.getData(), 0, packet.getLength());
 				JSONArray goalsJson = new JSONArray(messageString);
 				List<Goal> goals = new LinkedList<Goal>();
@@ -74,7 +73,8 @@ public class Vision implements Runnable {
 					JSONObject pos = goalJson.getJSONObject("pos");
 					JSONObject size = goalJson.getJSONObject("size");
 					goals.add(new Goal(pos.getDouble("x"), pos.getDouble("y"), size.getDouble("width"),
-							size.getDouble("height"), goalJson.getDouble("distance")));
+							size.getDouble("height"), goalJson.getDouble("distance"),
+							goalJson.getDouble("elevation_angle"), goalJson.getDouble("azimuth")));
 				}
 				this.lock.lock();
 				this.lastUpdate = System.currentTimeMillis();
@@ -85,30 +85,6 @@ public class Vision implements Runnable {
 			e.printStackTrace();
 		}
 	}
-=======
-                String messageString = new String(packet.getData(), 0, packet.getLength());
-                JSONArray goalsJson = new JSONArray(messageString);
-                List<Goal> goals = new LinkedList<Goal>();
-                for (int i = 0; i < goalsJson.length(); i++) {
-                    JSONObject goalJson = goalsJson.getJSONObject(i);
-                    JSONObject pos = goalJson.getJSONObject("pos");
-                    JSONObject size = goalJson.getJSONObject("size");
-                    goals.add(
-                            new Goal(pos.getDouble("x"), pos.getDouble("y"),
-                                    size.getDouble("width"), size.getDouble("height"),
-                                    goalJson.getDouble("distance"),
-                                    goalJson.getDouble("elevation_angle"), goalJson.getDouble("azimuth")));
-                }
-                this.lock.lock();
-                this.lastUpdate = System.currentTimeMillis();
-                this.latestGoals = goals;
-                this.lock.unlock();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
->>>>>>> origin/master
 
 	public List<Goal> getGoals() {
 		this.lock.lock();
