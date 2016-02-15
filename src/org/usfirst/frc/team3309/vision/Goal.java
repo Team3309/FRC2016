@@ -37,20 +37,27 @@ public class Goal {
      */
     public final double distance;
 
+    /**
+     * Angle of elevation to target in degrees
+     */
+    public final double elevationAngle;
+
     @Override
     public String toString() {
         return "Goal{" +
                 "center=(" + x + "," + y + ")" +
                 ", size=(" + width + "," + height + ")" +
                 ", distance=" + distance +
+                ", elevation=" + elevationAngle +
                 '}';
     }
 
-    public Goal(double x, double y, double width, double height, double distance) {
+    public Goal(double x, double y, double width, double height, double distance, double elevationAngle) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.distance = distance;
+        this.elevationAngle = elevationAngle;
     }
 }
