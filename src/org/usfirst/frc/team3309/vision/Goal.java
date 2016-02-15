@@ -42,6 +42,11 @@ public class Goal {
      */
     public final double elevationAngle;
 
+    /**
+     * Azimuth angle (horizontal angle off of North) in degrees
+     */
+    public final double azimuth;
+
     @Override
     public String toString() {
         return "Goal{" +
@@ -52,12 +57,13 @@ public class Goal {
                 '}';
     }
 
-    public Goal(double x, double y, double width, double height, double distance, double elevationAngle) {
+    public Goal(double x, double y, double width, double height, double distance, double elevationAngle, double azimuth) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.distance = distance;
         this.elevationAngle = elevationAngle;
+        this.azimuth = azimuth;
     }
 }

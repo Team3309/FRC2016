@@ -75,7 +75,11 @@ public class Vision implements Runnable {
                     JSONObject goalJson = goalsJson.getJSONObject(i);
                     JSONObject pos = goalJson.getJSONObject("pos");
                     JSONObject size = goalJson.getJSONObject("size");
-                    goals.add(new Goal(pos.getDouble("x"), pos.getDouble("y"), size.getDouble("width"), size.getDouble("height"), goalJson.getDouble("distance"), goalJson.getDouble("elevation_angle")));
+                    goals.add(
+                            new Goal(pos.getDouble("x"), pos.getDouble("y"),
+                                    size.getDouble("width"), size.getDouble("height"),
+                                    goalJson.getDouble("distance"),
+                                    goalJson.getDouble("elevation_angle"), goalJson.getDouble("azimuth")));
                 }
                 this.lock.lock();
                 this.lastUpdate = System.currentTimeMillis();
