@@ -53,8 +53,8 @@ public class Goal {
                 "center=(" + x + "," + y + ")" +
                 ", size=(" + width + "," + height + ")" +
                 ", distance=" + distance +
-                ", elevation=" + elevationAngle +
-                '}';
+                ", elevation=" + elevationAngle + ", azimuth=" + azimuth
+                 + '}';
     }
 
     public Goal(double x, double y, double width, double height, double distance, double elevationAngle, double azimuth) {

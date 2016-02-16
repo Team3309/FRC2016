@@ -1,3 +1,4 @@
+
 package org.team3309.lib;
 
 import org.team3309.lib.controllers.Controller;
@@ -10,7 +11,7 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
  * @author TheMkrage
  * 
  */
-public abstract class ControlledSubsystem extends KragerSubsystem {
+public abstract class ControlledSubsystem extends KragerSystem {
 	/**
 	 * Controller of Subsystem
 	 */

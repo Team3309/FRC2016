@@ -152,7 +152,6 @@ public abstract class PIDController extends Controller {
 		// between a certain threshold before isCompleted return true
 		
 		if (completable) {
-			System.out.println("PREVIOUS Error " + previousError);
 			return this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
 		}		
 		return this.doneTimer.isConditionMaintained(false);
@@ -168,6 +167,7 @@ public abstract class PIDController extends Controller {
 		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 		SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
 		SmartDashboard.putNumber(this.getName() + " FACTOR", factor);
+		
 
 	}
 }

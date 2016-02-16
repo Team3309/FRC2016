@@ -5,7 +5,7 @@ package org.team3309.lib;
  * 
  * @author TheMkrage
  */
-public abstract class KragerSubsystem {
+public abstract class KragerSystem {
 	/**
 	 * Name of Subsystem; "Drive", "Intake", etc.
 	 */
@@ -16,7 +16,7 @@ public abstract class KragerSubsystem {
 	 * @param name
 	 *            Given name of subsystem
 	 */
-	public KragerSubsystem(String name) {
+	public KragerSystem(String name) {
 		this.name = name;
 	}
 

@@ -93,9 +93,11 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
-		//System.out.println("AUTO PERIODIC");
-		//Sensors.printNavX();
-		//System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals());
+		// System.out.println("AUTO PERIODIC");
+		// Sensors.printNavX();
+		if (Vision.getInstance().getGoals().size() > 0)
+			System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals().get(0).width);
+		
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
 	}
@@ -103,13 +105,14 @@ public class Robot extends IterativeRobot {
 	// Init to Tele
 	public void teleopInit() {
 		Drive.getInstance().toTeleop();
-		
+
 	}
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 		// x.
-		
+		if (Vision.getInstance().getGoals().size() > 0)
+			System.out.println("Azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();

@@ -2,30 +2,38 @@ package org.team3309.lib.controllers.drive;
 
 import java.util.List;
 
-import org.team3309.lib.KragerMath;
-import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Goal;
 import org.usfirst.frc.team3309.vision.Vision;
 
-public class FaceVisionTargetController extends PIDPositionController {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class FaceVisionTargetController extends DriveAngleController {
 
 	private boolean isFirstTime = true;
 	private double lastDirection = 1;
 	private double blankCounts = 0;
+	private double azimuth = 0;
+	private boolean isAimDecided = false;
 
 	public FaceVisionTargetController(double kP, double kI, double kD) {
-		super(kP, kI, kD);
+		super(Sensors.getAngle());
 		this.setTHRESHOLD(.02);
 		this.setName("Turn To Vision");
 	}
 
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
-		OutputSignal signal = new OutputSignal();
+		//OutputSignal signal = new OutputSignal();
 		List<Goal> currentGoals = Vision.getInstance().getGoals();
-		if (!currentGoals.isEmpty()) {
+		if (!currentGoals.isEmpty() && !isAimDecided) {
+			azimuth = currentGoals.get(0).azimuth;
+			this.goalAngle = Sensors.getAngle() + azimuth;
+			isAimDecided = true;
+		}
+		/*if (!currentGoals.isEmpty()) {
 			blankCounts = 0;
 			this.completable = true;
 			Goal curGoal = currentGoals.get(0);
@@ -48,7 +56,13 @@ public class FaceVisionTargetController extends PIDPositionController {
 				this.completable = false;
 				signal.setLeftRightMotor(lastDirection * -.33, .33 * lastDirection);
 			}
-		}
-		return signal;
+		}*/
+		return super.getOutputSignal(inputState);
+	}
+	
+	@Override 
+	public void sendToSmartDash() {
+		super.sendToSmartDash();
+		SmartDashboard.putNumber("AIM delta ANGLE", azimuth);
 	}
 }

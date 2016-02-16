@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3309.subsystems;
+package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.generic.PIDPositionController;
