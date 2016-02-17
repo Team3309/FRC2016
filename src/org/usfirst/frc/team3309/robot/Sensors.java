@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -22,11 +23,15 @@ public class Sensors {
 			RobotMap.ENCODERS_B_SHOOTER_DIGITAL, true);
 	private static Encoder hookEncoder = new Encoder(RobotMap.ENCODERS_A_HOOK_DIGITAL, RobotMap.ENCODERS_B_HOOK_DIGITAL,
 			false);
-	private static Encoder feedyWheelEncoder = new Encoder(RobotMap.ENCODERS_A_FEEDY_WHEEL_DIGITAL, RobotMap.ENCODERS_B_FEEDY_WHEEL_DIGITAL, false);
+	private static Encoder feedyWheelEncoder = new Encoder(RobotMap.ENCODERS_A_FEEDY_WHEEL_DIGITAL,
+			RobotMap.ENCODERS_B_FEEDY_WHEEL_DIGITAL, false);
+	private static Encoder intakePivot = new Encoder(RobotMap.ENCODERS_A_INTAKE_PIVOT_DIGITAL,
+			RobotMap.ENCODERS_B_INTAKE_PIVOT_DIGITAL, false);
 	private static Counter hoodEncoder = new Counter(11);
 	public static AHRS navX;
 
 	public static void printNavX() {
+		System.out.println("MEGH");
 		/* Display 6-axis Processed Angle Data */
 		SmartDashboard.putBoolean("IMU_Connected", Sensors.navX.isConnected());
 		SmartDashboard.putBoolean("IMU_IsCalibrating", Sensors.navX.isCalibrating());
@@ -43,11 +48,13 @@ public class Sensors {
 
 	// Drive
 	public static double getAngularVel() {
-		return navX.getRate();
+		return 0;
+		// return navX.getRate();
 	}
 
 	public static double getAngle() {
-		return navX.getFusedHeading();
+		return 0;
+		// return navX.getFusedHeading();
 	}
 
 	public static void resetDrive() {
@@ -84,8 +91,12 @@ public class Sensors {
 	public static double getHookAngle() {
 		return hookEncoder.getDistance();
 	}
-	
+
 	public static double getFeedyWheelVel() {
 		return feedyWheelEncoder.getDistance();
+	}
+
+	public static double getIntakePivotAngle() {
+		return intakePivot.getDistance();
 	}
 }

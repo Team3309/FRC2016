@@ -14,7 +14,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	private static FeedyWheel instance;
 	private double goalVel = 0;
 	private final double FEEDING_SPEED = 12;
-	private CANTalon feedyWheel = new CANTalon(RobotMap.FEEDY_WHEEL_ID);
+	//private CANTalon feedyWheel = new CANTalon(RobotMap.FEEDY_WHEEL_ID);
 
 	public static FeedyWheel getInstance() {
 		if (instance == null) {

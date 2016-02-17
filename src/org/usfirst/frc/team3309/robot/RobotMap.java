@@ -27,11 +27,12 @@ public class RobotMap {
 	public static final int FEEDY_WHEEL_ID = 1;
 
 	// Sensors
-	public static final int GYRO_ANALOG_PORT = 0;
 	public static final int ENCODERS_A_HOOK_DIGITAL = 7;
 	public static final int ENCODERS_B_HOOK_DIGITAL = 6;
 	public static final int ENCODERS_A_FEEDY_WHEEL_DIGITAL = 8;
 	public static final int ENCODERS_B_FEEDY_WHEEL_DIGITAL = 9;
+	public static final int ENCODERS_A_INTAKE_PIVOT_DIGITAL = 0;
+	public static final int ENCODERS_B_INTAKE_PIVOT_DIGITAL = 0;
 	public static final int ENCODERS_A_RIGHT_DRIVE_DIGITAL = 4;
 	public static final int ENCODERS_B_RIGHT_DRIVE_DIGITAL = 5;
 	public static final int ENCODERS_A_LEFT_DRIVE_DIGITAL = 2;

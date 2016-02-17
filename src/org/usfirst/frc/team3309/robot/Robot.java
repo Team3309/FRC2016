@@ -43,7 +43,13 @@ public class Robot extends IterativeRobot {
 
 	// Runs when Robot is turned on
 	public void robotInit() {
-		Sensors.navX = new AHRS(SerialPort.Port.kMXP);
+		System.out.println("INNIT");
+		try {
+			Sensors.navX = new AHRS(SerialPort.Port.kMXP);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("ONCE");
 		// Set up new Autos in sendable Chooser
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
@@ -65,7 +71,6 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Rock Wall", new CrossRockWall());
 		defenseAutoChooser.addObject("Rough Terrain", new CrossRoughTerrain());
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
-
 		SmartDashboard.putData("Defense", defenseAutoChooser);
 		Vision.getInstance().start();
 	}
@@ -98,7 +103,7 @@ public class Robot extends IterativeRobot {
 		// Sensors.printNavX();
 		if (Vision.getInstance().getGoals().size() > 0)
 			System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals().get(0).width);
-		
+
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
 	}
@@ -128,7 +133,7 @@ public class Robot extends IterativeRobot {
 		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
 		Drive.getInstance().update();
-		Shooter.getInstance().update();
+		// Shooter.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
 		// Shooter.getInstance().update();
 		// Intake.getInstance().update();
