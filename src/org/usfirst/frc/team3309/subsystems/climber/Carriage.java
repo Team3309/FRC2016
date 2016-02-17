@@ -32,7 +32,7 @@ public class Carriage extends ControlledSubsystem {
 		} else if (Controls.driverController.getB()) {
 			goalPosition = 70;
 		} else {
-			goalPosition = Sensors.hookEncoder.getDistance();
+			goalPosition = Sensors.getHookAngle();
 		}
 		double output = mController.getOutputSignal(getInputState()).getMotor();
 		this.setCarriage(output);
@@ -41,7 +41,7 @@ public class Carriage extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState inputState = new InputState();
-		inputState.setError(goalPosition - Sensors.hookEncoder.get());
+		inputState.setError(goalPosition - Sensors.getHookAngle());
 		return null;
 	}
 

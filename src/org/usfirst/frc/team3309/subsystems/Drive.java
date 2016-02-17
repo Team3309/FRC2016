@@ -5,7 +5,6 @@ import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
 import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
-import org.team3309.lib.controllers.generic.PIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
@@ -73,7 +72,7 @@ public class Drive extends ControlledSubsystem {
 		updateController();
 		// System.out.println("SET MOTORS");
 		OutputSignal output = mController.getOutputSignal(getInputState());
-		//System.out.println("LEFT: " + output.getLeftMotor());
+		// System.out.println("LEFT: " + output.getLeftMotor());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
 
@@ -120,7 +119,7 @@ public class Drive extends ControlledSubsystem {
 	 * @return the average of the left and right to get the distance traveled
 	 */
 	public double getDistanceTraveled() {
-		return (Sensors.leftDrive.get() + Sensors.rightDrive.get()) / 2;
+		return (Sensors.getLeftDrive() + Sensors.getRightDrive()) / 2;
 	}
 
 	/**
@@ -217,9 +216,9 @@ public class Drive extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", rightBack.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
 		SmartDashboard.putNumber(this.getName() + " Anglular Vel", Sensors.getAngularVel());
-		SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.leftDrive.getDistance());
-		SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.leftDrive.getRate());
-		SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.rightDrive.getDistance());
-		SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.rightDrive.getRate());
+		SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.getLeftDrive());
+		SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.getLeftDriveVel());
+		SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.getRightDrive());
+		SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.getRightDriveVel());
 	}
 }

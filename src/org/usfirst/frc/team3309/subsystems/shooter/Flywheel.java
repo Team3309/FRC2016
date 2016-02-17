@@ -9,7 +9,6 @@ import org.usfirst.frc.team3309.robot.Sensors;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -168,20 +167,17 @@ public class Flywheel extends ControlledSubsystem {
 		mController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
 		SmartDashboard.putNumber(this.getName() + " RPS", curVel);
-		SmartDashboard.putNumber(this.getName() + " Lef", leftSpark.getSpeed());
+		SmartDashboard.putNumber(this.getName() + " Left", leftSpark.getSpeed());
 		SmartDashboard.putNumber(this.getName() + " Right", rightSpark.getSpeed());
 	}
 
-	Counter shooterCounter = new Counter(RobotMap.SHOOTER_COUNTER);
-
 	private double getRPS() {
-
-		pastVel = Sensors.shooterEncoder.getRate();
-		return Sensors.shooterEncoder.getRate();
+		pastVel = Sensors.getShooterRPS();
+		return Sensors.getShooterRPS();
 	}
 
 	private double getRPM() {
-		return 60 / shooterCounter.getPeriod();
+		return 60 * Sensors.getShooterRPS();
 	}
 
 	private void setShooter(double power) {

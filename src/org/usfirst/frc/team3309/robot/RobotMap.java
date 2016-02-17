@@ -13,22 +13,25 @@ public class RobotMap {
 	public static final int LEFT_FRONT_MOTOR = 1;
 	public static final int RIGHT_BACK_MOTOR = 2;
 	public static final int RIGHT_FRONT_MOTOR = 3;
-	
+
 	// Shooter
 	public static final int LEFT_SHOOTER_MOTOR = 5;
 	public static final int RIGHT_SHOOTER_MOTOR = 4;
 	public static final int HOOD_MOTOR = 6;
-	
+
 	public static final int INTAKE_SIDE_MOTOR = 7;
 	public static final int INTAKE_FRONT_MOTOR = 8;
 	public static final int INTAKE_PIVOT_MOTOR = 9;
-	
+
 	public static final int INTAKE_PIVOT_ID = 0;
+	public static final int FEEDY_WHEEL_ID = 1;
 
 	// Sensors
 	public static final int GYRO_ANALOG_PORT = 0;
 	public static final int ENCODERS_A_HOOK_DIGITAL = 7;
 	public static final int ENCODERS_B_HOOK_DIGITAL = 6;
+	public static final int ENCODERS_A_FEEDY_WHEEL_DIGITAL = 8;
+	public static final int ENCODERS_B_FEEDY_WHEEL_DIGITAL = 9;
 	public static final int ENCODERS_A_RIGHT_DRIVE_DIGITAL = 4;
 	public static final int ENCODERS_B_RIGHT_DRIVE_DIGITAL = 5;
 	public static final int ENCODERS_A_LEFT_DRIVE_DIGITAL = 2;
@@ -36,5 +39,5 @@ public class RobotMap {
 	public static final int ENCODERS_A_SHOOTER_DIGITAL = 0;
 	public static final int ENCODERS_B_SHOOTER_DIGITAL = 1;
 	public static final int SHOOTER_COUNTER = 6;
-	
+
 }

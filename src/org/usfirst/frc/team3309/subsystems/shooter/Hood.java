@@ -5,8 +5,8 @@ import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.robot.Sensors;
 
-import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -14,7 +14,6 @@ public class Hood extends ControlledSubsystem {
 
 	private static Hood mHood = new Hood("Hood");
 	private Spark hoodSpark = new Spark(RobotMap.HOOD_MOTOR);
-	private Counter hoodEncoder = new Counter(11);
 	private double curAngle = 0;
 	private double goalAngle = curAngle;
 
@@ -38,7 +37,7 @@ public class Hood extends ControlledSubsystem {
 
 	@Override
 	public void update() {
-		curAngle = this.hoodEncoder.getPeriod();
+		curAngle = Sensors.getHoodAngle();
 		// Find aim angle
 		if (Controls.driverController.getA()) {
 			goalAngle = 10;
