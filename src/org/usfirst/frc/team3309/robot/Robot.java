@@ -18,6 +18,7 @@ import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.Shooter;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -127,6 +128,7 @@ public class Robot extends IterativeRobot {
 		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
 		Drive.getInstance().update();
+		Shooter.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
 		// Shooter.getInstance().update();
 		// Intake.getInstance().update();

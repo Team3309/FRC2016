@@ -13,16 +13,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Sensors {
-	public static AnalogGyro gyro = new AnalogGyro(RobotMap.GYRO_ANALOG_PORT);
-	public static Encoder leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL,
+	private static Encoder leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL,
 			RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
-	public static Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL,
+	private static Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL,
 			RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL, false);
-	public static Encoder shooterEncoder = new Encoder(RobotMap.ENCODERS_A_SHOOTER_DIGITAL,
+	private static Encoder shooterEncoder = new Encoder(RobotMap.ENCODERS_A_SHOOTER_DIGITAL,
 			RobotMap.ENCODERS_B_SHOOTER_DIGITAL, true);
-	// public static Counter shooterCounter = new
-	// Counter(RobotMap.SHOOTER_COUNTER);
-	public static AHRS navX;
+	private static Encoder hookEncoder = new Encoder(RobotMap.ENCODERS_A_HOOK_DIGITAL, RobotMap.ENCODERS_B_HOOK_DIGITAL,
+			false);
+	private static AHRS navX;
 
 	public static void printNavX() {
 		/* Display 6-axis Processed Angle Data */
@@ -32,18 +31,7 @@ public class Sensors {
 		SmartDashboard.putNumber("IMU_Pitch", Sensors.navX.getPitch());
 		SmartDashboard.putNumber("IMU_Roll", Sensors.navX.getRoll());
 		SmartDashboard.putNumber("IMU_CompassHeading", Sensors.navX.getCompassHeading());
-
-		/*
-		 * Display 9-axis Heading (requires magnetometer calibration to be
-		 * useful)
-		 */
 		SmartDashboard.putNumber("IMU_FusedHeading", Sensors.navX.getFusedHeading());
-
-		/*
-		 * Display Processed Acceleration Data (Linear Acceleration, Motion
-		 * Detect)
-		 */
-
 		SmartDashboard.putNumber("IMU_Accel_X", Sensors.navX.getWorldLinearAccelX());
 		SmartDashboard.putNumber("IMU_Accel_Y", Sensors.navX.getWorldLinearAccelY());
 		SmartDashboard.putBoolean("IMU_IsMoving", Sensors.navX.isMoving());
@@ -56,7 +44,5 @@ public class Sensors {
 
 	public static double getAngle() {
 		return navX.getFusedHeading();
-		
-		
 	}
 }

@@ -1,10 +1,11 @@
 package org.usfirst.frc.team3309.subsystems;
 
-import org.team3309.lib.ControlledSubsystem;
-import org.team3309.lib.controllers.statesandsignals.InputState;
+import org.team3309.lib.KragerSystem;
+import org.usfirst.frc.team3309.subsystems.climber.Carriage;
 
-public class Climber extends ControlledSubsystem{
+public class Climber extends KragerSystem {
 	private static Climber instance;
+	private static Carriage mCarriage;
 
 	/**
 	 * Singleton Pattern
@@ -16,6 +17,7 @@ public class Climber extends ControlledSubsystem{
 			instance = new Climber("Climber");
 		return instance;
 	}
+
 	private Climber(String name) {
 		super(name);
 	}
@@ -26,15 +28,7 @@ public class Climber extends ControlledSubsystem{
 	}
 
 	@Override
-	public InputState getInputState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void sendToSmartDash() {
-		// TODO Auto-generated method stub
 		
 	}
-
 }
