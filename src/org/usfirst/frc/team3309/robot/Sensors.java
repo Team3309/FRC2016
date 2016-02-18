@@ -15,46 +15,43 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Sensors {
-	private static Encoder leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL,
-			RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
-	private static Encoder rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL,
-			RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL, false);
-	private static Encoder shooterEncoder = new Encoder(RobotMap.ENCODERS_A_SHOOTER_DIGITAL,
-			RobotMap.ENCODERS_B_SHOOTER_DIGITAL, true);
-	private static Encoder hookEncoder = new Encoder(RobotMap.ENCODERS_A_HOOK_DIGITAL, RobotMap.ENCODERS_B_HOOK_DIGITAL,
-			false);
-	private static Encoder feedyWheelEncoder = new Encoder(RobotMap.ENCODERS_A_FEEDY_WHEEL_DIGITAL,
-			RobotMap.ENCODERS_B_FEEDY_WHEEL_DIGITAL, false);
-	private static Encoder intakePivot = new Encoder(RobotMap.ENCODERS_A_INTAKE_PIVOT_DIGITAL,
-			RobotMap.ENCODERS_B_INTAKE_PIVOT_DIGITAL, false);
-	private static Counter hoodEncoder = new Counter(11);
-	public static AHRS navX;
+	private static Encoder leftDrive;
+	private static Encoder rightDrive;
+	private static Encoder shooterEncoder;
+	private static Encoder hookEncoder;
+	private static Encoder feedyWheelEncoder;
+	private static Encoder intakePivot;
+	private static AHRS navX;
+	// private static Counter hoodEncoder;
 
-	public static void printNavX() {
-		System.out.println("MEGH");
-		/* Display 6-axis Processed Angle Data */
-		SmartDashboard.putBoolean("IMU_Connected", Sensors.navX.isConnected());
-		SmartDashboard.putBoolean("IMU_IsCalibrating", Sensors.navX.isCalibrating());
-		SmartDashboard.putNumber("IMU_Yaw", Sensors.navX.getYaw());
-		SmartDashboard.putNumber("IMU_Pitch", Sensors.navX.getPitch());
-		SmartDashboard.putNumber("IMU_Roll", Sensors.navX.getRoll());
-		SmartDashboard.putNumber("IMU_CompassHeading", Sensors.navX.getCompassHeading());
-		SmartDashboard.putNumber("IMU_FusedHeading", Sensors.navX.getFusedHeading());
-		SmartDashboard.putNumber("IMU_Accel_X", Sensors.navX.getWorldLinearAccelX());
-		SmartDashboard.putNumber("IMU_Accel_Y", Sensors.navX.getWorldLinearAccelY());
-		SmartDashboard.putBoolean("IMU_IsMoving", Sensors.navX.isMoving());
-		SmartDashboard.putBoolean("IMU_IsRotating", Sensors.navX.isRotating());
+	public static void init() {
+
+	}
+
+	static {
+		System.out.println("STARTING INIT");
+		rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL,
+				false);
+		leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
+		// hoodEncoder = new Counter(0);
+		intakePivot = new Encoder(RobotMap.ENCODERS_A_INTAKE_PIVOT_DIGITAL, RobotMap.ENCODERS_B_INTAKE_PIVOT_DIGITAL,
+				false);
+		feedyWheelEncoder = new Encoder(RobotMap.ENCODERS_A_FEEDY_WHEEL_DIGITAL,
+				RobotMap.ENCODERS_B_FEEDY_WHEEL_DIGITAL, false);
+		hookEncoder = new Encoder(RobotMap.ENCODERS_A_HOOK_DIGITAL, RobotMap.ENCODERS_B_HOOK_DIGITAL, false);
+		shooterEncoder = new Encoder(RobotMap.ENCODERS_A_SHOOTER_DIGITAL, RobotMap.ENCODERS_B_SHOOTER_DIGITAL, true);
+		navX = new AHRS(SerialPort.Port.kMXP);
+		System.out.println("HEY FRIENDS");
 	}
 
 	// Drive
 	public static double getAngularVel() {
-		return 0;
-		// return navX.getRate();
+		// return 2.0;
+		return navX.getRate();
 	}
 
 	public static double getAngle() {
-		return 0;
-		// return navX.getFusedHeading();
+		return navX.getFusedHeading();
 	}
 
 	public static void resetDrive() {
@@ -84,7 +81,7 @@ public class Sensors {
 	}
 
 	public static double getHoodAngle() {
-		return hoodEncoder.getDistance();
+		return 7;
 	}
 
 	// Climber

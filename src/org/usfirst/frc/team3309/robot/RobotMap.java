@@ -12,7 +12,7 @@ public class RobotMap {
 	public static final int LEFT_BACK_MOTOR = 0;
 	public static final int LEFT_FRONT_MOTOR = 1;
 	public static final int RIGHT_BACK_MOTOR = 2;
-	public static final int RIGHT_FRONT_MOTOR = 3;
+	public static final int RIGHT_FRONT_MOTOR = 10;
 
 	// Shooter
 	public static final int LEFT_SHOOTER_MOTOR = 5;
@@ -32,13 +32,13 @@ public class RobotMap {
 	public static final int ENCODERS_A_FEEDY_WHEEL_DIGITAL = 8;
 	public static final int ENCODERS_B_FEEDY_WHEEL_DIGITAL = 9;
 	public static final int ENCODERS_A_INTAKE_PIVOT_DIGITAL = 0;
-	public static final int ENCODERS_B_INTAKE_PIVOT_DIGITAL = 0;
+	public static final int ENCODERS_B_INTAKE_PIVOT_DIGITAL = 1;
 	public static final int ENCODERS_A_RIGHT_DRIVE_DIGITAL = 4;
 	public static final int ENCODERS_B_RIGHT_DRIVE_DIGITAL = 5;
 	public static final int ENCODERS_A_LEFT_DRIVE_DIGITAL = 2;
 	public static final int ENCODERS_B_LEFT_DRIVE_DIGITAL = 3;
-	public static final int ENCODERS_A_SHOOTER_DIGITAL = 0;
-	public static final int ENCODERS_B_SHOOTER_DIGITAL = 1;
+	public static final int ENCODERS_A_SHOOTER_DIGITAL = 11;
+	public static final int ENCODERS_B_SHOOTER_DIGITAL = 12;
 	public static final int SHOOTER_COUNTER = 6;
 
 }

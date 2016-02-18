@@ -18,13 +18,9 @@ import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
-import org.usfirst.frc.team3309.subsystems.Shooter;
 import org.usfirst.frc.team3309.vision.Vision;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -44,10 +40,12 @@ public class Robot extends IterativeRobot {
 	// Runs when Robot is turned on
 	public void robotInit() {
 		System.out.println("INNIT");
+		Sensors.init();;
 		try {
-			Sensors.navX = new AHRS(SerialPort.Port.kMXP);
+			
 		}catch (Exception e) {
 			e.printStackTrace();
+			e.getMessage();
 		}
 		System.out.println("ONCE");
 		// Set up new Autos in sendable Chooser

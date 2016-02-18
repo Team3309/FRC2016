@@ -10,6 +10,9 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -79,7 +82,13 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState input = new InputState();
-		input.setAngularPos(Sensors.getAngle());
+		try {
+			input.setAngularPos(Sensors.getAngle());
+		} catch (ExceptionInInitializerError e) {
+			for (StackTraceElement w : e.getStackTrace())
+				System.out.println(w);
+			System.out.println(e.getCause());
+		}
 		input.setAngularVel(Sensors.getAngularVel());
 		// input.setLeftPos(Sensors.leftDrive.getDistance());
 		// input.setLeftVel(Sensors.leftDrive.getRate());
@@ -183,7 +192,7 @@ public class Drive extends ControlledSubsystem {
 	 *            leftMotorSpeed
 	 */
 	private void setRightLeft(double right, double left) {
-		//setLeft(left);
+		// setLeft(left);
 		setRight(right);
 	}
 
@@ -195,7 +204,7 @@ public class Drive extends ControlledSubsystem {
 	 */
 	private void setRight(double right) {
 		rightFront.set(-right);
-		//rightBack.set(-right);
+		// rightBack.set(-right);
 	}
 
 	/**
