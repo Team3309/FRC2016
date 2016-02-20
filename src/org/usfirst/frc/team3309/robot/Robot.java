@@ -40,10 +40,11 @@ public class Robot extends IterativeRobot {
 	// Runs when Robot is turned on
 	public void robotInit() {
 		System.out.println("INNIT");
-		Sensors.init();;
+		Sensors.init();
+		;
 		try {
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
 		}
@@ -114,7 +115,6 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-		// x.
 		if (Vision.getInstance().getGoals().size() > 0)
 			System.out.println("Azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
 		/*
@@ -127,17 +127,12 @@ public class Robot extends IterativeRobot {
 		 * SmartDashboard.putNumber("POWER", toMotor);
 		 * pidController.sendToSmartDash(); this.test.set(toMotor);
 		 */
-
-		// System.out.println("ANALONG: " + test.getAnalogInPosition());
 		// Update the subsystems
+		// UPDATES
 		Drive.getInstance().update();
-		// Shooter.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
-		// Shooter.getInstance().update();
-		// Intake.getInstance().update();
-		// Shooter.getInstance().update();
-		// Shooter.getInstance().sendToSmartDash();
-		// Sensors.printNavX();
+		// MANUALS
+		
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

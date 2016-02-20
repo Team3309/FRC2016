@@ -51,4 +51,9 @@ public abstract class ControlledSubsystem extends KragerSystem {
 	 * Use this to send controllers to the smartdash for live tuning
 	 */
 	public abstract void sendToSmartDash();
+	
+	/**
+	 * Manual Control for no sensors
+	 */
+	public abstract void manualControl();
 }

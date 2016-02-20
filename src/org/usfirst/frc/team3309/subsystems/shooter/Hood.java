@@ -65,4 +65,18 @@ public class Hood extends ControlledSubsystem {
 		return input;
 	}
 
+	public void setHood(double power) {
+		this.hoodSpark.set(power);
+	}
+
+	@Override
+	public void manualControl() {
+		if (Controls.driverController.getA()) {
+			this.setHood(.4);
+		} else if (Controls.driverController.getB()) {
+			this.setHood(-.4);
+		} else {
+			this.setHood(0);
+		}
+	}
 }

@@ -52,4 +52,9 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 		this.intakeFront.set(power);
 		this.intakeSide.set(power);
 	}
+
+	@Override
+	public void manualControl() {
+		update();
+	}
 }

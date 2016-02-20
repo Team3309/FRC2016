@@ -7,14 +7,14 @@ import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Spark;
 
 public class FeedyWheel extends ControlledSubsystem {
 
 	private static FeedyWheel instance;
 	private double goalVel = 0;
 	private final double FEEDING_SPEED = 12;
-	//private CANTalon feedyWheel = new CANTalon(RobotMap.FEEDY_WHEEL_ID);
+	private Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_ID);
 
 	public static FeedyWheel getInstance() {
 		if (instance == null) {
@@ -30,9 +30,8 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	@Override
 	public void update() {
-
 		if (Controls.driverController.getLB()) {
-			goalVel = FEEDING_SPEED;	
+			goalVel = FEEDING_SPEED;
 		} else {
 			goalVel = 0;
 		}
@@ -49,5 +48,18 @@ public class FeedyWheel extends ControlledSubsystem {
 	@Override
 	public void sendToSmartDash() {
 		this.mController.sendToSmartDash();
+	}
+
+	public void setFeedyWheel(double power) {
+		this.feedyWheelSpark.set(power);
+	}
+
+	@Override
+	public void manualControl() {
+		if (Controls.driverController.getLB()) {
+			this.setFeedyWheel(0.5);
+		} else {
+			this.setFeedyWheel(0.0);
+		}
 	}
 }

@@ -40,4 +40,9 @@ public class IntakePivot extends ControlledSubsystem {
 
 	}
 
+	@Override
+	public void manualControl() {
+
+	}
+
 }

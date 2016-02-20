@@ -7,6 +7,7 @@ import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
@@ -229,5 +230,12 @@ public class Drive extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.getLeftDriveVel());
 		SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.getRightDrive());
 		SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.getRightDriveVel());
+	}
+
+	@Override
+	public void manualControl() {
+		double throttle = Controls.driverController.getLeftY();
+		double turn = Controls.driverController.getRightX();
+		this.setLeftRight(throttle + turn, throttle - turn);
 	}
 }

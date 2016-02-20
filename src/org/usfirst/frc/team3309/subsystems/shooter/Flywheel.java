@@ -104,7 +104,7 @@ public class Flywheel extends ControlledSubsystem {
 	/**
 	 * Raw power values
 	 */
-	private void manualControl() {
+	public void manualControl() {
 		if (Controls.driverController.getA()) {
 			power = .7;
 		} else if (Controls.driverController.getB()) {

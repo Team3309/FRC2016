@@ -53,4 +53,9 @@ public class Carriage extends ControlledSubsystem {
 	private void setCarriage(double power) {
 
 	}
+
+	@Override
+	public void manualControl() {
+	
+	}
 }
