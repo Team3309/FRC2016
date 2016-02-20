@@ -35,6 +35,13 @@ public class Shooter extends KragerSystem {
 	public void sendToSmartDash() {
 		mFlywheel.sendToSmartDash();
 		mHood.sendToSmartDash();
-		mFeedyWheel.update();
+		mFeedyWheel.sendToSmartDash();
+	}
+
+	@Override
+	public void manualControl() {
+		mFlywheel.manualControl();
+		mHood.manualControl();
+		mFeedyWheel.manualControl();
 	}
 }

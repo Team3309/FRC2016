@@ -5,7 +5,7 @@ import org.usfirst.frc.team3309.subsystems.climber.Carriage;
 
 public class Climber extends KragerSystem {
 	private static Climber instance;
-	private static Carriage mCarriage;
+	private static Carriage mCarriage = Carriage.getInstance();
 
 	/**
 	 * Singleton Pattern
@@ -24,11 +24,16 @@ public class Climber extends KragerSystem {
 
 	@Override
 	public void update() {
-		
+		mCarriage.update();
 	}
 
 	@Override
 	public void sendToSmartDash() {
-		
+		mCarriage.sendToSmartDash();
+	}
+
+	@Override
+	public void manualControl() {
+		mCarriage.manualControl();
 	}
 }

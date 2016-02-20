@@ -11,9 +11,6 @@ import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -193,7 +190,7 @@ public class Drive extends ControlledSubsystem {
 	 *            leftMotorSpeed
 	 */
 	private void setRightLeft(double right, double left) {
-		// setLeft(left);
+		setLeft(left);
 		setRight(right);
 	}
 

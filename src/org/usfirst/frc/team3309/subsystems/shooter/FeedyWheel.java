@@ -14,7 +14,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	private static FeedyWheel instance;
 	private double goalVel = 0;
 	private final double FEEDING_SPEED = 12;
-	private Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_ID);
+	private Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_MOTOR);
 
 	public static FeedyWheel getInstance() {
 		if (instance == null) {
