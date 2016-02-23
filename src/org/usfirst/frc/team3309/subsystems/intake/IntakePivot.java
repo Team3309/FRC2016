@@ -27,6 +27,7 @@ public class IntakePivot extends ControlledSubsystem {
 
 	private IntakePivot(String name) {
 		super(name);
+		intakePivot.enableBrakeMode(true);
 		mController = new PIDPositionController(.001, 0, 0);
 	}
 
@@ -68,6 +69,6 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-		this.setIntakePivot(KragerMath.threshold(Controls.operatorController.getLeftY()));
+		this.setIntakePivot(0.75 * KragerMath.threshold(Controls.operatorController.getLeftY()));
 	}
 }

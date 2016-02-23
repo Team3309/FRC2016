@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
@@ -39,16 +40,21 @@ public class Hood extends ControlledSubsystem {
 	public void update() {
 		curAngle = Sensors.getHoodAngle();
 		// Find aim angle
-		if (Controls.driverController.getA()) {
-			goalAngle = 10;
-		} else if (Controls.driverController.getB()) {
-			goalAngle = 20;
-		} else if (Controls.driverController.getXBut()) {
+		if (Controls.operatorController.getA()) {
+			goalAngle = 15.8;
+		} else if (Controls.operatorController.getB()) {
+			goalAngle = 27.6;
+		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 30;
-		} else if (Controls.driverController.getYBut()) {
+		} else if (Controls.operatorController.getYBut()) {
 			goalAngle = 45;
+		} else {
+			goalAngle = .2;
 		}
 		double output = this.mController.getOutputSignal(getInputState()).getMotor();
+		if ((curAngle > 59 && output > 0) || (curAngle < 0 && output < 0)) {
+			output = 0;
+		}
 		this.hoodSpark.set(output);
 	}
 
@@ -56,6 +62,8 @@ public class Hood extends ControlledSubsystem {
 	public void sendToSmartDash() {
 		this.mController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " angle", curAngle);
+		SmartDashboard.putNumber(this.getName() + " goal angle", goalAngle);
+		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.get());
 	}
 
 	@Override
@@ -71,12 +79,12 @@ public class Hood extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-		if (Controls.driverController.getA()) {
-			this.setHood(.4);
-		} else if (Controls.driverController.getB()) {
-			this.setHood(-.4);
-		} else {
-			this.setHood(0);
-		}
+		/*
+		 * if (Controls.driverController.getA()) { this.setHood(.4); } else if
+		 * (Controls.driverController.getB()) { this.setHood(-.4); } else {
+		 * this.setHood(0); }
+		 */
+
+		this.setHood(KragerMath.threshold(Controls.operatorController.getRightY()));
 	}
 }

@@ -2,8 +2,13 @@ package org.usfirst.frc.team3309.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * All the sensors on the robot
@@ -14,8 +19,9 @@ import edu.wpi.first.wpilibj.SerialPort;
 public class Sensors {
 	private static Encoder leftDrive;
 	private static Encoder rightDrive;
-	private static Encoder shooterEncoder;
+	private static Counter shooterEncoder;
 	private static Encoder hookEncoder;
+	private static Counter hoodEncoder;
 	private static Encoder feedyWheelEncoder;
 	private static Encoder intakePivot;
 	private static AHRS navX;
@@ -36,8 +42,14 @@ public class Sensors {
 		feedyWheelEncoder = new Encoder(RobotMap.ENCODERS_A_FEEDY_WHEEL_DIGITAL,
 				RobotMap.ENCODERS_B_FEEDY_WHEEL_DIGITAL, false);
 		hookEncoder = new Encoder(RobotMap.ENCODERS_A_HOOK_DIGITAL, RobotMap.ENCODERS_B_HOOK_DIGITAL, false);
-		shooterEncoder = new Encoder(RobotMap.ENCODERS_A_SHOOTER_DIGITAL, RobotMap.ENCODERS_B_SHOOTER_DIGITAL, true);
+		shooterEncoder = new Counter(RobotMap.SHOOTER_OPTICAL_SENSOR);
+		
 		navX = new AHRS(SerialPort.Port.kMXP);
+		hoodEncoder = new Counter(new DigitalInput(RobotMap.HOOD_ABS));
+		// Counter.Mode.kPulseLengt
+		hoodEncoder.setSemiPeriodMode(true);
+		hoodEncoder.setReverseDirection(true);
+		// hoodEncoder.
 		System.out.println("HEY FRIENDS");
 	}
 
@@ -74,11 +86,11 @@ public class Sensors {
 
 	// Shooter
 	public static double getShooterRPS() {
-		return shooterEncoder.getRate();
+		return (1/ shooterEncoder.getPeriod());
 	}
 
 	public static double getHoodAngle() {
-		return 7;
+		return 272 - ((1000000.0 * hoodEncoder.getPeriod()) * (360.0 / 4096.0));
 	}
 
 	// Climber

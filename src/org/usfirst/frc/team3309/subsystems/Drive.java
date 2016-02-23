@@ -11,6 +11,7 @@ import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,10 +35,9 @@ public class Drive extends ControlledSubsystem {
 	private static final double DRIVE_GYRO_LENIENCY = 10;
 
 	private static Drive instance;
-	private Spark leftFront = new Spark(RobotMap.LEFT_FRONT_MOTOR);
-	private Spark rightFront = new Spark(RobotMap.RIGHT_FRONT_MOTOR);
-	private Spark leftBack = new Spark(RobotMap.LEFT_BACK_MOTOR);
-	private Spark rightBack = new Spark(RobotMap.RIGHT_BACK_MOTOR);
+	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
+	private Spark right = new Spark(RobotMap.RIGHT_DRIVE);
+	private Solenoid sol = new Solenoid(0);
 
 	/**
 	 * Singleton Pattern
@@ -71,6 +71,10 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public void update() {
 		updateController();
+		if (Controls.driverController.getLB())
+			sol.set(true);
+		else
+			sol.set(false);
 		// System.out.println("SET MOTORS");
 		OutputSignal output = mController.getOutputSignal(getInputState());
 		// System.out.println("LEFT: " + output.getLeftMotor());
@@ -201,8 +205,7 @@ public class Drive extends ControlledSubsystem {
 	 *            rightMotorSpeed
 	 */
 	private void setRight(double right) {
-		rightFront.set(-right);
-		// rightBack.set(-right);
+		this.right.set(-right);
 	}
 
 	/**
@@ -212,15 +215,14 @@ public class Drive extends ControlledSubsystem {
 	 *            leftMotorSpeed
 	 */
 	private void setLeft(double left) {
-		leftFront.set(left);
-		leftBack.set(left);
+		this.left.set(left);
 	}
 
 	@Override
 	public void sendToSmartDash() {
 		mController.sendToSmartDash();
-		SmartDashboard.putNumber(this.getName() + " Left Side Pow", leftBack.get());
-		SmartDashboard.putNumber(this.getName() + " Right Side Pow", rightBack.get());
+		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
+		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
 		SmartDashboard.putNumber(this.getName() + " Anglular Vel", Sensors.getAngularVel());
 		SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.getLeftDrive());
@@ -231,6 +233,10 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
+		if (Controls.driverController.getLB())
+			sol.set(true);
+		else
+			sol.set(false);
 		double throttle = Controls.driverController.getLeftY();
 		double turn = Controls.driverController.getRightX();
 		this.setLeftRight(throttle + turn, throttle - turn);

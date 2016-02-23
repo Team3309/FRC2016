@@ -13,7 +13,7 @@ public class Carriage extends ControlledSubsystem {
 
 	private static Carriage instance;
 	private double goalVelocity = 0;
-	private CANTalon carriageTalon = new CANTalon(RobotMap.CLIMBER_CARRIAGE_MOTOR);
+	private CANTalon carriageTalon = new CANTalon(RobotMap.CLIMBER_CARRIAGE_ID);
 	private final double MAX_VEL = 10;
 
 	public static Carriage getInstance() {

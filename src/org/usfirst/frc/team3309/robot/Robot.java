@@ -18,8 +18,11 @@ import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.Intake;
+import org.usfirst.frc.team3309.subsystems.Shooter;
 import org.usfirst.frc.team3309.vision.Vision;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -110,6 +113,10 @@ public class Robot extends IterativeRobot {
 	// Init to Tele
 	public void teleopInit() {
 		Drive.getInstance().toTeleop();
+		Vision.getInstance().setLight(.8);
+		Compressor compressor = new Compressor();
+		compressor.setClosedLoopControl(false);
+		// compressor.start();
 
 	}
 
@@ -117,6 +124,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		if (Vision.getInstance().getGoals().size() > 0)
 			System.out.println("Azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
+
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();
@@ -131,8 +139,11 @@ public class Robot extends IterativeRobot {
 		// UPDATES
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
+		Shooter.getInstance().manualControl();
+		Intake.getInstance().manualControl();
 		// MANUALS
-		
+		System.out.println("SHOOTER EN: " + Sensors.getShooterRPS());
+		System.out.println("navx " + Sensors.getAngle());
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

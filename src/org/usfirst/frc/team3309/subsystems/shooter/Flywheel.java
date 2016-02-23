@@ -104,14 +104,14 @@ public class Flywheel extends ControlledSubsystem {
 	 * Raw power values
 	 */
 	public void manualControl() {
-		if (Controls.driverController.getA()) {
+		if (Controls.operatorController.getA()) {
 			power = .7;
-		} else if (Controls.driverController.getB()) {
+		} else if (Controls.operatorController.getB()) {
+			power = .7;
+		} else if (Controls.operatorController.getXBut()) {
 			power = .8;
-		} else if (Controls.driverController.getXBut()) {
+		} else if (Controls.operatorController.getYBut()) {
 			power = .9;
-		} else if (Controls.driverController.getYBut()) {
-			power = 1;
 		} else {
 			power = 0;
 		}
@@ -120,7 +120,7 @@ public class Flywheel extends ControlledSubsystem {
 	}
 
 	/**
-	 * Feed Forward with dynamic aims 
+	 * Feed Forward with dynamic aims
 	 */
 	private void shootLikeRobie() {
 		if (curVel < aimVelRPS - 20) {

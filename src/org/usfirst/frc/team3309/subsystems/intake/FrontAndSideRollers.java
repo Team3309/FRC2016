@@ -50,7 +50,7 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 
 	private void setIntake(double power) {
 		this.intakeFront.set(power);
-		this.intakeSide.set(power);
+		this.intakeSide.set(-power);
 	}
 
 	@Override

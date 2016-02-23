@@ -26,6 +26,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.usfirst.frc.team3309.robot.RobotMap;
+
+import edu.wpi.first.wpilibj.PWM;
 
 public class Vision implements Runnable {
 
@@ -45,6 +48,7 @@ public class Vision implements Runnable {
 	private List<Goal> latestGoals;
 	private long lastUpdate = 0;
 	private long lastTimeoutTime = 0;
+	private PWM out = new PWM(RobotMap.LIGHT);
 
 	private Vision() {
 		this.thread = new Thread(this);
@@ -53,6 +57,15 @@ public class Vision implements Runnable {
 
 	public void start() {
 		thread.start();
+	}
+
+	/**
+	 * Sets light between 0 - 1
+	 * 
+	 * @param power
+	 */
+	public void setLight(double power) {
+		out.setRaw((int) ((double) (power * 153.0)));
 	}
 
 	@Override
@@ -97,7 +110,6 @@ public class Vision implements Runnable {
 		List<Goal> goals = this.latestGoals;
 		this.lock.unlock();
 		if (goals == null) {
-			System.out.println("NULL");
 			return new LinkedList<Goal>();
 		}
 		return goals;

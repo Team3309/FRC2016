@@ -1,3 +1,4 @@
+
 package org.team3309.lib.controllers.drive.equations;
 
 import org.team3309.lib.controllers.Controller;
@@ -55,6 +56,7 @@ public class DriveCheezyDriveEquation extends Controller {
 		double negInertiaAccumulator = 0.0;
 		double negInertiaScalar;
 		if (isHighGear) {
+			
 			negInertiaScalar = 5.0;
 			sensitivity = .75;
 		} else {
@@ -85,7 +87,7 @@ public class DriveCheezyDriveEquation extends Controller {
 		// Quickturn!
 		if (isQuickTurn) {
 			if (Math.abs(linearPower) < 0.2) {
-				double alpha = 0.1;
+				double alpha = 0.05;
 				quickStopAccumulator = (1 - alpha) * quickStopAccumulator + alpha * limit(wheel, 1.0) * 5;
 			}
 			overPower = 1.0;

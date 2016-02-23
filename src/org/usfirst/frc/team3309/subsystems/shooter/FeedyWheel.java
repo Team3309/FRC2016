@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
@@ -30,7 +31,8 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	@Override
 	public void update() {
-		if (Controls.driverController.getLB()) {
+		if (Controls.driverController.getLB()
+				|| KragerMath.threshold(Controls.driverController.getLeftTrigger()) != 0) {
 			goalVel = FEEDING_SPEED;
 		} else {
 			goalVel = 0;
@@ -51,15 +53,17 @@ public class FeedyWheel extends ControlledSubsystem {
 	}
 
 	public void setFeedyWheel(double power) {
-		this.feedyWheelSpark.set(power);
+		this.feedyWheelSpark.set(-power);
 	}
 
 	@Override
 	public void manualControl() {
-		if (Controls.driverController.getLB()) {
-			this.setFeedyWheel(0.5);
+		if (Controls.operatorController.getRB()) {
+			this.setFeedyWheel(.5);
+		} else if (Controls.operatorController.getLB()) {
+			this.setFeedyWheel(-.5);
 		} else {
-			this.setFeedyWheel(0.0);
+			this.setFeedyWheel(0);
 		}
 	}
 }
