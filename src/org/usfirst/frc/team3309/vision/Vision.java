@@ -28,7 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class Vision implements Runnable {
 
@@ -48,7 +48,7 @@ public class Vision implements Runnable {
 	private List<Goal> latestGoals;
 	private long lastUpdate = 0;
 	private long lastTimeoutTime = 0;
-	private PWM out = new PWM(RobotMap.LIGHT);
+	private DigitalOutput out = new DigitalOutput(RobotMap.LIGHT);
 
 	private Vision() {
 		this.thread = new Thread(this);
@@ -57,6 +57,9 @@ public class Vision implements Runnable {
 
 	public void start() {
 		thread.start();
+		out.enablePWM(0);
+		out.setPWMRate(19000);
+
 	}
 
 	/**
@@ -65,7 +68,13 @@ public class Vision implements Runnable {
 	 * @param power
 	 */
 	public void setLight(double power) {
-		out.setRaw((int) ((double) (power * 153.0)));
+		out.updateDutyCycle(power);
+	}
+
+	public double getHoodAngle(Goal goal) {
+		// goal.distance *
+		double output = 2;
+		return output;
 	}
 
 	@Override

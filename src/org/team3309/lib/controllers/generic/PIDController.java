@@ -15,6 +15,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public abstract class PIDController extends Controller {
+
+	private boolean useSmartDash = true;
+
+	public boolean isUseSmartDash() {
+		return useSmartDash;
+	}
+
+	public void setUseSmartDash(boolean useSmartDash) {
+		this.useSmartDash = useSmartDash;
+	}
+
 	/**
 	 * if small gain, help with smartdash
 	 */
@@ -150,24 +161,25 @@ public abstract class PIDController extends Controller {
 	public boolean isCompleted() {
 		// If the Controller is completable, then the error will need to be
 		// between a certain threshold before isCompleted return true
-		
+
 		if (completable) {
 			return this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
-		}		
+		}
 		return this.doneTimer.isConditionMaintained(false);
 	}
 
 	@Override
 	public void sendToSmartDash() {
-		kP = SmartDashboard.getNumber(this.getName() + " kP", kP) * Math.pow(factor, -3);
-		kI = SmartDashboard.getNumber(this.getName() + " kI", kI) * Math.pow(factor, -3);
-		kD = SmartDashboard.getNumber(this.getName() + " kD", kD) * Math.pow(factor, -3);
-		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3));
-		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
-		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
-		SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
-		SmartDashboard.putNumber(this.getName() + " FACTOR", factor);
-		
+		if (this.useSmartDash) {
+			kP = SmartDashboard.getNumber(this.getName() + " kP", kP) * Math.pow(factor, -3);
+			kI = SmartDashboard.getNumber(this.getName() + " kI", kI) * Math.pow(factor, -3);
+			kD = SmartDashboard.getNumber(this.getName() + " kD", kD) * Math.pow(factor, -3);
+			SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3));
+			SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
+			SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
+			SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
+			SmartDashboard.putNumber(this.getName() + " FACTOR", factor);
+		}
 
 	}
 }

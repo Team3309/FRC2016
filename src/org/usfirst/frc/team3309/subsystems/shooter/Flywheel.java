@@ -28,6 +28,7 @@ public class Flywheel extends ControlledSubsystem {
 
 	private double pastVel = 0;
 
+	private boolean hasGoneBack = false;
 	/**
 	 * Value added to maxVelRPM
 	 */
@@ -41,6 +42,7 @@ public class Flywheel extends ControlledSubsystem {
 	private Flywheel(String name) {
 		super(name);
 		this.mController = new FeedForwardWithPIDController(.008, 0, .005, 0, 0);
+		this.mController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		SmartDashboard.putNumber("POWER", power);
 	}
@@ -52,7 +54,7 @@ public class Flywheel extends ControlledSubsystem {
 	 */
 	public static Flywheel getInstance() {
 		if (mFlywheel == null) {
-			mFlywheel = new Flywheel("Shooter");
+			mFlywheel = new Flywheel("Flywheel");
 		}
 		return mFlywheel;
 	}
@@ -62,42 +64,70 @@ public class Flywheel extends ControlledSubsystem {
 
 	@Override
 	public void update() {
-		manualControl();
+		// manualControl();
+		curVel = this.getRPS();
+		// Find our base aim vel
+		if (Controls.operatorController.getA()) {
+			aimVelRPS = 125;
+		} else if (Controls.operatorController.getB()) {
+			aimVelRPS = 120;
+		} else if (Controls.operatorController.getXBut()) {
+			aimVelRPS = 140;
+		} else if (Controls.operatorController.getYBut()) {
+			aimVelRPS = 160;
+		} else {
+			offset = 0;
+			aimVelRPS = 0;
+			aimAccRPS = 0;
+			hasGoneBack = false;
+		}
 
-		/*
-		 * curVel = this.getRPS();
-		 * 
-		 * // Find our base aim vel if (Controls.driverController.getA()) {
-		 * aimVelRPS = 200; } else if (Controls.driverController.getB()) {
-		 * aimVelRPS = 220; } else if (Controls.driverController.getXBut()) {
-		 * aimVelRPS = 260; } else if (Controls.driverController.getYBut()) {
-		 * aimVelRPS = 320; } else { offset = 0; aimVelRPS = 0; aimAccRPS = 0; }
-		 * 
-		 * // Based off of cur vel and aim vel, find aim acc double error =
-		 * this.aimVelRPS - curVel; if (Math.abs(error) > 1000) { if (error > 0)
-		 * { aimAccRPS = maxAccRPS; } else if (error < 0) { aimAccRPS =
-		 * -maxAccRPS; } } else { if (error > 0) { aimAccRPS = maxAccRPS / 4; }
-		 * else if (error < 0) { aimAccRPS = -maxAccRPS / 4; } }
-		 * 
-		 * // Find offset (how much should be added to the aim vel) // RB adds,
-		 * LB decreases if (Controls.driverController.getLB()) { offset -= 50; }
-		 * else if (Controls.driverController.getRB()) { offset += 50; }
-		 * 
-		 * // Send our target velocity to the mController if (this.mController
-		 * instanceof FeedForwardWithPIDController) {
-		 * ((FeedForwardWithPIDController)
-		 * this.mController).setAimAcc(aimAccRPS);
-		 * ((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS
-		 * + offset); }
-		 * 
-		 * // Get value and set to motors if (aimVelRPS == 0) {
-		 * this.setShooter(0); } else {
-		 * this.setShooter(this.mController.getOutputSignal(getInputState()).
-		 * getMotor()); }
-		 * 
-		 * this.sendToSmartDash();
-		 */
+		// Based off of cur vel and aim vel, find aim acc
+		double error = this.aimVelRPS - curVel;
+		if (Math.abs(error) > 1000) {
+			if (error > 0) {
+				aimAccRPS = maxAccRPS;
+			} else if (error < 0) {
+				aimAccRPS = -maxAccRPS;
+			}
+		} else {
+			if (error > 0) {
+				aimAccRPS = maxAccRPS / 4;
+			} else if (error < 0) {
+				aimAccRPS = -maxAccRPS / 4;
+			}
+		}
 
+		// Find offset (how much should be added to the aim vel) // RB adds,
+		if (Controls.driverController.getLB()) {
+			offset -= 0;
+		} else if (Controls.driverController.getRB()) {
+			offset += 0;
+		}
+		double output = this.mController.getOutputSignal(getInputState()).getMotor();
+		if (output != 0 && !hasGoneBack) {
+			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			FeedyWheel.getInstance().setFeedyWheel(0);
+			hasGoneBack = true;
+		}
+
+		// Send our target velocity to the mController
+		if (this.mController instanceof FeedForwardWithPIDController) {
+			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPS);
+			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS + offset);
+		}
+
+		// Get value and set to motors
+		if (aimVelRPS == 0) {
+			this.setShooter(0);
+		} else {
+			this.setShooter(output);
+		}
 	}
 
 	/**
@@ -113,7 +143,18 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getYBut()) {
 			power = .9;
 		} else {
+			hasGoneBack = false;
 			power = 0;
+		}
+		if (power != 0 && !hasGoneBack) {
+			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			FeedyWheel.getInstance().setFeedyWheel(0);
+			hasGoneBack = true;
 		}
 		this.rightSpark.set(power);
 		this.leftSpark.set(power);
@@ -166,6 +207,7 @@ public class Flywheel extends ControlledSubsystem {
 		mController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
 		SmartDashboard.putNumber(this.getName() + " RPS", curVel);
+		SmartDashboard.putNumber(this.getName() + " Goal", this.aimVelRPS);
 		SmartDashboard.putNumber(this.getName() + " Left", leftSpark.getSpeed());
 		SmartDashboard.putNumber(this.getName() + " Right", rightSpark.getSpeed());
 	}

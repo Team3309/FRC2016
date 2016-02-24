@@ -113,10 +113,10 @@ public class Robot extends IterativeRobot {
 	// Init to Tele
 	public void teleopInit() {
 		Drive.getInstance().toTeleop();
-		Vision.getInstance().setLight(.8);
+		Vision.getInstance().setLight(1);
 		Compressor compressor = new Compressor();
-		compressor.setClosedLoopControl(false);
-		// compressor.start();
+		compressor.setClosedLoopControl(true);
+		compressor.start();
 
 	}
 
@@ -140,7 +140,9 @@ public class Robot extends IterativeRobot {
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().manualControl();
-		Intake.getInstance().manualControl();
+		Shooter.getInstance().sendToSmartDash();
+		Intake.getInstance().update();
+		Intake.getInstance().sendToSmartDash();
 		// MANUALS
 		System.out.println("SHOOTER EN: " + Sensors.getShooterRPS());
 		System.out.println("navx " + Sensors.getAngle());

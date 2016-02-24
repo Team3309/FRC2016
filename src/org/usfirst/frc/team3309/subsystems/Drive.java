@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.subsystems;
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
+import org.team3309.lib.controllers.drive.FaceVisionTargetController;
 import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
@@ -10,6 +11,7 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
@@ -59,12 +61,30 @@ public class Drive extends ControlledSubsystem {
 		mController = new DriveCheezyDriveEquation();
 	}
 
+	FaceVisionTargetController x = new FaceVisionTargetController(.001, 0, 0);
+	boolean isReset = false;
+
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
 		// if mController is Completed and has not already been made blank, then
 		// make it blank
+		if (Controls.operatorController.getStart()) {
+			Vision.getInstance().setLight(.5);
+
+			x.setName("VISION");
+
+			
+			this.setController(x);
+		} else {
+			isReset = false;
+			Vision.getInstance().setLight(0);
+			this.setController(new DriveCheezyDriveEquation());
+		}
+
 		if (mController.isCompleted() && !(mController instanceof BlankController)) {
 			mController = new BlankController();
+		} else if (mController.isCompleted()) {
+			mController = new DriveCheezyDriveEquation();
 		}
 	}
 

@@ -58,12 +58,16 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-		if (Controls.operatorController.getRB()) {
-			this.setFeedyWheel(.5);
-		} else if (Controls.operatorController.getLB()) {
-			this.setFeedyWheel(-.5);
-		} else {
-			this.setFeedyWheel(0);
+		double power = 0;
+		if (KragerMath.threshold(Controls.driverController.getRightTrigger()) != 0) {
+			power = KragerMath.threshold(Controls.driverController.getRightTrigger());
+		} else if (KragerMath.threshold(Controls.driverController.getLeftTrigger()) != 0) {
+			power = KragerMath.threshold(-Controls.driverController.getLeftTrigger());
+		} else if (KragerMath.threshold(Controls.operatorController.getRightTrigger()) != 0) {
+			power = KragerMath.threshold(Controls.operatorController.getRightTrigger());
+		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
+			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
 		}
+		this.setFeedyWheel(power);
 	}
 }

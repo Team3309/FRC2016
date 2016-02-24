@@ -102,7 +102,4 @@ public class Sensors {
 		return feedyWheelEncoder.getDistance();
 	}
 
-	public static double getIntakePivotAngle() {
-		return intakePivot.getDistance();
-	}
 }

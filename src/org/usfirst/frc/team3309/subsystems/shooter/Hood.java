@@ -7,6 +7,7 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +33,7 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.mController = new PIDPositionController(0.001, 0, 0);
+		this.mController = new PIDPositionController(0.068, 0.001, .013);
 		this.mController.setName("Hood Angle");
 	}
 
@@ -41,13 +42,15 @@ public class Hood extends ControlledSubsystem {
 		curAngle = Sensors.getHoodAngle();
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
-			goalAngle = 15.8;
+			goalAngle = 14;
 		} else if (Controls.operatorController.getB()) {
 			goalAngle = 27.6;
 		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 30;
 		} else if (Controls.operatorController.getYBut()) {
 			goalAngle = 45;
+		} else if (Controls.operatorController.getStart()) {
+			// goalAngle = Vision.getInstance()
 		} else {
 			goalAngle = .2;
 		}

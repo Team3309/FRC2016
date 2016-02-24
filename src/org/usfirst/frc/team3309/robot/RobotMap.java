@@ -12,7 +12,7 @@ public class RobotMap {
 	public static final int RIGHT_DRIVE = 1;
 	public static final int LEFT_DRIVE = 0;
 
-	public static final int LIGHT = 2;
+	public static final int LIGHT = 7;
 
 	// Shooter
 	public static final int LEFT_SHOOTER_MOTOR = 4;
@@ -30,7 +30,7 @@ public class RobotMap {
 	public static final int CLIMBER_CARRIAGE_ID = 1;
 
 	// Sensors
-	public static final int ENCODERS_A_HOOK_DIGITAL = 7;
+	public static final int ENCODERS_A_HOOK_DIGITAL = 15;
 	public static final int ENCODERS_B_HOOK_DIGITAL = 6;
 	public static final int ENCODERS_A_FEEDY_WHEEL_DIGITAL = 14;
 	public static final int ENCODERS_B_FEEDY_WHEEL_DIGITAL = 13;

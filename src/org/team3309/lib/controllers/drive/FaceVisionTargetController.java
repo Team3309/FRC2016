@@ -22,6 +22,7 @@ public class FaceVisionTargetController extends DriveAngleController {
 		super(Sensors.getAngle());
 		this.setTHRESHOLD(.02);
 		this.setName("Turn To Vision");
+		SmartDashboard.putNumber(this.getName() + " AIM delta ANGLE", azimuth);
 	}
 
 	@Override
@@ -63,6 +64,6 @@ public class FaceVisionTargetController extends DriveAngleController {
 	@Override 
 	public void sendToSmartDash() {
 		super.sendToSmartDash();
-		SmartDashboard.putNumber("AIM delta ANGLE", azimuth);
+		SmartDashboard.putNumber(this.getName() + " AIM delta ANGLE", azimuth);
 	}
 }

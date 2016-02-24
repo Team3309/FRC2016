@@ -33,6 +33,10 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 			power = KragerMath.threshold(Controls.driverController.getRightTrigger());
 		} else if (KragerMath.threshold(Controls.driverController.getLeftTrigger()) != 0) {
 			power = KragerMath.threshold(-Controls.driverController.getLeftTrigger());
+		} else if (KragerMath.threshold(Controls.operatorController.getRightTrigger()) != 0) {
+			power = KragerMath.threshold(Controls.operatorController.getRightTrigger());
+		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
+			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
 		}
 		this.setIntake(power);
 	}
@@ -49,8 +53,8 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 	}
 
 	private void setIntake(double power) {
-		this.intakeFront.set(power);
-		this.intakeSide.set(-power);
+		this.intakeFront.set(-power);
+		this.intakeSide.set(power);
 	}
 
 	@Override
