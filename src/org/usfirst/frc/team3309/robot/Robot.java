@@ -141,7 +141,7 @@ public class Robot extends IterativeRobot {
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().manualControl();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().update();
+		Intake.getInstance().manualControl();
 		Intake.getInstance().sendToSmartDash();
 		// MANUALS
 		System.out.println("SHOOTER EN: " + Sensors.getShooterRPS());

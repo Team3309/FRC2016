@@ -21,8 +21,8 @@ public class Flywheel extends ControlledSubsystem {
 	private Spark leftSpark = new Spark(RobotMap.LEFT_SHOOTER_MOTOR);
 	private Spark rightSpark = new Spark(RobotMap.RIGHT_SHOOTER_MOTOR);
 
-	private double maxVelRPS = 0.0;
-	private double maxAccRPS = 0.0;
+	private double maxVelRPS = 155.0;
+	private double maxAccRPS = 31.0;
 	private double aimVelRPS = 0.0;
 	private double aimAccRPS = 0.0;
 
@@ -82,52 +82,37 @@ public class Flywheel extends ControlledSubsystem {
 			hasGoneBack = false;
 		}
 
-		// Based off of cur vel and aim vel, find aim acc
-		double error = this.aimVelRPS - curVel;
-		if (Math.abs(error) > 1000) {
-			if (error > 0) {
-				aimAccRPS = maxAccRPS;
-			} else if (error < 0) {
-				aimAccRPS = -maxAccRPS;
-			}
-		} else {
-			if (error > 0) {
-				aimAccRPS = maxAccRPS / 4;
-			} else if (error < 0) {
-				aimAccRPS = -maxAccRPS / 4;
-			}
-		}
+		shootLikeRobie();
 
-		// Find offset (how much should be added to the aim vel) // RB adds,
-		if (Controls.driverController.getLB()) {
-			offset -= 0;
-		} else if (Controls.driverController.getRB()) {
-			offset += 0;
-		}
-		double output = this.mController.getOutputSignal(getInputState()).getMotor();
-		if (output != 0 && !hasGoneBack) {
-			FeedyWheel.getInstance().setFeedyWheel(-.5);
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			FeedyWheel.getInstance().setFeedyWheel(0);
-			hasGoneBack = true;
-		}
+		/*
+		 * // Based off of cur vel and aim vel, find aim acc double error =
+		 * this.aimVelRPS - curVel; if (Math.abs(error) > 1000) { if (error > 0)
+		 * { aimAccRPS = maxAccRPS; } else if (error < 0) { aimAccRPS =
+		 * -maxAccRPS; } } else { if (error > 0) { aimAccRPS = maxAccRPS / 4; }
+		 * else if (error < 0) { aimAccRPS = -maxAccRPS / 4; } }
+		 * 
+		 * // Find offset (how much should be added to the aim vel) // RB adds,
+		 * if (Controls.driverController.getLB()) { offset -= 0; } else if
+		 * (Controls.driverController.getRB()) { offset += 0; }
+		 * 
+		 * if (output != 0 && !hasGoneBack) {
+		 * FeedyWheel.getInstance().setFeedyWheel(-.5); try { Thread.sleep(75);
+		 * } catch (InterruptedException e) { e.printStackTrace(); }
+		 * FeedyWheel.getInstance().setFeedyWheel(0); hasGoneBack = true; }
+		 * 
+		 * // Send our target velocity to the mController if (this.mController
+		 * instanceof FeedForwardWithPIDController) {
+		 * ((FeedForwardWithPIDController)
+		 * this.mController).setAimAcc(aimAccRPS);
+		 * ((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS
+		 * + offset); }
+		 * 
+		 * // Get value and set to motors if (aimVelRPS == 0) {
+		 * this.setShooter(0); } else { this.setShooter(output); }
+		 */
+		// double output =
+		// this.mController.getOutputSignal(getInputState()).getMotor();
 
-		// Send our target velocity to the mController
-		if (this.mController instanceof FeedForwardWithPIDController) {
-			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPS);
-			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS + offset);
-		}
-
-		// Get value and set to motors
-		if (aimVelRPS == 0) {
-			this.setShooter(0);
-		} else {
-			this.setShooter(output);
-		}
 	}
 
 	/**
@@ -164,35 +149,53 @@ public class Flywheel extends ControlledSubsystem {
 	 * Feed Forward with dynamic aims
 	 */
 	private void shootLikeRobie() {
-		if (curVel < aimVelRPS - 20) {
-			if (aimVelRPS < aimVelRPS) {
+		if (aimVelRPS == 0) {
+		} else {
+			if (curVel < aimVelRPS - 32) {
 				aimAccRPS = maxAccRPS;
 				aimVelRPS = curVel + maxAccRPS;
+
+			} else if (curVel > aimVelRPS + 32) {
+				aimAccRPS = 0;
+				// aimVelRPS = curVel + maxAccRPS;
 			} else {
-				aimAccRPS = maxAccRPS / 4;
+				aimAccRPS = 0;
 			}
-			aimAccRPS = maxAccRPS;
-		} else if (curVel > aimVelRPS + 20) {
-			if (aimVelRPS > aimVelRPS) {
-				aimAccRPS = -maxAccRPS;
-				aimVelRPS = curVel - maxAccRPS;
-			} else {
-				aimAccRPS = -maxAccRPS / 4;
-			}
-		} else {
-			aimAccRPS = 0;
 		}
-		double shooterSpeed = 0;
+
+		// Send our target velocity to the mController
+		if (this.mController instanceof FeedForwardWithPIDController) {
+			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPS);
+			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS + offset);
+		}
 		double output = this.mController.getOutputSignal(this.getInputState()).getMotor();
-		shooterSpeed = output;
 
-		if (shooterSpeed > 1) {
-			shooterSpeed = 1;
-		} else if (shooterSpeed < -1) {
-			shooterSpeed = -1;
+		if (output > 1) {
+			output = 1;
+		} else if (output < 0) {
+			output = 0;
 		}
 
-		setShooter(shooterSpeed);
+		if (output != 0 && !hasGoneBack) {
+			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			try {
+				Thread.sleep(75);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			FeedyWheel.getInstance().setFeedyWheel(0);
+			hasGoneBack = true;
+		}
+
+		// Get value and set to motors
+		if (aimVelRPS == 0) {
+			this.setShooter(0);
+		} else {
+			if (curVel < 18) {
+				output = .3;
+			}
+			this.setShooter(output);
+		}
 	}
 
 	@Override

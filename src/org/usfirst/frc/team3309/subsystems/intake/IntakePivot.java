@@ -72,7 +72,7 @@ public class IntakePivot extends ControlledSubsystem {
 			this.isButtonBeingHeld = false;
 		}
 		if (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8)) {
-			if (!this.isAtHighPoint) {
+			if (this.isAtHighPoint) {
 				output = .1;
 			}
 		}
@@ -120,6 +120,8 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-		this.setIntakePivot(0.75 * KragerMath.threshold(Controls.operatorController.getLeftY()));
+		this.setIntakePivot(.085);
+		// this.setIntakePivot(0.75 *
+		// KragerMath.threshold(Controls.operatorController.getLeftY()));
 	}
 }
