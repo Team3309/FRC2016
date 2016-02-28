@@ -9,6 +9,7 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FeedyWheel extends ControlledSubsystem {
 
@@ -26,7 +27,7 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	private FeedyWheel(String name) {
 		super("Feedy Wheel");
-		this.mController = new FeedForwardWithPIDController(.001, 0, 0, .001, 0);
+		this.mController = new FeedForwardWithPIDController(.005, 0, .007, .001, 0);
 	}
 
 	@Override
@@ -50,6 +51,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	@Override
 	public void sendToSmartDash() {
 		this.mController.sendToSmartDash();
+		SmartDashboard.putNumber(this.getName() + " Power", this.feedyWheelSpark.get());
 	}
 
 	public void setFeedyWheel(double power) {
@@ -68,6 +70,7 @@ public class FeedyWheel extends ControlledSubsystem {
 		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
 			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
 		}
+
 		this.setFeedyWheel(power);
 	}
 }

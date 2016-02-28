@@ -23,7 +23,7 @@ public class Flywheel extends ControlledSubsystem {
 
 	private double maxVelRPS = 155.0;
 	private double maxAccRPS = 31.0;
-	private double aimVelRPS = 0.0;
+	public double aimVelRPS = 0.0;
 	private double aimAccRPS = 0.0;
 
 	private double pastVel = 0;
@@ -41,10 +41,10 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.mController = new FeedForwardWithPIDController(.008, 0, .005, 0, 0);
+		this.mController = new FeedForwardWithPIDController(.005, 0, .005, 0, 0);
 		this.mController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
-		SmartDashboard.putNumber("POWER", power);
+		SmartDashboard.putNumber("TEST RPS", 100);
 	}
 
 	/**
@@ -62,6 +62,7 @@ public class Flywheel extends ControlledSubsystem {
 	double curVel = 0;
 	double power = 0;
 
+	// In front of batter 140 rps 26 degrees
 	@Override
 	public void update() {
 		// manualControl();
@@ -74,7 +75,7 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getXBut()) {
 			aimVelRPS = 140;
 		} else if (Controls.operatorController.getYBut()) {
-			aimVelRPS = 160;
+			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 		} else {
 			offset = 0;
 			aimVelRPS = 0;
@@ -176,15 +177,19 @@ public class Flywheel extends ControlledSubsystem {
 			output = 0;
 		}
 
-		if (output != 0 && !hasGoneBack) {
+		if (aimVelRPS != 0 && !hasGoneBack) {
 			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			System.out.println("FEEDY WHEEL");
 			try {
-				Thread.sleep(75);
+				Thread.sleep(135);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
+		} else {
+
 		}
 
 		// Get value and set to motors
@@ -192,7 +197,7 @@ public class Flywheel extends ControlledSubsystem {
 			this.setShooter(0);
 		} else {
 			if (curVel < 18) {
-				output = .3;
+				output = .35;
 			}
 			this.setShooter(output);
 		}
@@ -218,6 +223,12 @@ public class Flywheel extends ControlledSubsystem {
 	private double getRPS() {
 		pastVel = Sensors.getShooterRPS();
 		return Sensors.getShooterRPS();
+	}
+
+	public boolean isShooterInRange() {
+		if (this.getRPS() < aimVelRPS + 6 && this.getRPS() > aimVelRPS - 6)
+			return true;
+		return false;
 	}
 
 	private double getRPM() {

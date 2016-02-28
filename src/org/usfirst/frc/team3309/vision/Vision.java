@@ -31,10 +31,16 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 import edu.wpi.first.wpilibj.DigitalOutput;
 
 public class Vision implements Runnable {
+	public enum GoalSide {
+		LEFT, RIGHT, CENTER
+	}
 
 	private static final long TIMEOUT = 500;
 
 	private static Vision instance;
+	private static double goalHoodAngle = 0;
+	private static double goalRPS = 0;
+	private static GoalSide preferredGoal = GoalSide.CENTER;
 
 	public static Vision getInstance() {
 		if (instance == null) {
@@ -71,10 +77,16 @@ public class Vision implements Runnable {
 		out.updateDutyCycle(power);
 	}
 
-	public double getHoodAngle(Goal goal) {
-		// goal.distance *
-		double output = 2;
-		return output;
+	public Shot getShot() {
+		Shot x = new Shot();
+	}
+
+	public double getGoalHoodAngle() {
+		return goalHoodAngle;
+	}
+
+	public double getGoalRPS() {
+		return goalRPS;
 	}
 
 	@Override
@@ -102,6 +114,19 @@ public class Vision implements Runnable {
 				this.lastUpdate = System.currentTimeMillis();
 				this.latestGoals = goals;
 				this.lock.unlock();
+				List<Goal> currentGoals = getGoals();
+				if (this.preferredGoal == GoalSide.CENTER) {
+					for (Goal x : currentGoals) {
+
+					}
+				} else if (this.preferredGoal == GoalSide.LEFT) {
+
+				} else if (this.preferredGoal == GoalSide.RIGHT) {
+
+				} else {
+
+				}
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -122,6 +147,14 @@ public class Vision implements Runnable {
 			return new LinkedList<Goal>();
 		}
 		return goals;
+	}
+
+	public static GoalSide getPreferredGoal() {
+		return preferredGoal;
+	}
+
+	public static void setPreferredGoal(GoalSide preferredGoal) {
+		Vision.preferredGoal = preferredGoal;
 	}
 
 }

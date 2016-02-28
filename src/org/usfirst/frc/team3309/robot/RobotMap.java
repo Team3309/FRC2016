@@ -31,7 +31,7 @@ public class RobotMap {
 
 	// Sensors
 	public static final int ENCODERS_A_HOOK_DIGITAL = 15;
-	public static final int ENCODERS_B_HOOK_DIGITAL = 6;
+	public static final int ENCODERS_B_HOOK_DIGITAL = 16;
 	public static final int ENCODERS_A_FEEDY_WHEEL_DIGITAL = 14;
 	public static final int ENCODERS_B_FEEDY_WHEEL_DIGITAL = 13;
 	public static final int ENCODERS_A_INTAKE_PIVOT_DIGITAL = 0;

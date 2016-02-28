@@ -43,12 +43,12 @@ public class Sensors {
 				RobotMap.ENCODERS_B_FEEDY_WHEEL_DIGITAL, false);
 		hookEncoder = new Encoder(RobotMap.ENCODERS_A_HOOK_DIGITAL, RobotMap.ENCODERS_B_HOOK_DIGITAL, false);
 		shooterEncoder = new Counter(RobotMap.SHOOTER_OPTICAL_SENSOR);
-		
+
 		navX = new AHRS(SerialPort.Port.kMXP);
 		hoodEncoder = new Counter(new DigitalInput(RobotMap.HOOD_ABS));
 		// Counter.Mode.kPulseLengt
 		hoodEncoder.setSemiPeriodMode(true);
-		hoodEncoder.setReverseDirection(true);
+		hoodEncoder.setReverseDirection(false);
 		// hoodEncoder.
 		System.out.println("HEY FRIENDS");
 	}
@@ -86,11 +86,12 @@ public class Sensors {
 
 	// Shooter
 	public static double getShooterRPS() {
-		return (1/ shooterEncoder.getPeriod());
+		return (1 / shooterEncoder.getPeriod());
 	}
 
 	public static double getHoodAngle() {
-		return 272 - ((1000000.0 * hoodEncoder.getPeriod()) * (360.0 / 4096.0));
+		return Constants.getHoodBottomValue() - ((1000000.0 * (hoodEncoder.getPeriod())) * (360.0 / 4096.0));
+		// return (hoodEncoder.getPeriod() * 1000000.0);
 	}
 
 	// Climber

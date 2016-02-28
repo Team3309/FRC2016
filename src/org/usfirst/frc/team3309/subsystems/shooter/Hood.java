@@ -33,8 +33,11 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.mController = new PIDPositionController(0.068, 0.001, .013);
+		this.mController = new PIDPositionController(0.072, 0.003, .013);
 		this.mController.setName("Hood Angle");
+		SmartDashboard.putNumber("Test Angle", 25
+				);
+
 	}
 
 	@Override
@@ -44,27 +47,28 @@ public class Hood extends ControlledSubsystem {
 		if (Controls.operatorController.getA()) {
 			goalAngle = 14;
 		} else if (Controls.operatorController.getB()) {
-			goalAngle = 27.6;
+			goalAngle = 30.6;
 		} else if (Controls.operatorController.getXBut()) {
-			goalAngle = 30;
+			goalAngle = 40.5;
 		} else if (Controls.operatorController.getYBut()) {
-			goalAngle = 45;
+			//goalAngle = 45;
+			goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
 			// goalAngle = Vision.getInstance()
 		} else {
-			goalAngle = .2;
+			goalAngle = 1;
 		}
 		double output = this.mController.getOutputSignal(getInputState()).getMotor();
 		if ((curAngle > 59 && output > 0) || (curAngle < 0 && output < 0)) {
 			output = 0;
 		}
-		this.hoodSpark.set(output);
+		this.setHood(output);
 	}
 
 	@Override
 	public void sendToSmartDash() {
 		this.mController.sendToSmartDash();
-		SmartDashboard.putNumber(this.getName() + " angle", curAngle);
+		SmartDashboard.putNumber(this.getName() + " angle", Sensors.getHoodAngle());
 		SmartDashboard.putNumber(this.getName() + " goal angle", goalAngle);
 		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.get());
 	}
@@ -82,7 +86,7 @@ public class Hood extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-
+		curAngle = Sensors.getHoodAngle();
 		/*
 		 * if (Controls.driverController.getA()) { this.setHood(.4); } else if
 		 * (Controls.driverController.getB()) { this.setHood(-.4); } else {

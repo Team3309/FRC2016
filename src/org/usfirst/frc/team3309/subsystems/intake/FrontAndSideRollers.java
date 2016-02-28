@@ -5,6 +5,7 @@ import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,14 +30,16 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 	@Override
 	public void update() {
 		double power = 0;
-		if (KragerMath.threshold(Controls.driverController.getRightTrigger()) != 0) {
-			power = KragerMath.threshold(Controls.driverController.getRightTrigger());
-		} else if (KragerMath.threshold(Controls.driverController.getLeftTrigger()) != 0) {
-			power = KragerMath.threshold(-Controls.driverController.getLeftTrigger());
-		} else if (KragerMath.threshold(Controls.operatorController.getRightTrigger()) != 0) {
-			power = KragerMath.threshold(Controls.operatorController.getRightTrigger());
-		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
-			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
+		if (Flywheel.getInstance().isShooterInRange() && Flywheel.getInstance().aimVelRPS != 0) {
+			if (KragerMath.threshold(Controls.driverController.getRightTrigger()) != 0) {
+				power = KragerMath.threshold(Controls.driverController.getRightTrigger());
+			} else if (KragerMath.threshold(Controls.driverController.getLeftTrigger()) != 0) {
+				power = KragerMath.threshold(-Controls.driverController.getLeftTrigger());
+			} else if (KragerMath.threshold(Controls.operatorController.getRightTrigger()) != 0) {
+				power = KragerMath.threshold(Controls.operatorController.getRightTrigger());
+			} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
+				power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
+			}
 		}
 		this.setIntake(power);
 	}

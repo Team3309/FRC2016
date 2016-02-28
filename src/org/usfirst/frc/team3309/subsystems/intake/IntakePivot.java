@@ -6,6 +6,7 @@ import org.team3309.lib.controllers.generic.PIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
+import org.usfirst.frc.team3309.robot.Constants;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -17,8 +18,8 @@ public class IntakePivot extends ControlledSubsystem {
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
 	private double goalAngle = 0;
-	private double UP_ANGLE = 278;
-	private double INTAKE_ANGLE = 193;
+	private double UP_ANGLE = 4;
+	private double INTAKE_ANGLE = 100;
 	private boolean isAtHighPoint = true;
 	private boolean isButtonBeingHeld = false;
 
@@ -57,9 +58,9 @@ public class IntakePivot extends ControlledSubsystem {
 				((PIDController) this.mController).setUseSmartDash(false);
 			}
 			isAtHighPoint = !isAtHighPoint;
-			output = mController.getOutputSignal(getInputState()).getMotor();
+			output = -mController.getOutputSignal(getInputState()).getMotor();
 		} else if (Controls.operatorController.getRB()) {
-			output = mController.getOutputSignal(getInputState()).getMotor();
+			output = -mController.getOutputSignal(getInputState()).getMotor();
 		} else if (KragerMath.threshold(Controls.operatorController.getLeftY()) != 0) {
 			output = KragerMath.threshold(Controls.operatorController.getLeftY());
 			goalAngle = -1000;
@@ -67,12 +68,15 @@ public class IntakePivot extends ControlledSubsystem {
 			if (goalAngle < 0) {
 				output = 0;
 			} else {
-				output = mController.getOutputSignal(getInputState()).getMotor();
+				output = -mController.getOutputSignal(getInputState()).getMotor();
 			}
 			this.isButtonBeingHeld = false;
 		}
-		if (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8)) {
+		if (this.getPivotAngle() > 160
+				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
+				output = .065;
+			} else {
 				output = .1;
 			}
 		}
@@ -88,7 +92,8 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public double getPivotAngle() {
-		double curAngle = ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
+		double curAngle = Constants.getPivotTopValue()
+				- ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
 		while (curAngle > 360) {
 			curAngle -= 360;
 		}
@@ -108,7 +113,6 @@ public class IntakePivot extends ControlledSubsystem {
 	@Override
 	public void sendToSmartDash() {
 		this.mController.sendToSmartDash();
-		System.out.println("SENDING");
 		SmartDashboard.putNumber(this.getName() + " goal angle", this.goalAngle);
 		SmartDashboard.putNumber(this.getName() + " current angle", this.getPivotAngle());
 		SmartDashboard.putNumber(this.getName() + " power", this.intakePivot.get());
@@ -120,8 +124,7 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-		this.setIntakePivot(.085);
-		// this.setIntakePivot(0.75 *
-		// KragerMath.threshold(Controls.operatorController.getLeftY()));
+		// this.setIntakePivot(.065);
+		this.setIntakePivot(0.75 * KragerMath.threshold(Controls.operatorController.getLeftY()));
 	}
 }

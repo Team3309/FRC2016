@@ -61,21 +61,21 @@ public class Drive extends ControlledSubsystem {
 		mController = new DriveCheezyDriveEquation();
 	}
 
-	FaceVisionTargetController x = new FaceVisionTargetController(.001, 0, 0);
 	boolean isReset = false;
 
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
 		// if mController is Completed and has not already been made blank, then
 		// make it blank
-		if (Controls.operatorController.getStart()) {
+		if (Controls.operatorController.getStart() && !isReset) {
 			Vision.getInstance().setLight(.5);
-
+			FaceVisionTargetController x = new FaceVisionTargetController(.001, 0, 0);
 			x.setName("VISION");
-
-			
 			this.setController(x);
-		} else {
+			isReset = true;
+		} else if (Controls.operatorController.getStart() && isReset) {
+			
+		}else {
 			isReset = false;
 			Vision.getInstance().setLight(0);
 			this.setController(new DriveCheezyDriveEquation());
@@ -132,7 +132,7 @@ public class Drive extends ControlledSubsystem {
 	public void setAngleSetpoint(double goalAngle) {
 		mController = new DriveAngleController(goalAngle);
 		// ((PIDController) mController).setCompletable(false);
-		mController.setName("Drive Controller");
+		mController.setName("Drive Angle Controller");
 	}
 
 	/**

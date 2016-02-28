@@ -41,7 +41,7 @@ public class Shooter extends KragerSystem {
 	@Override
 	public void manualControl() {
 		mFlywheel.update();
-		mHood.manualControl();
+		mHood.update();
 		mFeedyWheel.manualControl();
 	}
 }
