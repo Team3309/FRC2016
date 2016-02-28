@@ -78,7 +78,8 @@ public class Vision implements Runnable {
 	}
 
 	public Shot getShot() {
-		Shot x = new Shot();
+		Shot x = new Shot(lastTimeoutTime, lastTimeoutTime, lastTimeoutTime);
+		return x; 
 	}
 
 	public double getGoalHoodAngle() {
