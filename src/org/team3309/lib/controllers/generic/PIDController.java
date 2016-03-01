@@ -115,6 +115,7 @@ public abstract class PIDController extends Controller {
 		// Make OutputSignal and fill it with calculated values
 		OutputSignal signal = new OutputSignal();
 		double output = (kP * error) + (kI * mIntegral) + (kD * (error - previousError));
+		//System.out.println("Kp: " + (kP * error) + "kI: " + (kI * mIntegral) + "kD: " + (kD * (error - previousError)));
 		signal.setMotor(output);
 		previousError = error;
 		return signal;

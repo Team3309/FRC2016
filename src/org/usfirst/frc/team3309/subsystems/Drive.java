@@ -41,6 +41,9 @@ public class Drive extends ControlledSubsystem {
 	private Spark right = new Spark(RobotMap.RIGHT_DRIVE);
 	private Solenoid sol = new Solenoid(0);
 
+	boolean isReset = false;
+	DriveAngleController x = new DriveAngleController(this.getAngle() + 5);
+
 	/**
 	 * Singleton Pattern
 	 * 
@@ -54,28 +57,36 @@ public class Drive extends ControlledSubsystem {
 
 	private Drive(String name) {
 		super(name);
-		mController = new DriveCheezyDriveEquation();
+		 mController = new DriveCheezyDriveEquation();
+		x.setName("Angle");
+	//	this.setController(x);
 	}
 
 	public void toTeleop() {
+		x.setName("Angle");
+		//this.setController(x);
+
 		mController = new DriveCheezyDriveEquation();
 	}
-
-	boolean isReset = false;
 
 	// Sets controller based on what state the remotes and game are in
 	private void updateController() {
 		// if mController is Completed and has not already been made blank, then
 		// make it blank
+
 		if (Controls.operatorController.getStart() && !isReset) {
 			Vision.getInstance().setLight(.5);
-			FaceVisionTargetController x = new FaceVisionTargetController(.001, 0, 0);
+			FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.039);
 			x.setName("VISION");
-			this.setController(x);
+			//this.setController(x);
 			isReset = true;
+			x.setGoalAngle(this.getAngle() + 5);
+			x.reset();
+			x.setName("Angle");
+			this.setController(x);
 		} else if (Controls.operatorController.getStart() && isReset) {
-			
-		}else {
+			System.out.println("Running Vision Rn");
+		} else {
 			isReset = false;
 			Vision.getInstance().setLight(0);
 			this.setController(new DriveCheezyDriveEquation());
@@ -86,6 +97,7 @@ public class Drive extends ControlledSubsystem {
 		} else if (mController.isCompleted()) {
 			mController = new DriveCheezyDriveEquation();
 		}
+
 	}
 
 	@Override
@@ -125,6 +137,7 @@ public class Drive extends ControlledSubsystem {
 	 * @param encoders
 	 *            goal encoder values
 	 */
+
 	public void setSetpoint(double encoders) {
 		mController = new DriveEncodersController(encoders);
 	}

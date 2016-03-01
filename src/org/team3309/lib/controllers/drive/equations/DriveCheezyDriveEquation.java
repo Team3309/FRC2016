@@ -1,6 +1,7 @@
 
 package org.team3309.lib.controllers.drive.equations;
 
+import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
@@ -21,7 +22,7 @@ public class DriveCheezyDriveEquation extends Controller {
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		double throttle = Controls.driverController.getLeftY();
-		double wheel = Controls.driverController.getRightX();
+		double wheel = KragerMath.threshold(Controls.driverController.getRightX());
 		boolean isQuickTurn = Controls.driverController.getRB();
 		boolean isHighGear = false;
 		OutputSignal signal = new OutputSignal();
@@ -56,15 +57,15 @@ public class DriveCheezyDriveEquation extends Controller {
 		double negInertiaAccumulator = 0.0;
 		double negInertiaScalar;
 		if (isHighGear) {
-			
+
 			negInertiaScalar = 5.0;
 			sensitivity = .75;
 		} else {
 			if (wheel * negInertia > 0) {
-				negInertiaScalar = 2.5;
+				negInertiaScalar = 1.75;
 			} else {
 				if (Math.abs(wheel) > 0.65) {
-					negInertiaScalar = 5.0;
+					negInertiaScalar = 4.0;
 				} else {
 					negInertiaScalar = 3.0;
 				}

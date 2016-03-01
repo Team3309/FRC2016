@@ -72,7 +72,7 @@ public class IntakePivot extends ControlledSubsystem {
 			}
 			this.isButtonBeingHeld = false;
 		}
-		if (this.getPivotAngle() > 160
+		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
 				output = .065;

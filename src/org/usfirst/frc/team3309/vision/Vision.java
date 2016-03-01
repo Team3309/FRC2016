@@ -34,13 +34,16 @@ public class Vision implements Runnable {
 	public enum GoalSide {
 		LEFT, RIGHT, CENTER
 	}
+	
+	//private static Shot[] = {new Shot(goalHoodAngle, goalHoodAngle, goalHoodAngle)};
 
 	private static final long TIMEOUT = 500;
 
 	private static Vision instance;
-	private static double goalHoodAngle = 0;
-	private static double goalRPS = 0;
-	private static GoalSide preferredGoal = GoalSide.CENTER;
+	private double goalHoodAngle = 0;
+	private double goalRPS = 0;
+	private GoalSide preferredGoal = GoalSide.CENTER;
+	private Goal currentGoal;
 
 	public static Vision getInstance() {
 		if (instance == null) {
@@ -78,8 +81,12 @@ public class Vision implements Runnable {
 	}
 
 	public Shot getShot() {
-		Shot x = new Shot(lastTimeoutTime, lastTimeoutTime, lastTimeoutTime);
-		return x; 
+		if (currentGoal == null) {
+			return null;
+		}
+		double toBeGoalRPS = 0, toBeGoalHoodAngle = 2;
+		Shot x = new Shot(toBeGoalRPS, toBeGoalHoodAngle, currentGoal.azimuth);
+		return x;
 	}
 
 	public double getGoalHoodAngle() {
@@ -116,17 +123,31 @@ public class Vision implements Runnable {
 				this.latestGoals = goals;
 				this.lock.unlock();
 				List<Goal> currentGoals = getGoals();
-				if (this.preferredGoal == GoalSide.CENTER) {
+				double currentBiggest = 0;
+				if (currentGoals.size() != 0) {
 					for (Goal x : currentGoals) {
-
+						if (Math.abs(x.width) > currentBiggest) {
+							currentBiggest = x.width;
+							currentGoal = x;
+						}
 					}
-				} else if (this.preferredGoal == GoalSide.LEFT) {
-
-				} else if (this.preferredGoal == GoalSide.RIGHT) {
-
 				} else {
-
+					currentGoal = null;
 				}
+				/*
+				 * if (this.preferredGoal == GoalSide.CENTER) { double
+				 * closestToZero = 1.1; for (Goal x : currentGoals) { if
+				 * (Math.abs(x.x) < closestToZero) { closestToZero = x.x;
+				 * this.currentGoal = x; }
+				 * 
+				 * } } else if (this.preferredGoal == GoalSide.LEFT) {
+				 * 
+				 * } else if (this.preferredGoal == GoalSide.RIGHT) {
+				 * 
+				 * } else {
+				 * 
+				 * }
+				 */
 
 			}
 		} catch (IOException e) {
@@ -150,12 +171,12 @@ public class Vision implements Runnable {
 		return goals;
 	}
 
-	public static GoalSide getPreferredGoal() {
+	public GoalSide getPreferredGoal() {
 		return preferredGoal;
 	}
 
-	public static void setPreferredGoal(GoalSide preferredGoal) {
-		Vision.preferredGoal = preferredGoal;
+	public void setPreferredGoal(GoalSide preferredGoal) {
+		preferredGoal = preferredGoal;
 	}
 
 }
