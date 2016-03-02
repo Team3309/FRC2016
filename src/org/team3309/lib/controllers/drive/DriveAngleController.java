@@ -13,7 +13,7 @@ public class DriveAngleController extends PIDPositionController {
 	double goalAngle = 0;
 
 	public DriveAngleController(double goal) {
-		super(.01, 0, 0);
+		super(.058, 0.015, 0.039);
 		this.setName("Angle");
 		SmartDashboard.putNumber(this.getName() + " goal(set me)", goal);
 		this.setTHRESHOLD(.5);
@@ -63,5 +63,9 @@ public class DriveAngleController extends PIDPositionController {
 
 	public void setGoalAngle(double angle) {
 		this.goalAngle = angle;
+	}
+	
+	public double getGoalAngle() {
+		return this.goalAngle;
 	}
 }

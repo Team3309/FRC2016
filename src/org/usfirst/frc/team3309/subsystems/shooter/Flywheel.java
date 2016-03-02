@@ -6,6 +6,7 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -76,6 +77,10 @@ public class Flywheel extends ControlledSubsystem {
 			aimVelRPS = 140;
 		} else if (Controls.operatorController.getYBut()) {
 			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
+		} else if (Controls.operatorController.getStart()) {
+			if (Vision.getInstance().getShot() != null) {
+				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
+			}
 		} else {
 			offset = 0;
 			aimVelRPS = 0;

@@ -34,8 +34,9 @@ public class Vision implements Runnable {
 	public enum GoalSide {
 		LEFT, RIGHT, CENTER
 	}
-	
-	//private static Shot[] = {new Shot(goalHoodAngle, goalHoodAngle, goalHoodAngle)};
+
+	// private static Shot[] = {new Shot(goalHoodAngle, goalHoodAngle,
+	// goalHoodAngle)};
 
 	private static final long TIMEOUT = 500;
 
@@ -106,7 +107,6 @@ public class Vision implements Runnable {
 				byte[] buf = new byte[2048];
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
-
 				String messageString = new String(packet.getData(), 0, packet.getLength());
 				JSONArray goalsJson = new JSONArray(messageString);
 				List<Goal> goals = new LinkedList<Goal>();
@@ -114,6 +114,8 @@ public class Vision implements Runnable {
 					JSONObject goalJson = goalsJson.getJSONObject(i);
 					JSONObject pos = goalJson.getJSONObject("pos");
 					JSONObject size = goalJson.getJSONObject("size");
+					System.out.println("FDSAF");
+
 					goals.add(new Goal(pos.getDouble("x"), pos.getDouble("y"), size.getDouble("width"),
 							size.getDouble("height"), goalJson.getDouble("distance"),
 							goalJson.getDouble("elevation_angle"), goalJson.getDouble("azimuth")));
@@ -122,32 +124,21 @@ public class Vision implements Runnable {
 				this.lastUpdate = System.currentTimeMillis();
 				this.latestGoals = goals;
 				this.lock.unlock();
-				List<Goal> currentGoals = getGoals();
+
+				// Not networking Code :
+				List<Goal> currentGoals = goals;
 				double currentBiggest = 0;
 				if (currentGoals.size() != 0) {
 					for (Goal x : currentGoals) {
 						if (Math.abs(x.width) > currentBiggest) {
 							currentBiggest = x.width;
 							currentGoal = x;
+							System.out.println("Current: " + currentGoal);
 						}
 					}
 				} else {
 					currentGoal = null;
 				}
-				/*
-				 * if (this.preferredGoal == GoalSide.CENTER) { double
-				 * closestToZero = 1.1; for (Goal x : currentGoals) { if
-				 * (Math.abs(x.x) < closestToZero) { closestToZero = x.x;
-				 * this.currentGoal = x; }
-				 * 
-				 * } } else if (this.preferredGoal == GoalSide.LEFT) {
-				 * 
-				 * } else if (this.preferredGoal == GoalSide.RIGHT) {
-				 * 
-				 * } else {
-				 * 
-				 * }
-				 */
 
 			}
 		} catch (IOException e) {
@@ -166,6 +157,7 @@ public class Vision implements Runnable {
 		List<Goal> goals = this.latestGoals;
 		this.lock.unlock();
 		if (goals == null) {
+			System.out.println("NO GOALS");
 			return new LinkedList<Goal>();
 		}
 		return goals;

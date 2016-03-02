@@ -11,6 +11,7 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -41,6 +42,8 @@ public class Drive extends ControlledSubsystem {
 	private Spark right = new Spark(RobotMap.RIGHT_DRIVE);
 	private Solenoid sol = new Solenoid(0);
 
+	private Shot desiredShot;
+
 	boolean isReset = false;
 	DriveAngleController x = new DriveAngleController(this.getAngle() + 5);
 
@@ -57,14 +60,14 @@ public class Drive extends ControlledSubsystem {
 
 	private Drive(String name) {
 		super(name);
-		 mController = new DriveCheezyDriveEquation();
+		mController = new DriveCheezyDriveEquation();
 		x.setName("Angle");
-	//	this.setController(x);
+		// this.setController(x);
 	}
 
 	public void toTeleop() {
 		x.setName("Angle");
-		//this.setController(x);
+		// this.setController(x);
 
 		mController = new DriveCheezyDriveEquation();
 	}
@@ -75,17 +78,21 @@ public class Drive extends ControlledSubsystem {
 		// make it blank
 
 		if (Controls.operatorController.getStart() && !isReset) {
+			this.desiredShot = Vision.getInstance().getShot();
 			Vision.getInstance().setLight(.5);
-			FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.039);
-			x.setName("VISION");
-			//this.setController(x);
-			isReset = true;
-			x.setGoalAngle(this.getAngle() + 5);
-			x.reset();
-			x.setName("Angle");
-			this.setController(x);
+			if (this.desiredShot != null) {
+				FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.039);
+				x.setName("VISION");
+				x.reset();
+				x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
+				this.setController(x);
+				isReset = true;
+			}else {
+				isReset = false;
+			}
 		} else if (Controls.operatorController.getStart() && isReset) {
 			System.out.println("Running Vision Rn");
+			System.out.println(x.getGoalAngle());
 		} else {
 			isReset = false;
 			Vision.getInstance().setLight(0);

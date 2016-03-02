@@ -129,7 +129,7 @@ public class Robot extends IterativeRobot {
 
 		if (Vision.getInstance().getGoals().size() > 0)
 			System.out.println("Azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
-
+		
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();
