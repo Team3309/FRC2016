@@ -16,159 +16,103 @@
 
 package org.usfirst.frc.team3309.vision;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import java.util.List;
 
 public class Vision implements Runnable {
-	public enum GoalSide {
-		LEFT, RIGHT, CENTER
-	}
+    public enum GoalSide {
+        LEFT, RIGHT, CENTER
+    }
 
-	// private static Shot[] = {new Shot(goalHoodAngle, goalHoodAngle,
-	// goalHoodAngle)};
+    // private static Shot[] = {new Shot(goalHoodAngle, goalHoodAngle,
+    // goalHoodAngle)};
 
-	private static final long TIMEOUT = 500;
+    private static final long TIMEOUT = 500;
 
-	private static Vision instance;
-	private double goalHoodAngle = 0;
-	private double goalRPS = 0;
-	private GoalSide preferredGoal = GoalSide.CENTER;
-	private Goal currentGoal;
+    private static Vision instance;
+    private double goalHoodAngle = 0;
+    private double goalRPS = 0;
+    private GoalSide preferredGoal = GoalSide.CENTER;
+    private Goal currentGoal;
 
-	public static Vision getInstance() {
-		if (instance == null) {
-			instance = new Vision();
-		}
-		return instance;
-	}
+    public static Vision getInstance() {
+        if (instance == null) {
+            instance = new Vision();
+        }
+        return instance;
+    }
 
-	private final Thread thread;
-	private final Lock lock;
-	private List<Goal> latestGoals;
-	private long lastUpdate = 0;
-	private long lastTimeoutTime = 0;
-	private DigitalOutput out = new DigitalOutput(RobotMap.LIGHT);
+    private DigitalOutput out = new DigitalOutput(RobotMap.LIGHT);
 
-	private Vision() {
-		this.thread = new Thread(this);
-		this.lock = new ReentrantLock();
-	}
+    private Vision() {
+    }
 
-	public void start() {
-		thread.start();
-		out.enablePWM(0);
-		out.setPWMRate(19000);
+    public void start() {
+        VisionClient.getInstance().start();
+        out.enablePWM(0);
+        out.setPWMRate(19000);
 
-	}
+    }
 
-	/**
-	 * Sets light between 0 - 1
-	 * 
-	 * @param power
-	 */
-	public void setLight(double power) {
-		out.updateDutyCycle(power);
-	}
+    /**
+     * Sets light between 0 - 1
+     *
+     * @param power
+     */
+    public void setLight(double power) {
+        out.updateDutyCycle(power);
+    }
 
-	public Shot getShot() {
-		if (currentGoal == null) {
-			return null;
-		}
-		double toBeGoalRPS = 0, toBeGoalHoodAngle = 2;
-		Shot x = new Shot(toBeGoalRPS, toBeGoalHoodAngle, currentGoal.azimuth);
-		return x;
-	}
+    public Shot getShot() {
+        if (currentGoal == null) {
+            return null;
+        }
+        double toBeGoalRPS = 0, toBeGoalHoodAngle = 2;
+        Shot x = new Shot(toBeGoalRPS, toBeGoalHoodAngle, currentGoal.azimuth);
+        return x;
+    }
 
-	public double getGoalHoodAngle() {
-		return goalHoodAngle;
-	}
+    public double getGoalHoodAngle() {
+        return goalHoodAngle;
+    }
 
-	public double getGoalRPS() {
-		return goalRPS;
-	}
+    public double getGoalRPS() {
+        return goalRPS;
+    }
 
-	@Override
-	public void run() {
-		try {
-			DatagramSocket socket = new DatagramSocket(3309);
-			System.out.println("Vision server started.");
-			while (true) {
-				byte[] buf = new byte[2048];
-				DatagramPacket packet = new DatagramPacket(buf, buf.length);
-				socket.receive(packet);
-				String messageString = new String(packet.getData(), 0, packet.getLength());
-				JSONArray goalsJson = new JSONArray(messageString);
-				List<Goal> goals = new LinkedList<Goal>();
-				for (int i = 0; i < goalsJson.length(); i++) {
-					JSONObject goalJson = goalsJson.getJSONObject(i);
-					JSONObject pos = goalJson.getJSONObject("pos");
-					JSONObject size = goalJson.getJSONObject("size");
-					System.out.println("FDSAF");
+    @Override
+    public void run() {
+        while (true) {
+            // wait for new goals to be available and then process them
+            List<Goal> currentGoals = VisionClient.getInstance().waitForGoals();
+            double currentBiggest = 0;
+            if (currentGoals.size() != 0) {
+                for (Goal x : currentGoals) {
+                    if (Math.abs(x.width) > currentBiggest) {
+                        currentBiggest = x.width;
+                        currentGoal = x;
+                        System.out.println("Current: " + currentGoal);
+                    }
+                }
+            } else {
+                currentGoal = null;
+            }
+        }
+    }
 
-					goals.add(new Goal(pos.getDouble("x"), pos.getDouble("y"), size.getDouble("width"),
-							size.getDouble("height"), goalJson.getDouble("distance"),
-							goalJson.getDouble("elevation_angle"), goalJson.getDouble("azimuth")));
-				}
-				this.lock.lock();
-				this.lastUpdate = System.currentTimeMillis();
-				this.latestGoals = goals;
-				this.lock.unlock();
+    public List<Goal> getGoals() {
+        return VisionClient.getInstance().getGoals();
+    }
 
-				// Not networking Code :
-				List<Goal> currentGoals = goals;
-				double currentBiggest = 0;
-				if (currentGoals.size() != 0) {
-					for (Goal x : currentGoals) {
-						if (Math.abs(x.width) > currentBiggest) {
-							currentBiggest = x.width;
-							currentGoal = x;
-							System.out.println("Current: " + currentGoal);
-						}
-					}
-				} else {
-					currentGoal = null;
-				}
 
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public GoalSide getPreferredGoal() {
+        return preferredGoal;
+    }
 
-	public List<Goal> getGoals() {
-		this.lock.lock();
-		long currentTime = System.currentTimeMillis();
-		if (currentTime - lastUpdate > TIMEOUT && lastUpdate != lastTimeoutTime) {
-			this.latestGoals = null;
-			this.lastTimeoutTime = lastUpdate;
-			System.out.println("Vision timed out");
-		}
-		List<Goal> goals = this.latestGoals;
-		this.lock.unlock();
-		if (goals == null) {
-			System.out.println("NO GOALS");
-			return new LinkedList<Goal>();
-		}
-		return goals;
-	}
-
-	public GoalSide getPreferredGoal() {
-		return preferredGoal;
-	}
-
-	public void setPreferredGoal(GoalSide preferredGoal) {
-		preferredGoal = preferredGoal;
-	}
+    public void setPreferredGoal(GoalSide preferredGoal) {
+        preferredGoal = preferredGoal;
+    }
 
 }
