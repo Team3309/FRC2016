@@ -17,8 +17,9 @@ public class FaceVisionTargetController extends DriveAngleController {
 	public FaceVisionTargetController(double kP, double kI, double kD) {
 		super(Sensors.getAngle());
 		if (Vision.getInstance().getShot() != null) {
+			this.setTIME_TO_BE_COMPLETE_MILLISECONDS(450);
 			aimShot = Vision.getInstance().getShot();
-			this.setTHRESHOLD(.4);
+			this.setTHRESHOLD(.3);
 			this.setName("Turn To Vision");
 			SmartDashboard.putNumber(this.getName() + " AIM delta ANGLE", aimShot.getAzimuth());
 			this.goalAngle = Drive.getInstance().getAngle() + aimShot.getAzimuth();
@@ -27,9 +28,10 @@ public class FaceVisionTargetController extends DriveAngleController {
 			this.sendToDash = false;
 			this.completable = true;
 			this.goalAngle = Drive.getInstance().getAngle();
+			System.out.println("THIS IS VERY BAD");
 		}
-		
-		//this.goalAngle = Drive.getInstance().getAngle() + 5;
+
+		// this.goalAngle = Drive.getInstance().getAngle() + 5;
 
 	}
 

@@ -70,7 +70,7 @@ public class FeedyWheel extends ControlledSubsystem {
 		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
 			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
 		}
-
+		//System.out.println("power: " + power);
 		this.setFeedyWheel(power);
 	}
 }

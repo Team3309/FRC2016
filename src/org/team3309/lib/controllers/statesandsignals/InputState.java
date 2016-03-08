@@ -22,6 +22,7 @@ public class InputState extends HashMap<String, Double> {
 
 	// Default Key Methods
 	public void setError(double error) {
+		//System.out.println("SETTOMG : " + error);
 		this.put("error", error);
 	}
 

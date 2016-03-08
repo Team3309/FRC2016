@@ -42,7 +42,7 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.mController = new FeedForwardWithPIDController(.005, 0, .005, 0, 0);
+		this.mController = new FeedForwardWithPIDController(.006, 0, .006, 0.000, 0.00);
 		this.mController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		SmartDashboard.putNumber("TEST RPS", 100);
@@ -70,9 +70,9 @@ public class Flywheel extends ControlledSubsystem {
 		curVel = this.getRPS();
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
-			aimVelRPS = 125;
+			aimVelRPS = 110;
 		} else if (Controls.operatorController.getB()) {
-			aimVelRPS = 120;
+			aimVelRPS = 130;
 		} else if (Controls.operatorController.getXBut()) {
 			aimVelRPS = 140;
 		} else if (Controls.operatorController.getYBut()) {
@@ -81,7 +81,10 @@ public class Flywheel extends ControlledSubsystem {
 			if (Vision.getInstance().getShot() != null) {
 				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
 			}
-		} else {
+		} else if (Controls.operatorController.getBack()) {
+			aimVelRPS = 160;
+			
+		}else {
 			offset = 0;
 			aimVelRPS = 0;
 			aimAccRPS = 0;
@@ -186,7 +189,7 @@ public class Flywheel extends ControlledSubsystem {
 			FeedyWheel.getInstance().setFeedyWheel(-.5);
 			System.out.println("FEEDY WHEEL");
 			try {
-				Thread.sleep(135);
+				Thread.sleep(130);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

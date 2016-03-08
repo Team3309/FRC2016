@@ -2,7 +2,9 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
+import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
+import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TurnToVisionMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
@@ -21,6 +23,7 @@ import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
 import org.usfirst.frc.team3309.vision.Vision;
+import org.usfirst.frc.team3309.vision.VisionClient;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -46,7 +49,6 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("INNIT");
 		Sensors.init();
-		;
 		try {
 
 		} catch (Exception e) {
@@ -58,7 +60,8 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
-		mainAutoChooser.addObject("Angle", new TurnToVisionMode());
+		mainAutoChooser.addObject("Angle", new TurnToAngleAutoMode());
+		mainAutoChooser.addObject("Go Forward", new GoForwardStraightAutoMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
 		startingPositionAutoChooser.addObject("2", 2);
@@ -89,6 +92,7 @@ public class Robot extends IterativeRobot {
 
 	// Init to Auto
 	public void autonomousInit() {
+		Sensors.resetDrive();
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
@@ -105,8 +109,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		// System.out.println("AUTO PERIODIC");
 		// Sensors.printNavX();
-		if (Vision.getInstance().getGoals().size() > 0)
-			System.out.println("JSON ARRAYS: " + Vision.getInstance().getGoals().get(0).width);
+		// if (Vision.getInstance().getGoals().size() > 0)
+		// System.out.println("JSON ARRAYS: " +
+		// Vision.getInstance().getGoals());
 
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
@@ -128,8 +133,8 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 
 		if (Vision.getInstance().getGoals().size() > 0)
-			System.out.println("Azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
-		
+			System.out.println("Y: " + Vision.getInstance().getGoals().get(0).y);
+
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();
@@ -150,26 +155,26 @@ public class Robot extends IterativeRobot {
 		Intake.getInstance().sendToSmartDash();
 
 		// SmartDashboard.putNumber("0", pdp.getCurrent(0));
-		/*
-		 * SmartDashboard.putNumber("1", pdp.getCurrent(1));
-		 * SmartDashboard.putNumber("2", pdp.getCurrent(2));
-		 * SmartDashboard.putNumber("3", pdp.getCurrent(3));
-		 * SmartDashboard.putNumber("4", pdp.getCurrent(4));
-		 * SmartDashboard.putNumber("5", pdp.getCurrent(5));
-		 * SmartDashboard.putNumber("6", pdp.getCurrent(6));
-		 * SmartDashboard.putNumber("7", pdp.getCurrent(7));
-		 * SmartDashboard.putNumber("8", pdp.getCurrent(8));
-		 * SmartDashboard.putNumber("9", pdp.getCurrent(9));
-		 * SmartDashboard.putNumber("10", pdp.getCurrent(10));
-		 * SmartDashboard.putNumber("11", pdp.getCurrent(11));
-		 * SmartDashboard.putNumber("12", pdp.getCurrent(12));
-		 * SmartDashboard.putNumber("13", pdp.getCurrent(13));
-		 * SmartDashboard.putNumber("14", pdp.getCurrent(14));
-		 * SmartDashboard.putNumber("15", pdp.getCurrent(15));
-		 */
+		
+		 // SmartDashboard.putNumber("1", pdp.getCurrent(1));
+		  SmartDashboard.putNumber("2", pdp.getCurrent(2));
+		  SmartDashboard.putNumber("3", pdp.getCurrent(3));
+		  SmartDashboard.putNumber("4", pdp.getCurrent(4));
+		  SmartDashboard.putNumber("5", pdp.getCurrent(5));
+		  SmartDashboard.putNumber("6", pdp.getCurrent(6));
+		  SmartDashboard.putNumber("7", pdp.getCurrent(7));
+		  SmartDashboard.putNumber("8", pdp.getCurrent(8));
+		  SmartDashboard.putNumber("9", pdp.getCurrent(9));
+		  SmartDashboard.putNumber("10", pdp.getCurrent(10));
+		  SmartDashboard.putNumber("11", pdp.getCurrent(11));
+		  SmartDashboard.putNumber("12", pdp.getCurrent(12));
+		  SmartDashboard.putNumber("13", pdp.getCurrent(13));
+		  SmartDashboard.putNumber("14", pdp.getCurrent(14));
+		  SmartDashboard.putNumber("15", pdp.getCurrent(15));
+		 
 		// MANUALS
 		try {
-			Thread.sleep(100);
+			Thread.sleep(30);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

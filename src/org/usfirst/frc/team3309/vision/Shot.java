@@ -4,11 +4,31 @@ public class Shot {
 	private double goalRPS = 0;
 	private double goalHoodAngle = 0;
 	private double azimuth = 0;
+	private double yCoordinate = 0;
 
-	public Shot(double goalRPS, double goalHoodAngle, double azimuth) {
+	public Shot(double azimuth) {
+		this.setAzimuth(azimuth);
+	}
+
+	public double getYCoordinate() {
+		return yCoordinate;
+	}
+
+	public void setYCoordinate(double distance) {
+		this.yCoordinate = distance;
+	}
+
+	public Shot(double goalRPS, double goalHoodAngle, double azimuth, double distance) {
 		this.goalRPS = goalRPS;
 		this.goalHoodAngle = goalHoodAngle;
+		this.yCoordinate = distance;
 		this.setAzimuth(azimuth);
+	}
+	
+	public Shot(double goalRPS, double goalHoodAngle, double distance) {
+		this.goalRPS = goalRPS;
+		this.goalHoodAngle = goalHoodAngle;
+		this.yCoordinate = distance;
 	}
 
 	public double getGoalRPS() {

@@ -13,6 +13,10 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
  */
 public class BlankController extends Controller {
 
+	private double power = 0;
+	
+	
+
 	@Override
 	public void reset() {
 		
@@ -20,11 +24,22 @@ public class BlankController extends Controller {
 
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
-		return new OutputSignal(); // Returns only zeros for everything
+		OutputSignal signal = new OutputSignal();
+		signal.setLeftRightMotor(power, power);
+		signal.setMotor(power);
+		return signal; // Returns only zeros for everything
 	}
 
 	@Override
 	public boolean isCompleted() {
 		return true; // Is always complete
+	}
+	
+	public double getPower() {
+		return power;
+	}
+
+	public void setPower(double power) {
+		this.power = power;
 	}
 }

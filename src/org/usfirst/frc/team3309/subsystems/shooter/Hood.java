@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
+import org.team3309.lib.controllers.generic.PIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
@@ -33,33 +34,46 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.mController = new PIDPositionController(0.072, 0.003, .013);
+		this.mController = new PIDPositionController(0.072, 0.002, .013);
 		this.mController.setName("Hood Angle");
-		SmartDashboard.putNumber("Test Angle", 25
-				);
+		((PIDController) this.mController).setTHRESHOLD(.4);
+		// this.mController.
+		SmartDashboard.putNumber("Test Angle", 25);
 
 	}
 
 	@Override
 	public void update() {
 		curAngle = Sensors.getHoodAngle();
+		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
 			goalAngle = 14;
 		} else if (Controls.operatorController.getB()) {
-			goalAngle = 30.6;
+			goalAngle = 28.6;
 		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 40.5;
 		} else if (Controls.operatorController.getYBut()) {
-			//goalAngle = 45;
+			// goalAngle = 45;
 			goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
-			// goalAngle = Vision.getInstance()
+			if (Vision.getInstance().getShot() != null)
+				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
+			else
+				goalAngle = .4;
+		} else if (KragerMath.threshold(Controls.operatorController.getRightY()) != 0) {
+			output = KragerMath.threshold(Controls.operatorController.getRightY());
+			goalAngle = -1000;
 		} else {
-			goalAngle = 1;
+			if (goalAngle >= -1) 	
+				goalAngle = .4;
 		}
-		double output = this.mController.getOutputSignal(getInputState()).getMotor();
-		if ((curAngle > 59 && output > 0) || (curAngle < 0 && output < 0)) {
+		
+		if (goalAngle >= 0) {
+			output = this.mController.getOutputSignal(getInputState()).getMotor();
+		}
+		
+		if ((curAngle > 59 && output > -1) || (curAngle < 0 && output < 0) || this.isOnTarget()) {
 			output = 0;
 		}
 		this.setHood(output);

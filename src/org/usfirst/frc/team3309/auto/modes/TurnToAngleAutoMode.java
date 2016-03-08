@@ -7,7 +7,9 @@ public class TurnToAngleAutoMode extends AutoRoutine{
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
+		
 		mDrive.setAngleSetpoint(359);
+		
 		this.waitForDrive(6000000);
 		this.waitForEndOfAuto();
 		System.out.println("AUTO HAS ENDED");

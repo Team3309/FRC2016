@@ -17,14 +17,15 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Sensors {
-	private static Encoder leftDrive;
-	private static Encoder rightDrive;
+	public static Encoder leftDrive;
+	public static Encoder rightDrive;
 	private static Counter shooterEncoder;
 	private static Encoder hookEncoder;
 	private static Counter hoodEncoder;
 	private static Encoder feedyWheelEncoder;
 	private static Encoder intakePivot;
 	private static AHRS navX;
+	private static double pastShooter = 0.0;
 	// private static Counter hoodEncoder;
 
 	public static void init() {
@@ -49,6 +50,8 @@ public class Sensors {
 		// Counter.Mode.kPulseLengt
 		hoodEncoder.setSemiPeriodMode(true);
 		hoodEncoder.setReverseDirection(false);
+		hoodEncoder.reset();
+
 		// hoodEncoder.
 		System.out.println("HEY FRIENDS");
 	}
@@ -60,7 +63,8 @@ public class Sensors {
 	}
 
 	public static double getAngle() {
-		return navX.getFusedHeading();
+		// System.out.println(navX.isMagnetometerCalibrated());
+		return navX.getYaw();
 	}
 
 	public static void resetDrive() {
@@ -86,12 +90,29 @@ public class Sensors {
 
 	// Shooter
 	public static double getShooterRPS() {
-		return (1 / shooterEncoder.getPeriod());
+		double currentShooter = (1 / shooterEncoder.getPeriod());
+		if (Math.abs(1 / shooterEncoder.getPeriod()) - (pastShooter) > 250)
+			return pastShooter;
+		pastShooter = currentShooter;
+		return currentShooter;
 	}
 
 	public static double getHoodAngle() {
-		return Constants.getHoodBottomValue() - ((1000000.0 * (hoodEncoder.getPeriod())) * (360.0 / 4096.0));
-		// return (hoodEncoder.getPeriod() * 1000000.0);
+		double hoodAngle = Constants.getHoodBottomValue()
+				- ((1000000.0 * (hoodEncoder.getPeriod())) * (360.0 / 4096.0));
+		// double hoodAngle = (-1 * ((1000000.0 * (hoodEncoder.getPeriod())) *
+		// (360.0 / 4096.0)));
+
+		while (hoodAngle > 360 || hoodAngle < 0) {
+			if (hoodAngle > 360) {
+				hoodAngle -= 360;
+			}
+			if (hoodAngle < 0) {
+				hoodAngle += 360;
+			}
+		}
+
+		return hoodAngle;
 	}
 
 	// Climber

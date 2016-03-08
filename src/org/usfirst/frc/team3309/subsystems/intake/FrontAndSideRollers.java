@@ -30,7 +30,7 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 	@Override
 	public void update() {
 		double power = 0;
-		if (Flywheel.getInstance().isShooterInRange() && Flywheel.getInstance().aimVelRPS != 0) {
+		//if ((Flywheel.getInstance().isShooterInRange() && Flywheel.getInstance().aimVelRPS != 0) || Flywheel.getInstance().aimVelRPS == 0) {
 			if (KragerMath.threshold(Controls.driverController.getRightTrigger()) != 0) {
 				power = KragerMath.threshold(Controls.driverController.getRightTrigger());
 			} else if (KragerMath.threshold(Controls.driverController.getLeftTrigger()) != 0) {
@@ -40,7 +40,7 @@ public class FrontAndSideRollers extends ControlledSubsystem {
 			} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
 				power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
 			}
-		}
+		//}
 		this.setIntake(power);
 	}
 

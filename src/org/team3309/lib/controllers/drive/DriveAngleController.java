@@ -13,7 +13,7 @@ public class DriveAngleController extends PIDPositionController {
 	double goalAngle = 0;
 
 	public DriveAngleController(double goal) {
-		super(.058, 0.015, 0.039);
+		super(.058, 0.015, 0.045);
 		this.setName("Angle");
 		SmartDashboard.putNumber(this.getName() + " goal(set me)", goal);
 		this.setTHRESHOLD(.5);
@@ -51,20 +51,18 @@ public class DriveAngleController extends PIDPositionController {
 	public void sendToSmartDash() {
 		super.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " AIM ANGLE", this.goalAngle);
-		try {
-			if (this.goalAngle != SmartDashboard.getNumber(this.getName() + " goal(set me)")) {
-				this.goalAngle = SmartDashboard.getNumber(this.getName() + " goal(set me)");
-				this.reset();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		/*
+		 * try { if (this.goalAngle != SmartDashboard.getNumber(this.getName() +
+		 * " goal(set me)")) { this.goalAngle =
+		 * SmartDashboard.getNumber(this.getName() + " goal(set me)");
+		 * this.reset(); } } catch (Exception e) { e.printStackTrace(); }
+		 */
 	}
 
 	public void setGoalAngle(double angle) {
 		this.goalAngle = angle;
 	}
-	
+
 	public double getGoalAngle() {
 		return this.goalAngle;
 	}

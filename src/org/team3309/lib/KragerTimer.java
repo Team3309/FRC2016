@@ -30,9 +30,9 @@ public class KragerTimer extends Timer {
 	 */
 	public boolean isConditionMaintained(boolean isTrue) {
 		if (isTrue) {
-			System.out.println("TRUE");
+			//System.out.println("TRUE");
 			if (isConditionMaintained && this.get() > timeToComplete) {
-				System.out.println("DONE WITH MAINTAINCE");
+				//System.out.println("DONE WITH MAINTAINCE");
 				return true;
 			} else if (!isConditionMaintained){
 				this.start();

@@ -13,17 +13,17 @@ import org.usfirst.frc.team3309.robot.Sensors;
  * @author Krager
  *
  */
-public class DriveEncodersController extends Controller{
+public class DriveEncodersController extends Controller {
 
-	private PIDPositionController leftController = new PIDPositionController(.3, 0, 0);
-	private PIDPositionController rightController = new PIDPositionController(.2, 0, 0);
-	protected PIDPositionController angController = new PIDPositionController(.2, 0, 0);
+	private PIDPositionController linearController = new PIDPositionController(.003, 0, 0);
+	// private PIDPositionController rightController = new
+	// PIDPositionController(.2, 0, 0);
+	protected PIDPositionController angController = new PIDPositionController(.002, 0, 0);
 	protected double goalEncoder;
 	protected double goalAngle;
 
 	public DriveEncodersController(double goal) {
-		leftController.setName("left");
-		rightController.setName("right");
+		linearController.setName("linear");
 		angController.setName("ang");
 		goalEncoder = goal;
 		goalAngle = Sensors.getAngle();
@@ -36,32 +36,35 @@ public class DriveEncodersController extends Controller{
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		// Input States for the three controllers
-		InputState inputForLeftVel = inputState;
-		InputState inputForRightVel = inputState;
-		InputState inputForAng = inputState;
+		InputState inputForLinear = new InputState();
+		// InputState inputForRightVel = inputState;
+		InputState inputForAng = new InputState();
 		// Add the error for each controller from the inputState
-		inputForLeftVel.setError(goalEncoder - inputState.getLeftPos());
-		inputForRightVel.setError(goalEncoder - inputState.getRightPos());
+		double x = (goalEncoder - inputState.getLeftPos());
+		inputForLinear.setError(x);
+		System.out.println("GOAL: " + x);
+		// inputForRightVel.setError(goalEncoder - inputState.getRightPos());
 		inputForAng.setError(goalAngle - inputState.getAngularPos());
-		OutputSignal leftOutput = leftController.getOutputSignal(inputForLeftVel);
-		OutputSignal rightOutput = rightController.getOutputSignal(inputForRightVel);
-		OutputSignal angularOutput = angController.getOutputSignal(inputState);
+		// System.out.println(inputForLinear.getError());
+		OutputSignal linearOutput = linearController.getOutputSignal(inputForLinear);
+		// OutputSignal rightOutput =
+		// rightController.getOutputSignal(inputForRightVel);
+		OutputSignal angularOutput = angController.getOutputSignal(inputForAng);
 		// Prepare the output
 		OutputSignal signal = new OutputSignal();
-		signal.setLeftMotor(leftOutput.getMotor() - angularOutput.getMotor());
-		signal.setRightMotor(rightOutput.getMotor() + angularOutput.getMotor());
+		signal.setLeftMotor(linearOutput.getMotor() - angularOutput.getMotor());
+		signal.setRightMotor(linearOutput.getMotor() + angularOutput.getMotor());
 		return signal;
 	}
 
 	@Override
 	public boolean isCompleted() {
-		return leftController.isCompleted() && rightController.isCompleted() && angController.isCompleted();
+		return linearController.isCompleted() && angController.isCompleted();
 	}
 
 	@Override
 	public void sendToSmartDash() {
-		leftController.sendToSmartDash();
-		rightController.sendToSmartDash();
+		linearController.sendToSmartDash();
 		angController.sendToSmartDash();
 	}
 }

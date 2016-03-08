@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
@@ -14,6 +16,7 @@ import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,7 +38,7 @@ public class Drive extends ControlledSubsystem {
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal angle
 	 */
-	private static final double DRIVE_GYRO_LENIENCY = 10;
+	private static final double DRIVE_GYRO_LENIENCY = .5;
 
 	private static Drive instance;
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
@@ -79,23 +82,30 @@ public class Drive extends ControlledSubsystem {
 
 		if (Controls.operatorController.getStart() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShot();
-			Vision.getInstance().setLight(.5);
+			Vision.getInstance().setLight(.4);
 			if (this.desiredShot != null) {
-				FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.039);
+				FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.03);
 				x.setName("VISION");
 				x.reset();
-				x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
+				if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .3) {
+					return;
+				}
+				// x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
+				System.out.println("Vision started");
 				this.setController(x);
 				isReset = true;
-			}else {
+			} else {
+				System.out.println("Vision does not see anything");
 				isReset = false;
 			}
 		} else if (Controls.operatorController.getStart() && isReset) {
-			System.out.println("Running Vision Rn");
-			System.out.println(x.getGoalAngle());
-		} else {
+			if (this.mController.isCompleted())
+				isReset = false;
+			// System.out.println("Running Vision Rn");
+			// System.out.println("Aiming for " + x.getGoalAngle());
+		} else if (!DriverStation.getInstance().isAutonomous()) {
 			isReset = false;
-			Vision.getInstance().setLight(0);
+			Vision.getInstance().setLight(.40);
 			this.setController(new DriveCheezyDriveEquation());
 		}
 
@@ -131,10 +141,10 @@ public class Drive extends ControlledSubsystem {
 			System.out.println(e.getCause());
 		}
 		input.setAngularVel(Sensors.getAngularVel());
-		// input.setLeftPos(Sensors.leftDrive.getDistance());
-		// input.setLeftVel(Sensors.leftDrive.getRate());
-		// input.setRightVel(Sensors.rightDrive.getDistance());
-		// input.setRightPos(Sensors.rightDrive.getRate());
+		input.setLeftPos(Sensors.getLeftDrive());
+		input.setLeftVel(Sensors.getLeftDriveVel());
+		input.setRightVel(Sensors.getRightDriveVel());
+		input.setRightPos(Sensors.getRightDrive());
 		return input;
 	}
 
@@ -151,6 +161,7 @@ public class Drive extends ControlledSubsystem {
 
 	public void setAngleSetpoint(double goalAngle) {
 		mController = new DriveAngleController(goalAngle);
+		mController.reset();
 		// ((PIDController) mController).setCompletable(false);
 		mController.setName("Drive Angle Controller");
 	}
