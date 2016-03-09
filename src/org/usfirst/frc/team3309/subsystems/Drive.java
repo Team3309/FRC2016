@@ -80,38 +80,39 @@ public class Drive extends ControlledSubsystem {
 		// if mController is Completed and has not already been made blank, then
 		// make it blank
 
-		if (Controls.operatorController.getStart() && !isReset) {
+		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShot();
 			Vision.getInstance().setLight(.4);
 			if (this.desiredShot != null) {
 				FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.03);
 				x.setName("VISION");
 				x.reset();
-				if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .3) {
+				if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
 					return;
 				}
 				// x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
 				System.out.println("Vision started");
+				x.setCompletable(false);
 				this.setController(x);
 				isReset = true;
 			} else {
 				System.out.println("Vision does not see anything");
 				isReset = false;
 			}
-		} else if (Controls.operatorController.getStart() && isReset) {
-			if (this.mController.isCompleted())
-				isReset = false;
-			// System.out.println("Running Vision Rn");
-			// System.out.println("Aiming for " + x.getGoalAngle());
+		} else if (Controls.operatorController.getBack()) {
+
 		} else if (!DriverStation.getInstance().isAutonomous()) {
 			isReset = false;
 			Vision.getInstance().setLight(.40);
+			// System.out.println("Vision Ended");
 			this.setController(new DriveCheezyDriveEquation());
 		}
 
 		if (mController.isCompleted() && !(mController instanceof BlankController)) {
+			System.out.println("BLANK");
 			mController = new BlankController();
 		} else if (mController.isCompleted()) {
+			System.out.println("BLA NK");
 			mController = new DriveCheezyDriveEquation();
 		}
 

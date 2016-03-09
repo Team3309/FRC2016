@@ -27,7 +27,7 @@ public class Intake extends KragerSystem {
 
 	@Override
 	public void update() {
-		mFrontAndSideRoller.update();
+		mFrontAndSideRoller.manualControl();
 		mIntakePivot.update();
 	}
 

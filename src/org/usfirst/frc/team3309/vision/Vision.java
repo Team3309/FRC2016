@@ -79,21 +79,22 @@ public class Vision implements Runnable {
 		Shot x = new Shot(currentGoal.azimuth);
 		boolean isCurrentShotYGreaterThanArrayY = false;
 		double closestShot = Integer.MAX_VALUE;
+		double currentY = currentGoal.y + currentGoal.height;
 		for (int i = 0; i < shots.length; i++) {
 			Shot shot = shots[i];
-			if (Math.abs(currentGoal.y - shot.getYCoordinate()) < closestShot) {
-				closestShot = Math.abs(currentGoal.y - shot.getYCoordinate());
+			if (Math.abs(currentY - shot.getYCoordinate()) < closestShot) {
+				closestShot = Math.abs(currentY - shot.getYCoordinate());
 				x.setGoalHoodAngle(shot.getGoalHoodAngle());
 				x.setGoalRPS(shot.getGoalRPS());
 				x.setYCoordinate(shot.getYCoordinate());
-				if (currentGoal.y < shot.getYCoordinate()) {
+				if (currentY < shot.getYCoordinate()) {
 					if (i != 0) {
 						isCurrentShotYGreaterThanArrayY = false;
 						Shot previousShot = shots[i - 1];
 						double slope = (previousShot.getGoalHoodAngle() - x.getGoalHoodAngle())
 								/ (previousShot.getYCoordinate() - x.getYCoordinate());
 						double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
-						double newOutput = slope * currentGoal.y + b;
+						double newOutput = slope * currentY + b;
 						x.setGoalHoodAngle(newOutput);
 					}
 				} else {
@@ -103,14 +104,14 @@ public class Vision implements Runnable {
 						double slope = (upperShot.getGoalHoodAngle() - x.getGoalHoodAngle())
 								/ (upperShot.getYCoordinate() - x.getYCoordinate());
 						double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
-						double newOutput = slope * currentGoal.y + b;
+						double newOutput = slope * currentY + b;
 						x.setGoalHoodAngle(newOutput);
 					}
 				}
 			}
 		}
-		x.setYCoordinate(currentGoal.y);
-		System.out.println("Here is my shot " + x.getYCoordinate() + " Hood Angle " + x.getGoalHoodAngle());
+		x.setYCoordinate(currentY);
+		//System.out.println("Here is my shot " + x.getYCoordinate() + " Hood Angle " + x.getGoalHoodAngle());
 		return x;
 	}
 

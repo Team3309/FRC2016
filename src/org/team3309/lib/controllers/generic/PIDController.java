@@ -37,7 +37,7 @@ public abstract class PIDController extends Controller {
 	/**
 	 * Limit of the Integral. mIntegral is capped off at the kILimit.
 	 */
-	private double kILimit = .5;
+	protected double kILimit = .5;
 	/**
 	 * Stores previous error
 	 */

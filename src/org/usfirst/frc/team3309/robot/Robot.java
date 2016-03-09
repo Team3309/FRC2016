@@ -132,9 +132,10 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 
-		if (Vision.getInstance().getGoals().size() > 0)
-			System.out.println("Y: " + Vision.getInstance().getGoals().get(0).y);
-
+		/*
+		 * if (Vision.getInstance().getGoals().size() > 0) System.out.println(
+		 * "azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
+		 */
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();
@@ -149,29 +150,31 @@ public class Robot extends IterativeRobot {
 		// UPDATES
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().manualControl();
+		Shooter.getInstance().update();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().manualControl();
+		Intake.getInstance().update();
 		Intake.getInstance().sendToSmartDash();
 
 		// SmartDashboard.putNumber("0", pdp.getCurrent(0));
-		
-		 // SmartDashboard.putNumber("1", pdp.getCurrent(1));
-		  SmartDashboard.putNumber("2", pdp.getCurrent(2));
-		  SmartDashboard.putNumber("3", pdp.getCurrent(3));
-		  SmartDashboard.putNumber("4", pdp.getCurrent(4));
-		  SmartDashboard.putNumber("5", pdp.getCurrent(5));
-		  SmartDashboard.putNumber("6", pdp.getCurrent(6));
-		  SmartDashboard.putNumber("7", pdp.getCurrent(7));
-		  SmartDashboard.putNumber("8", pdp.getCurrent(8));
-		  SmartDashboard.putNumber("9", pdp.getCurrent(9));
-		  SmartDashboard.putNumber("10", pdp.getCurrent(10));
-		  SmartDashboard.putNumber("11", pdp.getCurrent(11));
-		  SmartDashboard.putNumber("12", pdp.getCurrent(12));
-		  SmartDashboard.putNumber("13", pdp.getCurrent(13));
-		  SmartDashboard.putNumber("14", pdp.getCurrent(14));
-		  SmartDashboard.putNumber("15", pdp.getCurrent(15));
-		 
+
+		// SmartDashboard.putNumber("1", pdp.getCurrent(1));
+		/*
+		 * SmartDashboard.putNumber("2", pdp.getCurrent(2));
+		 * SmartDashboard.putNumber("3", pdp.getCurrent(3));
+		 * SmartDashboard.putNumber("4", pdp.getCurrent(4));
+		 * SmartDashboard.putNumber("5", pdp.getCurrent(5));
+		 * SmartDashboard.putNumber("6", pdp.getCurrent(6));
+		 * SmartDashboard.putNumber("7", pdp.getCurrent(7));
+		 * SmartDashboard.putNumber("8", pdp.getCurrent(8));
+		 * SmartDashboard.putNumber("9", pdp.getCurrent(9));
+		 * SmartDashboard.putNumber("10", pdp.getCurrent(10));
+		 * SmartDashboard.putNumber("11", pdp.getCurrent(11));
+		 * SmartDashboard.putNumber("12", pdp.getCurrent(12));
+		 * SmartDashboard.putNumber("13", pdp.getCurrent(13));
+		 * SmartDashboard.putNumber("14", pdp.getCurrent(14));
+		 * SmartDashboard.putNumber("15", pdp.getCurrent(15));
+		 */
+
 		// MANUALS
 		try {
 			Thread.sleep(30);
