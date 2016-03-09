@@ -60,13 +60,13 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShot() != null)
 				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
 			else
-				goalAngle = .4;
+				goalAngle = 1.3;
 		} else if (KragerMath.threshold(Controls.operatorController.getRightY()) != 0) {
 			output = KragerMath.threshold(Controls.operatorController.getRightY());
 			goalAngle = -1000;
 		} else {
 			if (goalAngle >= -1) 	
-				goalAngle = .4;
+				goalAngle = 1.3;
 		}
 		
 		if (goalAngle >= 0) {
@@ -108,5 +108,13 @@ public class Hood extends ControlledSubsystem {
 		 */
 
 		this.setHood(KragerMath.threshold(Controls.operatorController.getRightY()));
+	}
+
+	public double getGoalAngle() {
+		return goalAngle;
+	}
+
+	public void setGoalAngle(double goalAngle) {
+		this.goalAngle = goalAngle;
 	}
 }

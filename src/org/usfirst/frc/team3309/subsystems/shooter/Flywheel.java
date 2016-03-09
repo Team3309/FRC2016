@@ -8,6 +8,7 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -84,7 +85,7 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getBack()) {
 			aimVelRPS = 160;
 			
-		}else {
+		}else if (!DriverStation.getInstance().isAutonomous()){
 			offset = 0;
 			aimVelRPS = 0;
 			aimAccRPS = 0;

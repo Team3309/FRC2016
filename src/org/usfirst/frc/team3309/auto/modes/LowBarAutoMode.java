@@ -12,7 +12,7 @@ public class LowBarAutoMode extends AutoRoutine {
 		BlankController blankController = new BlankController();
 		blankController.setPower(4);
 		mDrive.setController(blankController);
-		Thread.sleep(3000);
+		Thread.sleep(4000);
 		blankController.setPower(0);
 		mDrive.setController(blankController);
 	}
