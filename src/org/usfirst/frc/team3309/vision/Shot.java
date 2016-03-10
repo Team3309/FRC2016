@@ -54,4 +54,8 @@ public class Shot {
 	public void setAzimuth(double azimuth) {
 		this.azimuth = azimuth;
 	}
+	
+	public String toString() {
+		return "goalHood: " + this.goalHoodAngle + " goalRPS " + goalRPS;
+	}
 }

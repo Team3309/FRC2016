@@ -26,8 +26,9 @@ public class RoutineBased {
 		Timer waitTimer = new Timer();
 		waitTimer.start();
 		while (!mDrive.isOnTarget()) {
-			if (waitTimer.get() > timeout)
+			if (waitTimer.get() > timeout) {
 				throw new TimedOutException();
+			}
 			Thread.sleep(100);
 		}
 	}

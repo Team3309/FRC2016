@@ -1,20 +1,39 @@
 package org.usfirst.frc.team3309.auto.modes;
 
+import org.team3309.lib.controllers.drive.DriveEncodersControllerBasePower;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
-import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 
 public class LowBarAutoMode extends AutoRoutine {
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-		BlankController blankController = new BlankController();
-		blankController.setPower(4);
-		mDrive.setController(blankController);
-		Thread.sleep(4000);
-		blankController.setPower(0);
-		mDrive.setController(blankController);
+		IntakePivot.getInstance().toIntakePosition();
+		// BlankController blankController = new BlankController();
+		// blankController.setPower(.4);
+		DriveEncodersControllerBasePower x = new DriveEncodersControllerBasePower(20000, .4);
+		mDrive.setController(x);
+		IntakePivot.getInstance().toIntakePosition();
+		// mDrive.setController(blankController);
+		// Thread.sleep(4000);
+		try {
+			this.waitForDrive(6000);
+			System.out.println("Completed");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		IntakePivot.getInstance().toUpPosition();
+
+		// blankController.setPower(0);
+		// mDrive.setController(blankController);
+		// Thread.sleep(1000);
+		/*
+		 * while (mDrive.getDistanceTraveled() < 23000) {
+		 * mDrive.setLeftRight(.4, .4); }
+		 * 
+		 */
 	}
 
 }

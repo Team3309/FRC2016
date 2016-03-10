@@ -14,12 +14,10 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 public class BlankController extends Controller {
 
 	private double power = 0;
-	
-	
 
 	@Override
 	public void reset() {
-		
+
 	}
 
 	@Override
@@ -34,7 +32,7 @@ public class BlankController extends Controller {
 	public boolean isCompleted() {
 		return true; // Is always complete
 	}
-	
+
 	public double getPower() {
 		return power;
 	}

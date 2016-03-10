@@ -25,7 +25,7 @@ public class Flywheel extends ControlledSubsystem {
 
 	private double maxVelRPS = 155.0;
 	private double maxAccRPS = 31.0;
-	public double aimVelRPS = 0.0;
+	private double aimVelRPS = 0.0;
 	private double aimAccRPS = 0.0;
 
 	private double pastVel = 0;
@@ -46,6 +46,7 @@ public class Flywheel extends ControlledSubsystem {
 		this.mController = new FeedForwardWithPIDController(.006, 0, .006, 0.000, 0.00);
 		this.mController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
+		((FeedForwardWithPIDController) this.mController).setTHRESHOLD(10);
 		SmartDashboard.putNumber("TEST RPS", 100);
 	}
 
@@ -63,6 +64,12 @@ public class Flywheel extends ControlledSubsystem {
 
 	double curVel = 0;
 	double power = 0;
+	private double autoVel = 0;
+
+	public void setAimVelRPSAuto(double power) {
+		this.aimVelRPS = power;
+		this.autoVel = this.aimVelRPS;
+	}
 
 	// In front of batter 140 rps 26 degrees
 	@Override
@@ -82,14 +89,13 @@ public class Flywheel extends ControlledSubsystem {
 			if (Vision.getInstance().getShot() != null) {
 				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
 			}
-		} else if (Controls.operatorController.getBack()) {
-			aimVelRPS = 160;
-			
-		}else if (!DriverStation.getInstance().isAutonomous()){
+		} else if (!DriverStation.getInstance().isAutonomous()) {
 			offset = 0;
 			aimVelRPS = 0;
 			aimAccRPS = 0;
 			hasGoneBack = false;
+		} else if (DriverStation.getInstance().isAutonomous()) {
+			aimVelRPS = autoVel;
 		}
 
 		shootLikeRobie();
@@ -142,13 +148,20 @@ public class Flywheel extends ControlledSubsystem {
 			power = 0;
 		}
 		if (power != 0 && !hasGoneBack) {
-			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			if (DriverStation.getInstance().isAutonomous())
+				FeedyWheel.getInstance().setFeedyWheelAuto(-.5);
+			else
+				FeedyWheel.getInstance().setFeedyWheel(-.5);
 			try {
 				Thread.sleep(75);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			FeedyWheel.getInstance().setFeedyWheel(0);
+			if (DriverStation.getInstance().isAutonomous())
+				FeedyWheel.getInstance().setFeedyWheelAuto(0);
+			else
+				FeedyWheel.getInstance().setFeedyWheel(0);
+
 			hasGoneBack = true;
 		}
 		this.rightSpark.set(power);
@@ -159,6 +172,7 @@ public class Flywheel extends ControlledSubsystem {
 	 * Feed Forward with dynamic aims
 	 */
 	private void shootLikeRobie() {
+
 		if (aimVelRPS == 0) {
 		} else {
 			if (curVel < aimVelRPS - 32) {
@@ -205,8 +219,8 @@ public class Flywheel extends ControlledSubsystem {
 		if (aimVelRPS == 0) {
 			this.setShooter(0);
 		} else {
-			if (curVel < 18) {
-				output = .35;
+			if (curVel < 30) {
+				output = .45;
 			}
 			this.setShooter(output);
 		}

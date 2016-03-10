@@ -10,6 +10,7 @@ import org.usfirst.frc.team3309.robot.Constants;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,10 +18,10 @@ public class IntakePivot extends ControlledSubsystem {
 
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
-	private double goalAngle = 0;
 	private double UP_ANGLE = 8;
 	private double INTAKE_ANGLE = 94;
-	private boolean isAtHighPoint = true;
+	private double goalAngle = INTAKE_ANGLE;
+	private boolean isAtHighPoint = false;
 	private boolean isButtonBeingHeld = false;
 
 	public static IntakePivot getInstance() {
@@ -38,9 +39,9 @@ public class IntakePivot extends ControlledSubsystem {
 		// intakePivot.enableBrakeMode(false);
 		// intakePivot.setPulseWidthPosition(0);
 		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
-		mController = new PIDPositionController(.001, 0, 0);
+		mController = new PIDPositionController(.012, 0, .005);
 		mController.setName("Pivot");
-		goalAngle = this.getPivotAngle();
+		///goalAngle = this.getPivotAngle();
 	}
 
 	@Override
@@ -69,15 +70,7 @@ public class IntakePivot extends ControlledSubsystem {
 		} else if (KragerMath.threshold(Controls.operatorController.getLeftY()) != 0) {
 			output = KragerMath.threshold(Controls.operatorController.getLeftY());
 			goalAngle = -1000;
-		} /*
-			 * else if (Controls.operatorController.getA() ||
-			 * Controls.operatorController.getB() ||
-			 * Controls.operatorController.getXBut() ||
-			 * Controls.operatorController.getYBut() ||
-			 * Controls.operatorController.getStart()) { goalAngle = 30;
-			 * this.setController(new PIDPositionController(.019, 0, .005));
-			 * ((PIDController) this.mController).setUseSmartDash(false); }
-			 */else {
+		} else {
 			if (goalAngle < 0) {
 				output = 0;
 			} else {
@@ -116,6 +109,19 @@ public class IntakePivot extends ControlledSubsystem {
 		}
 
 		return curAngle;
+	}
+
+	public void toIntakePosition() {
+		goalAngle = this.INTAKE_ANGLE;
+		System.out.println("NEW HOAL : " + goalAngle);
+		this.setController(new PIDPositionController(.012, 0, .005));
+		((PIDController) this.mController).setUseSmartDash(false);
+	}
+
+	public void toUpPosition() {
+		goalAngle = this.UP_ANGLE;
+		this.setController(new PIDPositionController(.019, 0, .009));
+		((PIDController) this.mController).setUseSmartDash(false);
 	}
 
 	@Override

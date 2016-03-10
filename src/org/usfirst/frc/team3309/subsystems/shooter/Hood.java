@@ -10,6 +10,7 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,7 +35,8 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.mController = new PIDPositionController(0.072, 0.002, .013);
+		this.mController = new PIDPositionController(0.041, 0.002, .008); // .072, .002, .013
+		((PIDController) this.mController).kILimit = .2;
 		this.mController.setName("Hood Angle");
 		((PIDController) this.mController).setTHRESHOLD(.4);
 		// this.mController.
@@ -60,19 +62,18 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShot() != null)
 				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
 			else
-				goalAngle = 1.3;
-		} else if (KragerMath.threshold(Controls.operatorController.getRightY()) != 0) {
+				goalAngle = 4;
+		} /*else if (KragerMath.threshold(Controls.operatorController.getRightY()) != 0) {
 			output = KragerMath.threshold(Controls.operatorController.getRightY());
-			goalAngle = -1000;
-		} else {
-			if (goalAngle >= -1) 	
-				goalAngle = 1.3;
+			//goalAngle = -1000;
+		} */else if (!DriverStation.getInstance().isAutonomous()) {
+			goalAngle = 4;
 		}
-		
+
 		if (goalAngle >= 0) {
 			output = this.mController.getOutputSignal(getInputState()).getMotor();
 		}
-		
+
 		if ((curAngle > 59 && output > -1) || (curAngle < 0 && output < 0) || this.isOnTarget()) {
 			output = 0;
 		}

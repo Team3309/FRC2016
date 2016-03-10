@@ -3,9 +3,10 @@ package org.usfirst.frc.team3309.robot;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
+import org.usfirst.frc.team3309.auto.modes.LowBarAutoMode;
+import org.usfirst.frc.team3309.auto.modes.LowBarShootAutoMode;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
 import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
-import org.usfirst.frc.team3309.auto.modes.TurnToVisionMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossDrawBridge;
@@ -23,7 +24,6 @@ import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
 import org.usfirst.frc.team3309.vision.Vision;
-import org.usfirst.frc.team3309.vision.VisionClient;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -61,6 +61,8 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
 		mainAutoChooser.addObject("Angle", new TurnToAngleAutoMode());
+		mainAutoChooser.addObject("Low Bar", new LowBarAutoMode());
+		mainAutoChooser.addObject("Low Bar Shoot", new LowBarShootAutoMode());
 		mainAutoChooser.addObject("Go Forward", new GoForwardStraightAutoMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
@@ -79,6 +81,9 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Rough Terrain", new CrossRoughTerrain());
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
 		SmartDashboard.putData("Defense", defenseAutoChooser);
+		Intake.getInstance();
+		Shooter.getInstance();
+		Drive.getInstance();
 		Vision.getInstance().start();
 	}
 
@@ -93,6 +98,7 @@ public class Robot extends IterativeRobot {
 	// Init to Auto
 	public void autonomousInit() {
 		Sensors.resetDrive();
+		Vision.getInstance().setLight(.2);
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
@@ -115,6 +121,10 @@ public class Robot extends IterativeRobot {
 
 		Drive.getInstance().update();
 		Drive.getInstance().sendToSmartDash();
+		Shooter.getInstance().update();
+		Shooter.getInstance().sendToSmartDash();
+		Intake.getInstance().update();
+		Intake.getInstance().sendToSmartDash();
 	}
 
 	// Init to Tele
@@ -132,10 +142,9 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 
-		/*
-		 * if (Vision.getInstance().getGoals().size() > 0) System.out.println(
-		 * "azimuth: " + Vision.getInstance().getGoals().get(0).azimuth);
-		 */
+		if (Vision.getInstance().getGoals().size() > 0)
+			System.out.println("Y: " + Vision.getInstance().getGoals().get(0).y);
+
 		/*
 		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
 		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();

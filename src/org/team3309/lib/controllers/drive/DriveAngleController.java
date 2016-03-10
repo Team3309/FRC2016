@@ -51,26 +51,26 @@ public class DriveAngleController extends PIDPositionController {
 				left = -.6;
 			}
 		}*/
-		if (Math.abs(error) < 4.5) {
-			System.out.println("HERE");
+		if (Math.abs(error) < 2.25) {
+			//System.out.println("HERE");
 			left = super.getOutputSignal(state).getMotor();
 		}else if (Math.abs(error) < 5) {
 			if (error < 0) {
-				left = -.3; 
+				left = -.42; 
 			}else if (error > 0) {
-				left = .3;
+				left = .42;
 			}
 		}else if (Math.abs(error) < 15) {
 			if (error < 0) {
-				left = -.4; 
+				left = -.42; 
 			}else if (error > 0) {
-				left = .4;
+				left = .42;
 			}
-		}else if (Math.abs(error) < 45) {
+		}else if (Math.abs(error) < Integer.MAX_VALUE) {
 			if (error < 0) {
-				left = -.5; 
+				left = -.42; 
 			}else if (error > 0) {
-				left = .5;
+				left = .42;
 			}
 		}
 		OutputSignal signal = new OutputSignal();

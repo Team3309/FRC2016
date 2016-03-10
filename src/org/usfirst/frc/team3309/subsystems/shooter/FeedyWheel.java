@@ -8,6 +8,7 @@ import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -54,10 +55,17 @@ public class FeedyWheel extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " Power", this.feedyWheelSpark.get());
 	}
 
+	private double autoPower = 0;
+
 	public void setFeedyWheel(double power) {
 		this.feedyWheelSpark.set(-power);
 	}
 
+	public void setFeedyWheelAuto(double power) {
+		if (DriverStation.getInstance().isAutonomous()) {
+			autoPower = -power;
+		}
+	}
 	@Override
 	public void manualControl() {
 		double power = 0;
@@ -69,8 +77,10 @@ public class FeedyWheel extends ControlledSubsystem {
 			power = KragerMath.threshold(Controls.operatorController.getRightTrigger());
 		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
 			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
+		} else if (DriverStation.getInstance().isAutonomous()) {
+			power = autoPower;
 		}
-		//System.out.println("power: " + power);
+		// System.out.println("power: " + power);
 		this.setFeedyWheel(power);
 	}
 }

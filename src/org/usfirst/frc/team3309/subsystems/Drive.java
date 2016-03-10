@@ -15,6 +15,7 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
+import org.usfirst.frc.team3309.vision.VisionClient;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -82,19 +83,9 @@ public class Drive extends ControlledSubsystem {
 
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShot();
-			Vision.getInstance().setLight(.4);
+			Vision.getInstance().setLight(.2);
 			if (this.desiredShot != null) {
-				FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.03);
-				x.setName("VISION");
-				x.reset();
-				if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
-					return;
-				}
-				// x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
-				System.out.println("Vision started");
-				x.setCompletable(false);
-				this.setController(x);
-				isReset = true;
+				toVision();
 			} else {
 				System.out.println("Vision does not see anything");
 				isReset = false;
@@ -109,13 +100,30 @@ public class Drive extends ControlledSubsystem {
 		}
 
 		if (mController.isCompleted() && !(mController instanceof BlankController)) {
-			System.out.println("BLANK");
+			// System.out.println("BLANK");
 			mController = new BlankController();
-		} else if (mController.isCompleted()) {
-			System.out.println("BLA NK");
+		} else if (mController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
+			// System.out.println("BLA NK");
 			mController = new DriveCheezyDriveEquation();
 		}
 
+	}
+
+	public void toVision() {
+		this.desiredShot = Vision.getInstance().getShot();
+		if (this.desiredShot != null) {
+			FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.03);
+			x.setName("VISION");
+			x.reset();
+			if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
+				return;
+			}
+			// x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
+			System.out.println("Vision started");
+			x.setCompletable(false);
+			this.setController(x);
+			isReset = true;
+		}
 	}
 
 	@Override
@@ -182,7 +190,7 @@ public class Drive extends ControlledSubsystem {
 	 * @return the average of the left and right to get the distance traveled
 	 */
 	public double getDistanceTraveled() {
-		return (Sensors.getLeftDrive() + Sensors.getRightDrive()) / 2;
+		return (Math.abs(Sensors.getLeftDrive()) + Math.abs(Sensors.getRightDrive())) / 2;
 	}
 
 	/**
@@ -233,7 +241,7 @@ public class Drive extends ControlledSubsystem {
 	 * @param right
 	 *            rightMotorSpeed
 	 */
-	private void setLeftRight(double left, double right) {
+	public void setLeftRight(double left, double right) {
 		setRightLeft(right, left);
 	}
 
@@ -245,7 +253,7 @@ public class Drive extends ControlledSubsystem {
 	 * @param left
 	 *            leftMotorSpeed
 	 */
-	private void setRightLeft(double right, double left) {
+	public void setRightLeft(double right, double left) {
 		setLeft(left);
 		setRight(right);
 	}
@@ -256,7 +264,7 @@ public class Drive extends ControlledSubsystem {
 	 * @param right
 	 *            rightMotorSpeed
 	 */
-	private void setRight(double right) {
+	public void setRight(double right) {
 		this.right.set(-right);
 	}
 
@@ -266,7 +274,7 @@ public class Drive extends ControlledSubsystem {
 	 * @param left
 	 *            leftMotorSpeed
 	 */
-	private void setLeft(double left) {
+	public void setLeft(double left) {
 		this.left.set(left);
 	}
 
