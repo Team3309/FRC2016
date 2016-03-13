@@ -43,11 +43,11 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.mController = new FeedForwardWithPIDController(.006, 0, .006, 0.000, 0.00);
+		this.mController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
 		this.mController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		((FeedForwardWithPIDController) this.mController).setTHRESHOLD(10);
-		SmartDashboard.putNumber("TEST RPS", 100);
+		SmartDashboard.putNumber("TEST RPS", 110);
 	}
 
 	/**
@@ -76,21 +76,24 @@ public class Flywheel extends ControlledSubsystem {
 	public void update() {
 		// manualControl();
 		curVel = this.getRPS();
+		System.out.println("TOADJGDASOJF");
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
-			aimVelRPS = 110;
+			aimVelRPS = 103;
 		} else if (Controls.operatorController.getB()) {
 			aimVelRPS = 130;
 		} else if (Controls.operatorController.getXBut()) {
-			aimVelRPS = 140;
+			aimVelRPS = 160;
 		} else if (Controls.operatorController.getYBut()) {
-			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
+			//aimVelRPS = SmartDashboard.getNumber("TEST RPS");
+			aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShot() != null) {
 				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
 			}
 		} else if (!DriverStation.getInstance().isAutonomous()) {
 			offset = 0;
+			System.out.println("ELSE");
 			aimVelRPS = 0;
 			aimAccRPS = 0;
 			hasGoneBack = false;
@@ -98,8 +101,9 @@ public class Flywheel extends ControlledSubsystem {
 			aimVelRPS = autoVel;
 		}
 
+		System.out.println("HALD");
 		shootLikeRobie();
-
+		System.out.println("DONE WITH SHOOTER");
 		/*
 		 * // Based off of cur vel and aim vel, find aim acc double error =
 		 * this.aimVelRPS - curVel; if (Math.abs(error) > 1000) { if (error > 0)
@@ -153,6 +157,7 @@ public class Flywheel extends ControlledSubsystem {
 			else
 				FeedyWheel.getInstance().setFeedyWheel(-.5);
 			try {
+				System.out.println("THREAD SEE");
 				Thread.sleep(75);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

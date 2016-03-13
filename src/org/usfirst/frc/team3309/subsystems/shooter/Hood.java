@@ -35,29 +35,31 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.mController = new PIDPositionController(0.041, 0.002, .008); // .072, .002, .013
+		this.mController = new PIDPositionController(0.51, 0.001, .014); // .072, .002, .013
 		((PIDController) this.mController).kILimit = .2;
 		this.mController.setName("Hood Angle");
 		((PIDController) this.mController).setTHRESHOLD(.4);
 		// this.mController.
-		SmartDashboard.putNumber("Test Angle", 25);
+		SmartDashboard.putNumber("Test Angle", 15);
 
 	}
 
 	@Override
 	public void update() {
+		System.out.println("Start Hood");
 		curAngle = Sensors.getHoodAngle();
+		System.out.println("ADFASSDFAA AANGE:");
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
-			goalAngle = 14;
+			goalAngle = 14.65;
 		} else if (Controls.operatorController.getB()) {
 			goalAngle = 28.6;
 		} else if (Controls.operatorController.getXBut()) {
-			goalAngle = 40.5;
+			goalAngle = 42.85;
 		} else if (Controls.operatorController.getYBut()) {
-			// goalAngle = 45;
-			goalAngle = SmartDashboard.getNumber("Test Angle");
+			 goalAngle = 28.6;
+			//goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShot() != null)
 				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
@@ -68,15 +70,18 @@ public class Hood extends ControlledSubsystem {
 			//goalAngle = -1000;
 		} */else if (!DriverStation.getInstance().isAutonomous()) {
 			goalAngle = 4;
+			System.out.println("NOT AUTO");
+			
 		}
 
 		if (goalAngle >= 0) {
 			output = this.mController.getOutputSignal(getInputState()).getMotor();
 		}
 
-		if ((curAngle > 59 && output > -1) || (curAngle < 0 && output < 0) || this.isOnTarget()) {
+		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0) || this.isOnTarget()) {
 			output = 0;
 		}
+		System.out.println("DONE WITH HOOD");
 		this.setHood(output);
 	}
 
@@ -96,7 +101,7 @@ public class Hood extends ControlledSubsystem {
 	}
 
 	public void setHood(double power) {
-		this.hoodSpark.set(-power);
+		this.hoodSpark.set(power);
 	}
 
 	@Override

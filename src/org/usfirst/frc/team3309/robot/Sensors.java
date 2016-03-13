@@ -91,6 +91,7 @@ public class Sensors {
 	// Shooter
 	public static double getShooterRPS() {
 		double currentShooter = (1 / shooterEncoder.getPeriod());
+		System.out.println("FDASF " + shooterEncoder.getPeriod());
 		if (Math.abs(1 / shooterEncoder.getPeriod()) - (pastShooter) > 250)
 			return pastShooter;
 		pastShooter = currentShooter;
@@ -103,11 +104,13 @@ public class Sensors {
 		// double hoodAngle = (-1 * ((1000000.0 * (hoodEncoder.getPeriod())) *
 		// (360.0 / 4096.0)));
 
-		while (hoodAngle > 360 || hoodAngle < 0) {
+		System.out.println("HOOD ANGLE: " + hoodAngle);
+		while (hoodAngle > 360 || hoodAngle < -20) {
+			
 			if (hoodAngle > 360) {
 				hoodAngle -= 360;
 			}
-			if (hoodAngle < 0) {
+			if (hoodAngle < -20) {
 				hoodAngle += 360;
 			}
 		}

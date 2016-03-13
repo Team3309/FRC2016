@@ -42,6 +42,9 @@ public abstract class PIDController extends Controller {
 	 * Stores previous error
 	 */
 	protected double previousError = 0;
+	protected double previousPValue = 0;
+	protected double previousIValue = 0;
+	protected double previousDValue = 0;
 	/**
 	 * Running Integral term to use between loops.
 	 */
@@ -114,8 +117,12 @@ public abstract class PIDController extends Controller {
 
 		// Make OutputSignal and fill it with calculated values
 		OutputSignal signal = new OutputSignal();
+		previousPValue = (kP * error);
+		previousIValue = (kI * mIntegral);
+		previousDValue = (kD * (error - previousError));
 		double output = (kP * error) + (kI * mIntegral) + (kD * (error - previousError));
-		//System.out.println("Kp: " + (kP * error) + "kI: " + (kI * mIntegral) + "kD: " + (kD * (error - previousError)));
+		// System.out.println("Kp: " + (kP * error) + "kI: " + (kI * mIntegral)
+		// + "kD: " + (kD * (error - previousError)));
 		signal.setMotor(output);
 		previousError = error;
 		return signal;
@@ -180,6 +187,9 @@ public abstract class PIDController extends Controller {
 			SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 			SmartDashboard.putNumber(this.getName() + " ERROR", this.previousError);
 			SmartDashboard.putNumber(this.getName() + " FACTOR", factor);
+			SmartDashboard.putNumber(this.getName() + " P CONTRIBUTION", this.previousPValue);
+			SmartDashboard.putNumber(this.getName() + " I CONTRIBUTION", this.previousIValue);
+			SmartDashboard.putNumber(this.getName() + " D CONTRIBUTION", this.previousDValue);
 		}
 
 	}

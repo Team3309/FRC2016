@@ -40,7 +40,7 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 		if (Math.abs(basePower) < Math.abs(originalBasePower)) {
 			basePower += originalBasePower / 10;
 		} else if (Drive.getInstance().getDistanceTraveled() > Math.abs(goalEncoder)) {
-			//basePower = -originalBasePower;
+			// basePower = -originalBasePower;
 			isOver = true;
 		} else if (Drive.getInstance().getDistanceTraveled() < Math.abs(goalEncoder)) {
 			basePower = originalBasePower;
@@ -48,8 +48,8 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 		System.out.println("Here is turn power: " + angularOutput.getMotor());
 		System.out.println("ERror: " + inputForAng.getError());
 		System.out.println("GoalAngle: " + goalAngle);
-		signal.setLeftMotor(basePower - angularOutput.getMotor());
-		signal.setRightMotor(basePower + angularOutput.getMotor());
+		signal.setLeftMotor(basePower);
+		signal.setRightMotor(basePower);
 		return signal;
 	}
 

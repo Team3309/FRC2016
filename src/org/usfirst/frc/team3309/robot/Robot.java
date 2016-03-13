@@ -2,10 +2,13 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
-import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
+import org.usfirst.frc.team3309.auto.modes.HighSpeedCrossAutoIntakeDownMode;
+import org.usfirst.frc.team3309.auto.modes.HighSpeedCrossAutoIntakeUpMode;
 import org.usfirst.frc.team3309.auto.modes.LowBarAutoMode;
 import org.usfirst.frc.team3309.auto.modes.LowBarShootAutoMode;
+import org.usfirst.frc.team3309.auto.modes.LowSpeedCrossAutoIntakeUp;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
+import org.usfirst.frc.team3309.auto.modes.TurnInPlaceLAAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
@@ -63,7 +66,10 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addObject("Angle", new TurnToAngleAutoMode());
 		mainAutoChooser.addObject("Low Bar", new LowBarAutoMode());
 		mainAutoChooser.addObject("Low Bar Shoot", new LowBarShootAutoMode());
-		mainAutoChooser.addObject("Go Forward", new GoForwardStraightAutoMode());
+		mainAutoChooser.addObject("Go Forward Intake Up", new HighSpeedCrossAutoIntakeUpMode());
+		mainAutoChooser.addObject("Go LOW inteke Up", new LowSpeedCrossAutoIntakeUp());
+		mainAutoChooser.addObject("Turn in Place", new TurnInPlaceLAAutoMode());
+		mainAutoChooser.addObject("Go Forward Intake Down", new HighSpeedCrossAutoIntakeDownMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
 		startingPositionAutoChooser.addObject("2", 2);
@@ -81,6 +87,7 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Rough Terrain", new CrossRoughTerrain());
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
 		SmartDashboard.putData("Defense", defenseAutoChooser);
+		SmartDashboard.putNumber("ANGLE I AM TURNING ( ADDED TO OTHER)", 0);
 		Intake.getInstance();
 		Shooter.getInstance();
 		Drive.getInstance();
@@ -89,6 +96,8 @@ public class Robot extends IterativeRobot {
 
 	// When first put into disabled mode
 	public void disabledInit() {
+		Vision.getInstance().setLight(0);
+		Drive.getInstance().setHighGear(false);
 	}
 
 	// Called repeatedly in disabled mode
@@ -130,6 +139,7 @@ public class Robot extends IterativeRobot {
 	// Init to Tele
 	public void teleopInit() {
 		Drive.getInstance().toTeleop();
+		Shooter.getInstance().mFeedyWheel.autoAssigned = false;
 
 		Vision.getInstance().setLight(0);
 		Compressor compressor = new Compressor();
@@ -157,18 +167,26 @@ public class Robot extends IterativeRobot {
 		 */
 		// Update the subsystems
 		// UPDATES
+		System.out.println("RUNNING");
 		Drive.getInstance().update();
+		System.out.println("Drie");
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().update();
+		System.out.println("shhote");
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().update();
+		System.out.println("Intaek");
 		Intake.getInstance().sendToSmartDash();
+		/*
+		 * if (DriverStation.getInstance().getMatchTime() < 1)
+		 * Drive.getInstance().setHighGear(false);
+		 */
 
 		// SmartDashboard.putNumber("0", pdp.getCurrent(0));
 
 		// SmartDashboard.putNumber("1", pdp.getCurrent(1));
 		/*
-		 * SmartDashboard.putNumber("2", pdp.getCurrent(2));
+		 * SmartDashboard.putNumbe r("2", pdp.getCurrent(2));
 		 * SmartDashboard.putNumber("3", pdp.getCurrent(3));
 		 * SmartDashboard.putNumber("4", pdp.getCurrent(4));
 		 * SmartDashboard.putNumber("5", pdp.getCurrent(5));

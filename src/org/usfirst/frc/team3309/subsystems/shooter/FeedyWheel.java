@@ -61,11 +61,15 @@ public class FeedyWheel extends ControlledSubsystem {
 		this.feedyWheelSpark.set(-power);
 	}
 
+	public boolean autoAssigned = false;
+
 	public void setFeedyWheelAuto(double power) {
-		if (DriverStation.getInstance().isAutonomous()) {
-			autoPower = -power;
-		}
+
+		autoPower = -power;
+		autoAssigned = true;
+
 	}
+
 	@Override
 	public void manualControl() {
 		double power = 0;
@@ -77,7 +81,7 @@ public class FeedyWheel extends ControlledSubsystem {
 			power = KragerMath.threshold(Controls.operatorController.getRightTrigger());
 		} else if (KragerMath.threshold(Controls.operatorController.getLeftTrigger()) != 0) {
 			power = KragerMath.threshold(-Controls.operatorController.getLeftTrigger());
-		} else if (DriverStation.getInstance().isAutonomous()) {
+		} else if (autoAssigned) {
 			power = autoPower;
 		}
 		// System.out.println("power: " + power);

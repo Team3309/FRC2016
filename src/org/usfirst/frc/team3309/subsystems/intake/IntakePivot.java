@@ -18,8 +18,8 @@ public class IntakePivot extends ControlledSubsystem {
 
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
-	private double UP_ANGLE = 8;
-	private double INTAKE_ANGLE = 94;
+	private double UP_ANGLE = 4;
+	private double INTAKE_ANGLE = 92;
 	private double goalAngle = INTAKE_ANGLE;
 	private boolean isAtHighPoint = false;
 	private boolean isButtonBeingHeld = false;
@@ -41,6 +41,7 @@ public class IntakePivot extends ControlledSubsystem {
 		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		mController = new PIDPositionController(.012, 0, .005);
 		mController.setName("Pivot");
+		goalAngle = INTAKE_ANGLE;
 		///goalAngle = this.getPivotAngle();
 	}
 
@@ -67,7 +68,7 @@ public class IntakePivot extends ControlledSubsystem {
 			output = -mController.getOutputSignal(getInputState()).getMotor();
 		} else if (Controls.operatorController.getRB()) {
 			output = -mController.getOutputSignal(getInputState()).getMotor();
-		} else if (KragerMath.threshold(Controls.operatorController.getLeftY()) != 0) {
+		} else if (Math.abs(KragerMath.threshold(Controls.operatorController.getLeftY())) > .15) {
 			output = KragerMath.threshold(Controls.operatorController.getLeftY());
 			goalAngle = -1000;
 		} else {
@@ -81,9 +82,9 @@ public class IntakePivot extends ControlledSubsystem {
 		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
 				|| (this.getPivotAngle() < (this.goalAngle + 10) && this.getPivotAngle() > (this.goalAngle - 10))) {
 			if (this.isAtHighPoint) {
-				output = .04;
+				output = .06;
 			} else {
-				output = .05;
+				output = .04;
 			}
 		}
 
@@ -104,7 +105,7 @@ public class IntakePivot extends ControlledSubsystem {
 		while (curAngle > 360) {
 			curAngle -= 360;
 		}
-		while (curAngle < 0) {
+		while (curAngle < -10) {
 			curAngle += 360;
 		}
 

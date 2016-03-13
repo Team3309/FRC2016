@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3309.auto.modes;
 
-import org.team3309.lib.controllers.drive.FaceVisionTargetController;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.generic.OnlyPowerController;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
@@ -29,10 +28,11 @@ public class LowBarShootAutoMode extends AutoRoutine {
 
 		Sensors.resetDrive();
 		OnlyPowerController startTurning = new OnlyPowerController();
-		startTurning.setLeftPower(.8);
+		startTurning.setLeftPower(.7);
 		startTurning.setRightPower(.4);
 		mDrive.setController(startTurning);
 
+		//TurnToAngleAutoMode angleTurn = new TurnToAngleAutoMode();
 		while (Math.abs(Sensors.getLeftDrive()) < 13350) {
 			Thread.sleep(30);
 		}
@@ -64,29 +64,31 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		}
 		mDrive.stopDrive();
 
-		mDrive.toVision();
-		// mDrive.setAngleSetpoint(goal.getAzimuth());
-		Thread.sleep(200);
+		
 		goal = Vision.getInstance().getShot();
 		Flywheel.getInstance().setAimVelRPSAuto(goal.getGoalRPS());
 		Hood.getInstance().setGoalAngle(goal.getGoalHoodAngle());
-		Thread.sleep(1000);
-		goal = Vision.getInstance().getShot();
-		Flywheel.getInstance().setAimVelRPSAuto(goal.getGoalRPS());
-		Hood.getInstance().setGoalAngle(goal.getGoalHoodAngle());
-		mDrive.toVision();
-		Thread.sleep(500);
-		mDrive.toVision();
-		Thread.sleep(500);
-		mDrive.toVision();
-		System.out.println("FEEDY IS RUNNING");
-
-		while (!Flywheel.getInstance().isOnTarget()) {
-
+		boolean isRunnning = true;
+		int counter2 = 0;
+		while (counter2 < 3) {
+			mDrive.toVision();
+			Thread.sleep(700);
+			mDrive.setController(new BlankController());
+			Thread.sleep(250);
+			goal = Vision.getInstance().getShot();
+			Flywheel.getInstance().setAimVelRPSAuto(goal.getGoalRPS());
+			Hood.getInstance().setGoalAngle(goal.getGoalHoodAngle());
+			counter2++;
 		}
 		Thread.sleep(1000);
+		
+		System.out.println("FEEDY IS RUNNING");
+
+		/*while (!Flywheel.getInstance().isOnTarget()) {
+
+		}*/
 		FeedyWheel.getInstance().setFeedyWheelAuto(-.9);
-		Thread.sleep(1000);
+		Thread.sleep(5000);
 		FeedyWheel.getInstance().setFeedyWheelAuto(0);
 
 	}

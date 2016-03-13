@@ -1,7 +1,5 @@
 package org.usfirst.frc.team3309.subsystems;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
-
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
@@ -15,7 +13,6 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
-import org.usfirst.frc.team3309.vision.VisionClient;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -48,6 +45,7 @@ public class Drive extends ControlledSubsystem {
 
 	private Shot desiredShot;
 
+	public boolean lowGearInAuto = false;
 	boolean isReset = false;
 	DriveAngleController x = new DriveAngleController(this.getAngle() + 5);
 
@@ -72,7 +70,7 @@ public class Drive extends ControlledSubsystem {
 	public void toTeleop() {
 		x.setName("Angle");
 		// this.setController(x);
-
+		lowGearInAuto = false;
 		mController = new DriveCheezyDriveEquation();
 	}
 
@@ -83,7 +81,7 @@ public class Drive extends ControlledSubsystem {
 
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShot();
-			Vision.getInstance().setLight(.2);
+			Vision.getInstance().setLight(.6);
 			if (this.desiredShot != null) {
 				toVision();
 			} else {
@@ -94,7 +92,7 @@ public class Drive extends ControlledSubsystem {
 
 		} else if (!DriverStation.getInstance().isAutonomous()) {
 			isReset = false;
-			Vision.getInstance().setLight(.40);
+			Vision.getInstance().setLight(.70);
 			// System.out.println("Vision Ended");
 			this.setController(new DriveCheezyDriveEquation());
 		}
@@ -129,14 +127,23 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public void update() {
 		updateController();
-		if (Controls.driverController.getLB())
-			sol.set(true);
-		else
+		if (Controls.driverController.getLB() || lowGearInAuto) {
+			// || ((DriverStation.getInstance().getMatchTime() < 1.5) &&
+			// !DriverStation.getInstance().isAutonomous()))
 			sol.set(false);
+		} else {
+			sol.set(true);
+		}
 		// System.out.println("SET MOTORS");
 		OutputSignal output = mController.getOutputSignal(getInputState());
 		// System.out.println("LEFT: " + output.getLeftMotor());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
+	}
+
+	public void setHighGear(boolean bool) {
+		if (!bool)
+			lowGearInAuto = true;
+		sol.set(bool);
 	}
 
 	@Override

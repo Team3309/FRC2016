@@ -61,7 +61,7 @@ public class VisionClient implements Runnable {
 	@Override
 	public void run() {
 		try {
-			DatagramSocket socket = new DatagramSocket(3309);
+			DatagramSocket socket = new DatagramSocket(5809);
 			System.out.println("Vision client started.");
 			byte[] ackBuf = "{\"ack\": true}".getBytes();
 			while (true) {

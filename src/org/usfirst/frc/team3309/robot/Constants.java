@@ -3,12 +3,12 @@ package org.usfirst.frc.team3309.robot;
 public class Constants {
 	public static boolean IS_HOOD_SENSOR_REVERSED_PRACTICE = true;
 	public static boolean IS_HOOD_SENSOR_REVERSED_COMP = true;
-	public static double HOOD_BOTTOM_VALUE_COMP = 272;
-	public static double HOOD_BOTTOM_VALUE_PRACTICE = -162.0;
-	public static double PIVOT_TOP_VALUE_COMP = 278;
+	public static double HOOD_BOTTOM_VALUE_COMP = -84;
+	public static double HOOD_BOTTOM_VALUE_PRACTICE = -161.0;
+	public static double PIVOT_TOP_VALUE_COMP = 296;
 	public static double PIVOT_TOP_VALUE_PRACTICE = 366;
 
-	public static boolean isComp = false;
+	public static boolean isComp = true;
 
 	public static double valueForCompOrPractice(double compValue, double practiceValue) {
 		if (isComp) {
