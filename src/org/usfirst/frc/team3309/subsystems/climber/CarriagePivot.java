@@ -15,7 +15,25 @@ public class CarriagePivot extends ControlledSubsystem {
 	}
 
 	@Override
-	public void update() {
+	public void initTeleop() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void initAuto() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void updateTeleop() {
+
+	}
+
+	@Override
+	public void updateAuto() {
+		// TODO Auto-generated method stub
 
 	}
 

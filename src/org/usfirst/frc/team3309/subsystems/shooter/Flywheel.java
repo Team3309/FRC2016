@@ -19,11 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Flywheel extends ControlledSubsystem {
-
 	private Spark leftSpark = new Spark(RobotMap.LEFT_SHOOTER_MOTOR);
 	private Spark rightSpark = new Spark(RobotMap.RIGHT_SHOOTER_MOTOR);
 
-	private double maxVelRPS = 155.0;
 	private double maxAccRPS = 31.0;
 	private double aimVelRPS = 0.0;
 	private double aimAccRPS = 0.0;
@@ -43,10 +41,10 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.mController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
-		this.mController.setName("Flywheel");
+		this.teleopController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
+		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
-		((FeedForwardWithPIDController) this.mController).setTHRESHOLD(10);
+		((FeedForwardWithPIDController) this.teleopController).setTHRESHOLD(10);
 		SmartDashboard.putNumber("TEST RPS", 110);
 	}
 
@@ -71,9 +69,24 @@ public class Flywheel extends ControlledSubsystem {
 		this.autoVel = this.aimVelRPS;
 	}
 
+	@Override
+	public void initTeleop() {
+
+	}
+
+	@Override
+	public void initAuto() {
+
+	}
+
+	@Override
+	public void updateAuto() {
+		shootLikeRobie();
+	}
+
 	// In front of batter 140 rps 26 degrees
 	@Override
-	public void update() {
+	public void updateTeleop() {
 		// manualControl();
 		curVel = this.getRPS();
 		System.out.println("TOADJGDASOJF");
@@ -85,54 +98,19 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getXBut()) {
 			aimVelRPS = 160;
 		} else if (Controls.operatorController.getYBut()) {
-			//aimVelRPS = SmartDashboard.getNumber("TEST RPS");
+			// aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 			aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShot() != null) {
 				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
 			}
-		} else if (!DriverStation.getInstance().isAutonomous()) {
+		} else {
 			offset = 0;
-			System.out.println("ELSE");
 			aimVelRPS = 0;
 			aimAccRPS = 0;
 			hasGoneBack = false;
-		} else if (DriverStation.getInstance().isAutonomous()) {
-			aimVelRPS = autoVel;
 		}
-
-		System.out.println("HALD");
 		shootLikeRobie();
-		System.out.println("DONE WITH SHOOTER");
-		/*
-		 * // Based off of cur vel and aim vel, find aim acc double error =
-		 * this.aimVelRPS - curVel; if (Math.abs(error) > 1000) { if (error > 0)
-		 * { aimAccRPS = maxAccRPS; } else if (error < 0) { aimAccRPS =
-		 * -maxAccRPS; } } else { if (error > 0) { aimAccRPS = maxAccRPS / 4; }
-		 * else if (error < 0) { aimAccRPS = -maxAccRPS / 4; } }
-		 * 
-		 * // Find offset (how much should be added to the aim vel) // RB adds,
-		 * if (Controls.driverController.getLB()) { offset -= 0; } else if
-		 * (Controls.driverController.getRB()) { offset += 0; }
-		 * 
-		 * if (output != 0 && !hasGoneBack) {
-		 * FeedyWheel.getInstance().setFeedyWheel(-.5); try { Thread.sleep(75);
-		 * } catch (InterruptedException e) { e.printStackTrace(); }
-		 * FeedyWheel.getInstance().setFeedyWheel(0); hasGoneBack = true; }
-		 * 
-		 * // Send our target velocity to the mController if (this.mController
-		 * instanceof FeedForwardWithPIDController) {
-		 * ((FeedForwardWithPIDController)
-		 * this.mController).setAimAcc(aimAccRPS);
-		 * ((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS
-		 * + offset); }
-		 * 
-		 * // Get value and set to motors if (aimVelRPS == 0) {
-		 * this.setShooter(0); } else { this.setShooter(output); }
-		 */
-		// double output =
-		// this.mController.getOutputSignal(getInputState()).getMotor();
-
 	}
 
 	/**
@@ -152,21 +130,13 @@ public class Flywheel extends ControlledSubsystem {
 			power = 0;
 		}
 		if (power != 0 && !hasGoneBack) {
-			if (DriverStation.getInstance().isAutonomous())
-				FeedyWheel.getInstance().setFeedyWheelAuto(-.5);
-			else
-				FeedyWheel.getInstance().setFeedyWheel(-.5);
+			FeedyWheel.getInstance().setFeedyWheel(-.5);
 			try {
-				System.out.println("THREAD SEE");
 				Thread.sleep(75);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (DriverStation.getInstance().isAutonomous())
-				FeedyWheel.getInstance().setFeedyWheelAuto(0);
-			else
-				FeedyWheel.getInstance().setFeedyWheel(0);
-
+			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
 		}
 		this.rightSpark.set(power);
@@ -177,7 +147,6 @@ public class Flywheel extends ControlledSubsystem {
 	 * Feed Forward with dynamic aims
 	 */
 	private void shootLikeRobie() {
-
 		if (aimVelRPS == 0) {
 		} else {
 			if (curVel < aimVelRPS - 32) {
@@ -191,23 +160,19 @@ public class Flywheel extends ControlledSubsystem {
 				aimAccRPS = 0;
 			}
 		}
-
 		// Send our target velocity to the mController
-		if (this.mController instanceof FeedForwardWithPIDController) {
-			((FeedForwardWithPIDController) this.mController).setAimAcc(aimAccRPS);
-			((FeedForwardWithPIDController) this.mController).setAimVel(aimVelRPS + offset);
+		if (this.teleopController instanceof FeedForwardWithPIDController) {
+			((FeedForwardWithPIDController) this.teleopController).setAimAcc(aimAccRPS);
+			((FeedForwardWithPIDController) this.teleopController).setAimVel(aimVelRPS + offset);
 		}
-		double output = this.mController.getOutputSignal(this.getInputState()).getMotor();
-
+		double output = this.teleopController.getOutputSignal(this.getInputState()).getMotor();
 		if (output > 1) {
 			output = 1;
 		} else if (output < 0) {
 			output = 0;
 		}
-
 		if (aimVelRPS != 0 && !hasGoneBack) {
 			FeedyWheel.getInstance().setFeedyWheel(-.5);
-			System.out.println("FEEDY WHEEL");
 			try {
 				Thread.sleep(130);
 			} catch (InterruptedException e) {
@@ -216,10 +181,7 @@ public class Flywheel extends ControlledSubsystem {
 
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
-		} else {
-
 		}
-
 		// Get value and set to motors
 		if (aimVelRPS == 0) {
 			this.setShooter(0);
@@ -240,7 +202,10 @@ public class Flywheel extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		mController.sendToSmartDash();
+		if (DriverStation.getInstance().isAutonomous())
+			autoController.sendToSmartDash();
+		else
+			teleopController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
 		SmartDashboard.putNumber(this.getName() + " RPS", curVel);
 		SmartDashboard.putNumber(this.getName() + " Goal", this.aimVelRPS);
@@ -251,6 +216,22 @@ public class Flywheel extends ControlledSubsystem {
 	private double getRPS() {
 		pastVel = Sensors.getShooterRPS();
 		return Sensors.getShooterRPS();
+	}
+
+	public double getAimVelRPS() {
+		return aimVelRPS;
+	}
+
+	public void setAimVelRPS(double aimVelRPS) {
+		this.aimVelRPS = aimVelRPS;
+	}
+
+	public double getAimAccRPS() {
+		return aimAccRPS;
+	}
+
+	public void setAimAccRPS(double aimAccRPS) {
+		this.aimAccRPS = aimAccRPS;
 	}
 
 	public boolean isShooterInRange() {

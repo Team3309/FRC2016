@@ -13,7 +13,7 @@ public class ForwardIntoZoneMode extends AutoRoutine {
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
 		DriveEncodersController x = new DriveEncodersController(5000);
-		mDrive.setController(x);
+		mDrive.setTeleopController(x);
 		this.waitForDrive(6000);
 	}
 }

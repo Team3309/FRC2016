@@ -18,7 +18,7 @@ public class LowBarAutoMode extends AutoRoutine {
 		// blankController.setPower(.4);
 
 		DriveEncodersControllerBasePower x = new DriveEncodersControllerBasePower(23000, .5);
-		mDrive.setController(x);
+		mDrive.setTeleopController(x);
 
 		IntakePivot.getInstance().toIntakePosition();
 

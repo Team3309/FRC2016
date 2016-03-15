@@ -7,13 +7,31 @@ import org.usfirst.frc.team3309.robot.Sensors;
 public class Hook extends ControlledSubsystem {
 
 	private double goalPosition = Sensors.getHookAngle();
-	
+
 	private Hook(String name) {
 		super(name);
 	}
 
 	@Override
-	public void update() {
+	public void initTeleop() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void initAuto() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void updateTeleop() {
+
+	}
+
+	@Override
+	public void updateAuto() {
+		// TODO Auto-generated method stub
 
 	}
 

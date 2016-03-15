@@ -19,7 +19,7 @@ public class Hood extends ControlledSubsystem {
 	private static Hood mHood = new Hood("Hood");
 	private Spark hoodSpark = new Spark(RobotMap.HOOD_MOTOR);
 	private double curAngle = 0;
-	private double goalAngle = curAngle;
+	private double goalAngle = 4;
 
 	/**
 	 * Singleton Pattern
@@ -35,20 +35,30 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.mController = new PIDPositionController(0.51, 0.001, .014); // .072, .002, .013
-		((PIDController) this.mController).kILimit = .2;
-		this.mController.setName("Hood Angle");
-		((PIDController) this.mController).setTHRESHOLD(.4);
-		// this.mController.
+		this.teleopController = new PIDPositionController(0.51, 0.001, .014);
+		this.autoController = new PIDPositionController(0.51, 0.001, .014);
+		((PIDController) this.teleopController).kILimit = .2;
+		this.teleopController.setName("Hood Angle");
+		((PIDController) this.teleopController).setTHRESHOLD(.4);
+		((PIDController) this.autoController).kILimit = .2;
+		this.autoController.setName("Hood Angle");
+		((PIDController) this.autoController).setTHRESHOLD(.4);
 		SmartDashboard.putNumber("Test Angle", 15);
+	}
+
+	@Override
+	public void initTeleop() {
 
 	}
 
 	@Override
-	public void update() {
-		System.out.println("Start Hood");
+	public void initAuto() {
+		goalAngle = 4;
+	}
+
+	@Override
+	public void updateTeleop() {
 		curAngle = Sensors.getHoodAngle();
-		System.out.println("ADFASSDFAA AANGE:");
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
@@ -58,36 +68,44 @@ public class Hood extends ControlledSubsystem {
 		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 42.85;
 		} else if (Controls.operatorController.getYBut()) {
-			 goalAngle = 28.6;
-			//goalAngle = SmartDashboard.getNumber("Test Angle");
+			goalAngle = 28.6;
+			// goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShot() != null)
 				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
 			else
 				goalAngle = 4;
-		} /*else if (KragerMath.threshold(Controls.operatorController.getRightY()) != 0) {
-			output = KragerMath.threshold(Controls.operatorController.getRightY());
-			//goalAngle = -1000;
-		} */else if (!DriverStation.getInstance().isAutonomous()) {
+		} else {
 			goalAngle = 4;
-			System.out.println("NOT AUTO");
-			
 		}
-
 		if (goalAngle >= 0) {
-			output = this.mController.getOutputSignal(getInputState()).getMotor();
+			output = this.teleopController.getOutputSignal(getInputState()).getMotor();
 		}
 
 		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0) || this.isOnTarget()) {
 			output = 0;
 		}
-		System.out.println("DONE WITH HOOD");
+		this.setHood(output);
+	}
+
+	@Override
+	public void updateAuto() {
+		double output = 0;
+		if (goalAngle >= 0) {
+			output = this.autoController.getOutputSignal(getInputState()).getMotor();
+		}
+		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0) || this.isOnTarget()) {
+			output = 0;
+		}
 		this.setHood(output);
 	}
 
 	@Override
 	public void sendToSmartDash() {
-		this.mController.sendToSmartDash();
+		if (DriverStation.getInstance().isAutonomous())
+			autoController.sendToSmartDash();
+		else
+			teleopController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " angle", Sensors.getHoodAngle());
 		SmartDashboard.putNumber(this.getName() + " goal angle", goalAngle);
 		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.get());
@@ -107,12 +125,6 @@ public class Hood extends ControlledSubsystem {
 	@Override
 	public void manualControl() {
 		curAngle = Sensors.getHoodAngle();
-		/*
-		 * if (Controls.driverController.getA()) { this.setHood(.4); } else if
-		 * (Controls.driverController.getB()) { this.setHood(-.4); } else {
-		 * this.setHood(0); }
-		 */
-
 		this.setHood(KragerMath.threshold(Controls.operatorController.getRightY()));
 	}
 

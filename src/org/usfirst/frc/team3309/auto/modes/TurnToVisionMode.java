@@ -9,8 +9,8 @@ public class TurnToVisionMode extends AutoRoutine {
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-		FaceVisionTargetController x = new FaceVisionTargetController(.01, 0, 0);
-		Drive.getInstance().setController(x);
+		FaceVisionTargetController x = new FaceVisionTargetController();
+		Drive.getInstance().setTeleopController(x);
 		waitForDrive(100000);
 	}
 

@@ -30,25 +30,14 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		OnlyPowerController startTurning = new OnlyPowerController();
 		startTurning.setLeftPower(.7);
 		startTurning.setRightPower(.4);
-		mDrive.setController(startTurning);
+		mDrive.setTeleopController(startTurning);
 
-		//TurnToAngleAutoMode angleTurn = new TurnToAngleAutoMode();
+		// TurnToAngleAutoMode angleTurn = new TurnToAngleAutoMode();
 		while (Math.abs(Sensors.getLeftDrive()) < 13350) {
 			Thread.sleep(30);
 		}
-		mDrive.setController(new BlankController());
-		/*
-		 * mDrive.setAngleSetpoint(mDrive.getAngle() + 45); try {
-		 * this.waitForDrive(15000); } catch (Exception e) {
-		 * 
-		 * } System.out.println("Turned T"); DriveEncodersControllerBasePower
-		 * goForwardToGoCloserToGoal = new
-		 * DriveEncodersControllerBasePower(4000, .4);
-		 * mDrive.setController(goForwardToGoCloserToGoal); try {
-		 * this.waitForDrive(-2000); } catch (Exception e) {
-		 * 
-		 * } System.out.println("Went Forward A little more");
-		 */
+		mDrive.setTeleopController(new BlankController());
+
 		Thread.sleep(1000);
 		double counter = 0;
 		Shot goal = Vision.getInstance().getShot();
@@ -64,16 +53,14 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		}
 		mDrive.stopDrive();
 
-		
 		goal = Vision.getInstance().getShot();
 		Flywheel.getInstance().setAimVelRPSAuto(goal.getGoalRPS());
 		Hood.getInstance().setGoalAngle(goal.getGoalHoodAngle());
-		boolean isRunnning = true;
 		int counter2 = 0;
 		while (counter2 < 3) {
 			mDrive.toVision();
 			Thread.sleep(700);
-			mDrive.setController(new BlankController());
+			mDrive.setTeleopController(new BlankController());
 			Thread.sleep(250);
 			goal = Vision.getInstance().getShot();
 			Flywheel.getInstance().setAimVelRPSAuto(goal.getGoalRPS());
@@ -81,15 +68,17 @@ public class LowBarShootAutoMode extends AutoRoutine {
 			counter2++;
 		}
 		Thread.sleep(1000);
-		
+
 		System.out.println("FEEDY IS RUNNING");
 
-		/*while (!Flywheel.getInstance().isOnTarget()) {
-
-		}*/
-		FeedyWheel.getInstance().setFeedyWheelAuto(-.9);
+		/*
+		 * while (!Flywheel.getInstance().isOnTarget()) {
+		 * 
+		 * }
+		 */
+		FeedyWheel.getInstance().setFeedyWheel(-.9);
 		Thread.sleep(5000);
-		FeedyWheel.getInstance().setFeedyWheelAuto(0);
+		FeedyWheel.getInstance().setFeedyWheel(0);
 
 	}
 

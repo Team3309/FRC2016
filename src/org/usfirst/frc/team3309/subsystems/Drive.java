@@ -62,23 +62,42 @@ public class Drive extends ControlledSubsystem {
 
 	private Drive(String name) {
 		super(name);
-		mController = new DriveCheezyDriveEquation();
-		x.setName("Angle");
-		// this.setController(x);
+		teleopController = new DriveCheezyDriveEquation();
+		autoController = new BlankController();
 	}
 
-	public void toTeleop() {
-		x.setName("Angle");
-		// this.setController(x);
-		lowGearInAuto = false;
-		mController = new DriveCheezyDriveEquation();
+	@Override
+	public void initTeleop() {
+		teleopController = new DriveCheezyDriveEquation();
+		isReset = false;
 	}
 
-	// Sets controller based on what state the remotes and game are in
-	private void updateController() {
-		// if mController is Completed and has not already been made blank, then
-		// make it blank
+	@Override
+	public void initAuto() {
+		autoController = new BlankController();
+	}
 
+	public void toVision() {
+		this.desiredShot = Vision.getInstance().getShot();
+		if (this.desiredShot != null) {
+			FaceVisionTargetController x = new FaceVisionTargetController();
+			x.setName("VISION");
+			x.reset();
+			if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
+				return;
+			}
+			System.out.println("Vision started");
+			x.setCompletable(false);
+			if (DriverStation.getInstance().isAutonomous())
+				this.setAutoController(x);
+			else
+				this.setTeleopController(x);
+			isReset = true;
+		}
+	}
+
+	@Override
+	public void updateTeleop() {
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShot();
 			Vision.getInstance().setLight(.6);
@@ -90,59 +109,30 @@ public class Drive extends ControlledSubsystem {
 			}
 		} else if (Controls.operatorController.getBack()) {
 
-		} else if (!DriverStation.getInstance().isAutonomous()) {
+		} else {
 			isReset = false;
 			Vision.getInstance().setLight(.70);
-			// System.out.println("Vision Ended");
-			this.setController(new DriveCheezyDriveEquation());
+			this.setTeleopController(new DriveCheezyDriveEquation());
 		}
 
-		if (mController.isCompleted() && !(mController instanceof BlankController)) {
-			// System.out.println("BLANK");
-			mController = new BlankController();
-		} else if (mController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
-			// System.out.println("BLA NK");
-			mController = new DriveCheezyDriveEquation();
-		}
-
-	}
-
-	public void toVision() {
-		this.desiredShot = Vision.getInstance().getShot();
-		if (this.desiredShot != null) {
-			FaceVisionTargetController x = new FaceVisionTargetController(.058, 0.015, 0.03);
-			x.setName("VISION");
-			x.reset();
-			if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
-				return;
-			}
-			// x.setGoalAngle(Vision.getInstance().getShot().getAzimuth());
-			System.out.println("Vision started");
-			x.setCompletable(false);
-			this.setController(x);
-			isReset = true;
-		}
-	}
-
-	@Override
-	public void update() {
-		updateController();
-		if (Controls.driverController.getLB() || lowGearInAuto) {
-			// || ((DriverStation.getInstance().getMatchTime() < 1.5) &&
-			// !DriverStation.getInstance().isAutonomous()))
+		if (Controls.driverController.getLB()) {
 			sol.set(false);
 		} else {
 			sol.set(true);
 		}
-		// System.out.println("SET MOTORS");
-		OutputSignal output = mController.getOutputSignal(getInputState());
-		// System.out.println("LEFT: " + output.getLeftMotor());
+		if (teleopController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
+			teleopController = new DriveCheezyDriveEquation();
+		}
+		OutputSignal output = teleopController.getOutputSignal(getInputState());
+		setLeftRight(output.getLeftMotor(), output.getRightMotor());
+	}
+
+	public void updateAuto() {
+		OutputSignal output = autoController.getOutputSignal(getInputState());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
 
 	public void setHighGear(boolean bool) {
-		if (!bool)
-			lowGearInAuto = true;
 		sol.set(bool);
 	}
 
@@ -172,14 +162,13 @@ public class Drive extends ControlledSubsystem {
 	 */
 
 	public void setSetpoint(double encoders) {
-		mController = new DriveEncodersController(encoders);
+		teleopController = new DriveEncodersController(encoders);
 	}
 
 	public void setAngleSetpoint(double goalAngle) {
-		mController = new DriveAngleController(goalAngle);
-		mController.reset();
-		// ((PIDController) mController).setCompletable(false);
-		mController.setName("Drive Angle Controller");
+		teleopController = new DriveAngleController(goalAngle);
+		teleopController.reset();
+		teleopController.setName("Drive Angle Controller");
 	}
 
 	/**
@@ -236,7 +225,7 @@ public class Drive extends ControlledSubsystem {
 	 * Stops current running controller and sets motors to zero
 	 */
 	public void stopDrive() {
-		mController = new BlankController();
+		autoController = new BlankController();
 		setLeftRight(0, 0);
 	}
 
@@ -287,7 +276,10 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		mController.sendToSmartDash();
+		if (DriverStation.getInstance().isAutonomous()) 
+			autoController.sendToSmartDash();
+		else
+			teleopController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());

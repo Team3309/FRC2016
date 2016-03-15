@@ -18,11 +18,11 @@ public class LowSpeedCrossAutoIntakeUp extends AutoRoutine{
 		OnlyPowerController x = new OnlyPowerController();
 		x.setLeftPower(.4);
 		x.setRightPower(.42);
-		Drive.getInstance().setController(x);
+		Drive.getInstance().setTeleopController(x);
 		Thread.sleep(6000);
 		x.setLeftPower(0);
 		x.setRightPower(0);
-		mDrive.setController(x);
+		mDrive.setTeleopController(x);
 		mDrive.stopDrive();
 		//this.waitForDrive(10000000);
 		System.out.println("Auto is done");

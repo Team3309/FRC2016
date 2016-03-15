@@ -25,14 +25,32 @@ public class Carriage extends ControlledSubsystem {
 
 	private Carriage(String name) {
 		super(name);
-		mController = new PIDVelocityController(.01, 0, 0);
+		teleopController = new PIDVelocityController(.01, 0, 0);
 	}
 
 	@Override
-	public void update() {
+	public void initTeleop() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void initAuto() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void updateTeleop() {
 		goalVelocity = KragerMath.threshold(Controls.operatorController.getRightY()) * this.MAX_VEL;
-		double output = mController.getOutputSignal(getInputState()).getMotor();
+		double output = teleopController.getOutputSignal(getInputState()).getMotor();
 		this.setCarriage(output);
+	}
+
+	@Override
+	public void updateAuto() {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -63,4 +81,5 @@ public class Carriage extends ControlledSubsystem {
 	public void manualControl() {
 		this.setCarriage(KragerMath.threshold(Controls.operatorController.getRightY()));
 	}
+
 }

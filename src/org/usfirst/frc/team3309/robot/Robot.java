@@ -38,20 +38,16 @@ public class Robot extends IterativeRobot {
 	XboxController driverController = Controls.driverController;
 	XboxController operatorController = Controls.operatorController;
 
-	// PWM x = new PWM(0);
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
-	private PowerDistributionPanel pdp;
-
-	// private GearTooth test = new GearTooth(0);
-	// private PIDPositionController pidController = new
-	// PIDPositionController(.00001, 0, 0);
+	private PowerDistributionPanel pdp = new PowerDistributionPanel();
 
 	// Runs when Robot is turned on
 	public void robotInit() {
 		System.out.println("INNIT");
 		Sensors.init();
+		pdp = new PowerDistributionPanel();
 		try {
 
 		} catch (Exception e) {
@@ -59,7 +55,7 @@ public class Robot extends IterativeRobot {
 			e.getMessage();
 		}
 		System.out.println("ONCE");
-		// Set up new Autos in sendable Chooser
+		// Set up new Autos in Sendable Chooser
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
@@ -87,7 +83,6 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Rough Terrain", new CrossRoughTerrain());
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
 		SmartDashboard.putData("Defense", defenseAutoChooser);
-		SmartDashboard.putNumber("ANGLE I AM TURNING ( ADDED TO OTHER)", 0);
 		Intake.getInstance();
 		Shooter.getInstance();
 		Drive.getInstance();
@@ -117,36 +112,30 @@ public class Robot extends IterativeRobot {
 		} else {
 			(new Thread((AutoRoutine) mainAutoChooser.getSelected())).start();
 		}
-
+		Drive.getInstance().initAuto();
+		Shooter.getInstance().initAuto();
+		Intake.getInstance().initAuto();
 	}
 
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
-		// System.out.println("AUTO PERIODIC");
-		// Sensors.printNavX();
-		// if (Vision.getInstance().getGoals().size() > 0)
-		// System.out.println("JSON ARRAYS: " +
-		// Vision.getInstance().getGoals());
-
-		Drive.getInstance().update();
+		Drive.getInstance().updateAuto();
 		Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().update();
+		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().update();
+		Intake.getInstance().updateAuto();
 		Intake.getInstance().sendToSmartDash();
 	}
 
 	// Init to Tele
 	public void teleopInit() {
-		Drive.getInstance().toTeleop();
-		Shooter.getInstance().mFeedyWheel.autoAssigned = false;
-
+		Drive.getInstance().initTeleop();
+		Shooter.getInstance().initTeleop();
+		Intake.getInstance().initTeleop();
 		Vision.getInstance().setLight(0);
 		Compressor compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
 		compressor.start();
-		pdp = new PowerDistributionPanel();
-
 	}
 
 	// This function is called periodically during operator control
@@ -154,59 +143,16 @@ public class Robot extends IterativeRobot {
 
 		if (Vision.getInstance().getGoals().size() > 0)
 			System.out.println("Y: " + Vision.getInstance().getGoals().get(0).y);
-
-		/*
-		 * double encoderIn360 = ((double) test.getPulseWidthPosition()) *
-		 * (360.0 / 4096.0); double posTest = test.getPulseWidthPosition();
-		 * SmartDashboard.putNumber("Abs Pos (scaled): ", encoderIn360);
-		 * SmartDashboard.putNumber("POSITION:", posTest); InputState state =
-		 * new InputState(); state.setError(270 - encoderIn360); double toMotor
-		 * = pidController.getOutputSignal(state).getMotor();
-		 * SmartDashboard.putNumber("POWER", toMotor);
-		 * pidController.sendToSmartDash(); this.test.set(toMotor);
-		 */
 		// Update the subsystems
-		// UPDATES
-		System.out.println("RUNNING");
-		Drive.getInstance().update();
-		System.out.println("Drie");
+		Drive.getInstance().updateTeleop();
 		Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().update();
-		System.out.println("shhote");
+		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().update();
-		System.out.println("Intaek");
+		Intake.getInstance().updateTeleop();
 		Intake.getInstance().sendToSmartDash();
-		/*
-		 * if (DriverStation.getInstance().getMatchTime() < 1)
-		 * Drive.getInstance().setHighGear(false);
-		 */
-
-		// SmartDashboard.putNumber("0", pdp.getCurrent(0));
-
-		// SmartDashboard.putNumber("1", pdp.getCurrent(1));
-		/*
-		 * SmartDashboard.putNumbe r("2", pdp.getCurrent(2));
-		 * SmartDashboard.putNumber("3", pdp.getCurrent(3));
-		 * SmartDashboard.putNumber("4", pdp.getCurrent(4));
-		 * SmartDashboard.putNumber("5", pdp.getCurrent(5));
-		 * SmartDashboard.putNumber("6", pdp.getCurrent(6));
-		 * SmartDashboard.putNumber("7", pdp.getCurrent(7));
-		 * SmartDashboard.putNumber("8", pdp.getCurrent(8));
-		 * SmartDashboard.putNumber("9", pdp.getCurrent(9));
-		 * SmartDashboard.putNumber("10", pdp.getCurrent(10));
-		 * SmartDashboard.putNumber("11", pdp.getCurrent(11));
-		 * SmartDashboard.putNumber("12", pdp.getCurrent(12));
-		 * SmartDashboard.putNumber("13", pdp.getCurrent(13));
-		 * SmartDashboard.putNumber("14", pdp.getCurrent(14));
-		 * SmartDashboard.putNumber("15", pdp.getCurrent(15));
-		 */
-
-		// MANUALS
 		try {
 			Thread.sleep(30);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -12,7 +12,7 @@ public class TurnInPlaceLAAutoMode extends AutoRoutine {
 	public void routine() throws TimedOutException, InterruptedException {
 		double offset = SmartDashboard.getNumber("ANGLE I AM TURNING ( ADDED TO OTHER)"); 
 		DriveAngleVelocityController angleVel = new DriveAngleVelocityController(this.mDrive.getAngle() + offset);
-		mDrive.setController(angleVel);
+		mDrive.setTeleopController(angleVel);
 		Thread.sleep(342515);
 	}
 

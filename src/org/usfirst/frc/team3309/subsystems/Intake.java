@@ -26,9 +26,27 @@ public class Intake extends KragerSystem {
 	}
 
 	@Override
-	public void update() {
+	public void initTeleop() {
+		mFrontAndSideRoller.initTeleop();
+		mIntakePivot.initTeleop();
+	}
+
+	@Override
+	public void initAuto() {
+		mFrontAndSideRoller.initAuto();
+		mIntakePivot.initAuto();
+	}
+
+	@Override
+	public void updateAuto() {
+		mFrontAndSideRoller.updateAuto();
+		mIntakePivot.updateAuto();
+	}
+
+	@Override
+	public void updateTeleop() {
 		mFrontAndSideRoller.manualControl();
-		mIntakePivot.update();
+		mIntakePivot.updateTeleop();
 	}
 
 	@Override
@@ -42,4 +60,5 @@ public class Intake extends KragerSystem {
 		mFrontAndSideRoller.manualControl();
 		mIntakePivot.manualControl();
 	}
+
 }

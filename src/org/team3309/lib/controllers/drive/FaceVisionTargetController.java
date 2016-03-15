@@ -14,7 +14,7 @@ public class FaceVisionTargetController extends DriveAngleController {
 	private boolean sendToDash = true;
 	private Shot aimShot;
 
-	public FaceVisionTargetController(double kP, double kI, double kD) {
+	public FaceVisionTargetController() {
 		super(Sensors.getAngle());
 		if (Vision.getInstance().getShot() != null) {
 			this.setTIME_TO_BE_COMPLETE_MILLISECONDS(1500);

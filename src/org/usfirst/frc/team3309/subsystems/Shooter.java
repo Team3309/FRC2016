@@ -25,9 +25,30 @@ public class Shooter extends KragerSystem {
 	}
 
 	@Override
-	public void update() {
-		mFlywheel.update();
-		mHood.update();
+	public void initTeleop() {
+		mFlywheel.initTeleop();
+		mHood.initTeleop();
+		mFeedyWheel.initTeleop();
+	}
+
+	@Override
+	public void initAuto() {
+		mFlywheel.initAuto();
+		mHood.initAuto();
+		mFeedyWheel.initAuto();
+	}
+
+	@Override
+	public void updateAuto() {
+		mFlywheel.updateAuto();
+		mHood.updateAuto();
+		mFeedyWheel.updateAuto();
+	}
+
+	@Override
+	public void updateTeleop() {
+		mFlywheel.updateTeleop();
+		mHood.updateTeleop();
 		mFeedyWheel.manualControl();
 	}
 

@@ -13,19 +13,22 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
  */
 public abstract class ControlledSubsystem extends KragerSystem {
 	/**
-	 * Controller of Subsystem
+	 * Controller of Subsystem For Teleop
 	 */
-	protected Controller mController;
+	protected Controller teleopController;
+	protected Controller autoController;
 
 	public ControlledSubsystem(String name) {
 		super(name);
-		mController = new BlankController();
+		teleopController = new BlankController();
 	}
 
 	/*
 	 * @see org.team3309.lib.KragerSubsystem#update()
 	 */
-	public abstract void update();
+	public abstract void updateTeleop();
+
+	public abstract void updateAuto();
 
 	/**
 	 * returns Input State
@@ -35,23 +38,28 @@ public abstract class ControlledSubsystem extends KragerSystem {
 	 */
 	public abstract InputState getInputState();
 
-	public void setController(Controller mController) {
-		this.mController = mController;
+	public void setTeleopController(Controller mController) {
+		this.teleopController = mController;
 	}
-	
+
+	public void setAutoController(Controller mController) {
+		this.autoController = mController;
+	}
+
 	/**
 	 * Tells if the controller is where it is supposed to be
+	 * 
 	 * @return
 	 */
 	public boolean isOnTarget() {
-		return mController.isCompleted();
+		return teleopController.isCompleted();
 	}
 
 	/**
 	 * Use this to send controllers to the smartdash for live tuning
 	 */
 	public abstract void sendToSmartDash();
-	
+
 	/**
 	 * Manual Control for no sensors
 	 */

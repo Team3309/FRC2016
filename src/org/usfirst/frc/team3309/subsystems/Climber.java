@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.KragerSystem;
+import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.usfirst.frc.team3309.subsystems.climber.Carriage;
 import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 
@@ -25,9 +26,26 @@ public class Climber extends KragerSystem {
 	}
 
 	@Override
-	public void update() {
-		mCarriage.update();
-		mHood.update();
+	public void initTeleop() {
+
+	}
+
+	@Override
+	public void initAuto() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void updateTeleop() {
+		mCarriage.updateTeleop();
+		mHood.updateTeleop();
+	}
+
+	@Override
+	public void updateAuto() {
+		mCarriage.updateAuto();
+		mHood.updateAuto();
 	}
 
 	@Override

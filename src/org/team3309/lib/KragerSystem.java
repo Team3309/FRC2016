@@ -25,9 +25,24 @@ public abstract class KragerSystem {
 	}
 
 	/**
-	 * Method ran through each loop to control a certain subsystem
+	 * Method ran through each Teleop loop to control a certain subsystem
 	 */
-	public abstract void update();
+	public abstract void updateTeleop();
+
+	/**
+	 * Method ran through each Auto loop to control a certain subsystem
+	 */
+	public abstract void updateAuto();
+
+	/**
+	 * Method ran at teleop init
+	 */
+	public abstract void initTeleop();
+
+	/**
+	 * Method ran at auto init
+	 */
+	public abstract void initAuto();
 
 	/**
 	 * Send to smart dash to see all of the aspects of this subsystem
