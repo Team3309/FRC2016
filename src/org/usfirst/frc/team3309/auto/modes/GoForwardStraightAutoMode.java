@@ -10,6 +10,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
+		Drive.getInstance().setHighGear(true);
 		DriveEncodersVelocityController x = new DriveEncodersVelocityController(700);
 		Drive.getInstance().setAutoController(x);
 		try {
