@@ -92,7 +92,6 @@ public class Flywheel extends ControlledSubsystem {
 	public void updateTeleop() {
 		// manualControl();
 		curVel = this.getRPS();
-		System.out.println("TOADJGDASOJF");
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
 			aimVelRPS = 103;

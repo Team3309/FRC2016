@@ -300,4 +300,9 @@ public class Drive extends ControlledSubsystem {
 		double turn = Controls.driverController.getRightX();
 		this.setLeftRight(throttle + turn, throttle - turn);
 	}
+
+	public boolean isLowGear() {
+		// TODO Auto-generated method stub
+		return sol.get();
+	}
 }

@@ -6,6 +6,7 @@ import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.usfirst.frc.team3309.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,12 +18,21 @@ public class DriveAngleVelocityController extends Controller {
 
 	public DriveAngleVelocityController(double aimAngle) {
 		this.setName("DRIVE ANGLE VEL");
+		if (Drive.getInstance().isLowGear()) {
+			leftSideController.setConstants(.006, 0, .003, .001, 0);
+			rightSideController.setConstants(.006, 0, .003, .001, 0);
+			turningController.setConstants(6, 0, 13.015);
+		}else {
+			leftSideController.setConstants(.006, 0, .003, .001, 0);
+			rightSideController.setConstants(.006, 0, .003, .001, 0);
+			turningController.setConstants(6, 0, 13.015);
+		}
 		this.leftSideController.setName("LEFT IDE VEL CONTROLER");
 		this.rightSideController.setName("RIGHT IDE VEL CONTROLER");
 		this.turningController.setName("Turning Angle Controller");
 		goalAngle = aimAngle;
 		SmartDashboard.putNumber(this.getName() + " Vel to Turn At", 0);
-		//SmartDashboard.putNumber("" , value);
+		// SmartDashboard.putNumber("" , value);
 	}
 
 	@Override
@@ -47,7 +57,8 @@ public class DriveAngleVelocityController extends Controller {
 		state.setError(error); // sets angle error to be sent in turning PID
 		OutputSignal outputOfTurningController = turningController.getOutputSignal(state); // outputs
 																							// which
-																							// "power"/ vel
+																							// "power"/
+																							// vel
 																							// to
 																							// send
 		SmartDashboard.putNumber("DRIVE ANGLE VEL Output", outputOfTurningController.getMotor());
@@ -55,14 +66,14 @@ public class DriveAngleVelocityController extends Controller {
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
 		System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
-		 leftState.setError(outputOfTurningController.getMotor() -
-		 inputState.getLeftVel());
-		 rightState.setError(outputOfTurningController.getMotor() -
-		 inputState.getRightVel());
-		//leftSideController.setAimVel(dashAimTurnVel);
-		//rightSideController.setAimVel(dashAimTurnVel);
-		//leftState.setError(dashAimTurnVel - inputState.getLeftVel());
-		//rightState.setError(dashAimTurnVel - inputState.getRightVel());
+		leftState.setError(outputOfTurningController.getMotor() - inputState.getLeftVel());
+		rightState.setError(outputOfTurningController.getMotor() - inputState.getRightVel());
+		// rightSideController.setAimVel(outputOfTurningController.getMotor());
+		// leftSideController.setAimVel(outputOfTurningController.getMotor());
+		// leftSideController.setAimVel(dashAimTurnVel);
+		// rightSideController.setAimVel(dashAimTurnVel);
+		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());
+		// rightState.setError(dashAimTurnVel - inputState.getRightVel());
 		toBeReturnedSignal.setLeftRightMotor(leftSideController.getOutputSignal(leftState).getMotor(),
 				-rightSideController.getOutputSignal(rightState).getMotor());
 

@@ -37,7 +37,12 @@ public class FeedForwardWithPIDController extends PIDController {
 		this.kA = kA;
 		this.kV = kV;
 	}
-
+	
+	public void setConstants(double kV, double kA, double kP, double kI, double kD) {
+		super.setConstants(kP, kI, kD);
+		this.kV = kV;
+		this.kA = kA;
+	}
 	@Override
 	public void reset() {
 		super.reset();

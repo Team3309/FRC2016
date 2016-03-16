@@ -73,7 +73,7 @@ public class Sensors {
 	}
 
 	public static double getRightDrive() {
-		return rightDrive.get();
+		return rightDrive.get()/100;
 	}
 
 	public static double getRightDriveVel() {
@@ -81,7 +81,7 @@ public class Sensors {
 	}
 
 	public static double getLeftDrive() {
-		return leftDrive.get();
+		return leftDrive.get()/100;
 	}
 
 	public static double getLeftDriveVel() {
@@ -91,7 +91,6 @@ public class Sensors {
 	// Shooter
 	public static double getShooterRPS() {
 		double currentShooter = (1 / shooterEncoder.getPeriod());
-		System.out.println("FDASF " + shooterEncoder.getPeriod());
 		if (Math.abs(1 / shooterEncoder.getPeriod()) - (pastShooter) > 250)
 			return pastShooter;
 		pastShooter = currentShooter;

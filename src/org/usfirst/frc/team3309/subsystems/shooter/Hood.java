@@ -93,8 +93,6 @@ public class Hood extends ControlledSubsystem {
 		double output = 0;
 		curAngle = Sensors.getHoodAngle();
 		if (goalAngle >= 0) {
-			output = this.autoController.getOutputSignal(getInputState()).getMotor();
-			System.out.println("output " + output);
 		}
 		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0)) {
 			output = 0;
@@ -105,11 +103,9 @@ public class Hood extends ControlledSubsystem {
 	@Override
 	public void sendToSmartDash() {
 		if (DriverStation.getInstance().isAutonomous()) {
-			System.out.println("IS AUTO " + goalAngle);
 			autoController.sendToSmartDash();
 		} else
 			teleopController.sendToSmartDash();
-		System.out.println("Error " + curAngle + " " + goalAngle);
 		SmartDashboard.putNumber(this.getName() + " angle", Sensors.getHoodAngle());
 		SmartDashboard.putNumber(this.getName() + " goal angle", goalAngle);
 		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.get());

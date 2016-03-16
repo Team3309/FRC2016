@@ -159,7 +159,8 @@ public abstract class PIDController extends Controller {
 		TIME_TO_BE_COMPLETE_MILLISECONDS = tIME_TO_BE_COMPLETE_MILLISECONDS;
 	}
 
-	public void setConstants(double kP, double kI, double kD) {
+	public void setConstants( double kP, double kI, double kD) {
+		
 		this.kP = kP;
 		this.kI = kI;
 		this.kD = kD;

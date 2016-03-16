@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.robot;
 
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
+import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
 import org.usfirst.frc.team3309.auto.modes.HighSpeedCrossAutoIntakeDownMode;
 import org.usfirst.frc.team3309.auto.modes.HighSpeedCrossAutoIntakeUpMode;
 import org.usfirst.frc.team3309.auto.modes.LowBarAutoMode;
@@ -58,6 +59,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("ONCE");
 		// Set up new Autos in Sendable Chooser
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
+		mainAutoChooser.addObject("Go Straight", new GoForwardStraightAutoMode());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
 		mainAutoChooser.addObject("Custom Auto", new CustomAuto());
 		mainAutoChooser.addObject("Angle", new TurnToAngleAutoMode());
