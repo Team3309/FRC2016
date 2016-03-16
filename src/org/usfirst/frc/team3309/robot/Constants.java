@@ -4,11 +4,11 @@ public class Constants {
 	public static boolean IS_HOOD_SENSOR_REVERSED_PRACTICE = true;
 	public static boolean IS_HOOD_SENSOR_REVERSED_COMP = true;
 	public static double HOOD_BOTTOM_VALUE_COMP = -84;
-	public static double HOOD_BOTTOM_VALUE_PRACTICE = -161.0;
+	public static double HOOD_BOTTOM_VALUE_PRACTICE = -165.0;
 	public static double PIVOT_TOP_VALUE_COMP = 296;
 	public static double PIVOT_TOP_VALUE_PRACTICE = 366;
 
-	public static boolean isComp = true;
+	public static boolean isComp = false;
 
 	public static double valueForCompOrPractice(double compValue, double practiceValue) {
 		if (isComp) {

@@ -77,7 +77,7 @@ public class Sensors {
 	}
 
 	public static double getRightDriveVel() {
-		return rightDrive.getRate();
+		return rightDrive.getRate()/100;
 	}
 
 	public static double getLeftDrive() {
@@ -85,7 +85,7 @@ public class Sensors {
 	}
 
 	public static double getLeftDriveVel() {
-		return leftDrive.getRate();
+		return leftDrive.getRate()/100;
 	}
 
 	// Shooter
@@ -104,7 +104,7 @@ public class Sensors {
 		// double hoodAngle = (-1 * ((1000000.0 * (hoodEncoder.getPeriod())) *
 		// (360.0 / 4096.0)));
 
-		System.out.println("HOOD ANGLE: " + hoodAngle);
+		//System.out.println("HOOD ANGLE: " + hoodAngle);
 		while (hoodAngle > 360 || hoodAngle < -20) {
 			
 			if (hoodAngle > 360) {

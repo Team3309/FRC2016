@@ -42,9 +42,12 @@ public class Flywheel extends ControlledSubsystem {
 	private Flywheel(String name) {
 		super(name);
 		this.teleopController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
+		this.autoController.setName("Flywheel");
 		((FeedForwardWithPIDController) this.teleopController).setTHRESHOLD(10);
+		((FeedForwardWithPIDController) this.autoController).setTHRESHOLD(10);
 		SmartDashboard.putNumber("TEST RPS", 110);
 	}
 

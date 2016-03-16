@@ -48,6 +48,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("INNIT");
 		Sensors.init();
 		pdp = new PowerDistributionPanel();
+		SmartDashboard.putNumber("ANGLE I AM TURNING ( ADDED TO OTHER)", 10);
 		try {
 
 		} catch (Exception e) {
