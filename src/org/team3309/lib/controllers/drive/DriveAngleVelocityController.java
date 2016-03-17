@@ -1,6 +1,7 @@
 package org.team3309.lib.controllers.drive;
 
 import org.team3309.lib.KragerMath;
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
@@ -13,8 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveAngleVelocityController extends Controller {
 	private FeedForwardWithPIDController leftSideController = new FeedForwardWithPIDController(.006, 0, .003, .001, 0);
 	private FeedForwardWithPIDController rightSideController = new FeedForwardWithPIDController(.006, 0, .003, .001, 0);
-	private PIDPositionController turningController = new PIDPositionController(6, 0, 13.015);
-	private double goalAngle = 0;
+	private PIDPositionController turningController = new PIDPositionController(3, 0, 16.015);
+	private KragerTimer doneTimer = new KragerTimer(.5);
+	protected double goalAngle = 0;
 
 	public DriveAngleVelocityController(double aimAngle) {
 		this.setName("DRIVE ANGLE VEL");
@@ -22,15 +24,18 @@ public class DriveAngleVelocityController extends Controller {
 			leftSideController.setConstants(.006, 0, .003, .001, 0);
 			rightSideController.setConstants(.006, 0, .003, .001, 0);
 			turningController.setConstants(6, 0, 13.015);
-		}else {
-			leftSideController.setConstants(.006, 0, .003, .001, 0);
-			rightSideController.setConstants(.006, 0, .003, .001, 0);
-			turningController.setConstants(6, 0, 13.015);
+		} else {
+			leftSideController.setConstants(.006, 0, .009, .001, 0);
+			rightSideController.setConstants(.006, 0, .009, .001, 0);
+			turningController.setConstants(3, 0, 16.015);
 		}
 		this.leftSideController.setName("LEFT IDE VEL CONTROLER");
 		this.rightSideController.setName("RIGHT IDE VEL CONTROLER");
 		this.turningController.setName("Turning Angle Controller");
+		leftSideController.kILimit = .7;
+		rightSideController.kILimit = .7;
 		goalAngle = aimAngle;
+
 		SmartDashboard.putNumber(this.getName() + " Vel to Turn At", 0);
 		// SmartDashboard.putNumber("" , value);
 	}
@@ -76,14 +81,12 @@ public class DriveAngleVelocityController extends Controller {
 		// rightState.setError(dashAimTurnVel - inputState.getRightVel());
 		toBeReturnedSignal.setLeftRightMotor(leftSideController.getOutputSignal(leftState).getMotor(),
 				-rightSideController.getOutputSignal(rightState).getMotor());
-
 		return toBeReturnedSignal;
 	}
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		return doneTimer.isConditionMaintained(Drive.getInstance().isAngleCloseTo(goalAngle));
 	}
 
 	public void sendToSmartDash() {

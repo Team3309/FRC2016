@@ -30,13 +30,13 @@ public class Drive extends ControlledSubsystem {
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal encoder averageÃ�.
 	 */
-	private static final double DRIVE_ENCODER_LENIENCY = 40;
+	private static final double DRIVE_ENCODER_LENIENCY = 5;
 
 	/**
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal angle
 	 */
-	private static final double DRIVE_GYRO_LENIENCY = .5;
+	private static final double DRIVE_GYRO_LENIENCY = 1.2;
 
 	private static Drive instance;
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
@@ -87,7 +87,6 @@ public class Drive extends ControlledSubsystem {
 				return;
 			}
 			System.out.println("Vision started");
-			x.setCompletable(false);
 			if (DriverStation.getInstance().isAutonomous())
 				this.setAutoController(x);
 			else
@@ -199,8 +198,13 @@ public class Drive extends ControlledSubsystem {
 	 * @return
 	 */
 	public boolean isEncoderCloseTo(double encoderGoal) {
-		if (getDistanceTraveled() < encoderGoal + DRIVE_ENCODER_LENIENCY
-				&& getDistanceTraveled() > encoderGoal - DRIVE_ENCODER_LENIENCY) {
+		double factor = 1;
+		if(encoderGoal < 0) {
+			factor = -1;
+		}
+		if (getDistanceTraveled() * factor < encoderGoal + DRIVE_ENCODER_LENIENCY
+				&& factor * getDistanceTraveled() > encoderGoal - DRIVE_ENCODER_LENIENCY) {
+			//System.out.println("TRUE");
 			return true;
 		}
 		return false;

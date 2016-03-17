@@ -9,6 +9,7 @@ import org.usfirst.frc.team3309.auto.modes.LowBarAutoMode;
 import org.usfirst.frc.team3309.auto.modes.LowBarShootAutoMode;
 import org.usfirst.frc.team3309.auto.modes.LowSpeedCrossAutoIntakeUp;
 import org.usfirst.frc.team3309.auto.modes.NoMoveAuto;
+import org.usfirst.frc.team3309.auto.modes.SpyBotAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TurnInPlaceLAAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
@@ -32,6 +33,7 @@ import org.usfirst.frc.team3309.vision.Vision;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -68,6 +70,7 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addObject("Go Forward Intake Up", new HighSpeedCrossAutoIntakeUpMode());
 		mainAutoChooser.addObject("Go LOW inteke Up", new LowSpeedCrossAutoIntakeUp());
 		mainAutoChooser.addObject("Turn in Place", new TurnInPlaceLAAutoMode());
+		mainAutoChooser.addObject("Spy Bot Auto", new SpyBotAutoMode());
 		mainAutoChooser.addObject("Go Forward Intake Down", new HighSpeedCrossAutoIntakeDownMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
@@ -141,9 +144,13 @@ public class Robot extends IterativeRobot {
 		compressor.start();
 	}
 
+	Timer time = new Timer();
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 
+		
+		time.start();
+		time.reset();
 		if (Vision.getInstance().getGoals().size() > 0)
 			System.out.println("Y: " + Vision.getInstance().getGoals().get(0).y);
 		// Update the subsystems
@@ -158,5 +165,6 @@ public class Robot extends IterativeRobot {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println(time.get());
 	}
 }
