@@ -27,17 +27,24 @@ public class DriveEncodersVelocityController extends Controller {
 	private boolean isRampUp = false;
 
 	public DriveEncodersVelocityController(double encoderGoal) {
+		System.out.println("IS LOW GEAR: " + Drive.getInstance().isLowGear());
 		if (Drive.getInstance().isLowGear()) {
 			encodersController.setConstants(2, 0, 1.015);
+
 			turningController.setConstants(.06, 0, 0);
 			leftSideController.setConstants(.006, 0, .003, .001, 0);
 			rightSideController.setConstants(.006, 0, .004, .001, 0);
 		} else {
 			encodersController.setConstants(2.9, 0, .215);
-			turningController.setConstants(.06, 0, 0);
+			turningController.setConstants(.04, 0, 0);
 			leftSideController.setConstants(.006, 0, .009, .001, 0);
 			rightSideController.setConstants(.006, 0, .009, .001, 0);
 		}
+		System.out.println("IS LOW GEAR: " + Drive.getInstance().isLowGear());
+		turningController.printConstants();
+		leftSideController.printConstants();
+		rightSideController.printConstants();
+		encodersController.printConstants();
 		goalAngle = Sensors.getAngle();
 		// if (Drive.getInstance().isLowGear())
 		this.goalEncoder = encoderGoal;
@@ -79,6 +86,11 @@ public class DriveEncodersVelocityController extends Controller {
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
+		System.out.println("DRIVE: ");
+		turningController.printConstants();
+		leftSideController.printConstants();
+		rightSideController.printConstants();
+		encodersController.printConstants();
 		if (Math.abs(outputOfTurningController.getMotor()) > MAX_ENCODER_VEL) {
 			if (outputOfTurningController.getMotor() > 0) {
 				outputOfTurningController.setMotor(MAX_ENCODER_VEL);
@@ -151,6 +163,7 @@ public class DriveEncodersVelocityController extends Controller {
 	}
 
 	public void sendToSmartDash() {
+		System.out.println("FDASFDSAFDSAFASD");
 		leftSideController.sendToSmartDash();
 		rightSideController.sendToSmartDash();
 		encodersController.sendToSmartDash();

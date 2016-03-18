@@ -26,12 +26,11 @@ public class Vision implements Runnable {
 	private final Thread thread;
 
 	// These are the shots
-	private static Shot[] shots = { new Shot(120, 27, .6775), new Shot(120, 29.03309, 0.52708),
-			new Shot(120, 30.03309, 0.4125), new Shot(120, 33.7, .1208), new Shot(160, 36, .1),
-			new Shot(160, 36.8, .025), new Shot(160, 38, -.075), new Shot(160, 39.3, -.165),
-			new Shot(160, 40.25, -.227), new Shot(160, 42.2, -.36666), new Shot(160, 42.7, -.43333),
-			new Shot(160, 42.7, -.4275), new Shot(160, 42.85, -.4833), new Shot(160, 43.4, -.6375),
-			new Shot(160, 44.9, -.825), };
+	private static Shot[] shots = { new Shot(140, 27.5, .57291), new Shot(140, 32.3003309, 0.308),
+			new Shot(140, 34.303309, 0.091666), new Shot(160, 34.8, .0708), new Shot(160, 35.2, -.04375),
+			new Shot(160, 35.9, -.164), new Shot(160, 38.9, -.2541), new Shot(160, 39.2, -.3565),
+			new Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(160, 42.4, -.702),
+			new Shot(160, 43.0, -.79375), new Shot(170, 43.5, -.94555) };
 	// new Shot(goalRPS, goalHood, y)
 
 	// new Shot(160, 20, 20)
@@ -98,7 +97,8 @@ public class Vision implements Runnable {
 						double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
 						double newOutput = slope * currentY + b;
 						shotToBeReturned.setGoalHoodAngle(newOutput);
-						System.out.println("previousShot: " + previousShot + " shot: " + shot);
+						// System.out.println("previousShot: " + previousShot +
+						// " shot: " + shot);
 					}
 				} else {
 					if (i != shots.length - 1) {
@@ -109,13 +109,15 @@ public class Vision implements Runnable {
 						double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
 						double newOutput = slope * currentY + b;
 						shotToBeReturned.setGoalHoodAngle(newOutput);
-						System.out.println("upperShot: " + upperShot + " shot: " + shot);
+						// System.out.println("upperShot: " + upperShot + "
+						// shot: " + shot);
 					}
 				}
 			}
 		}
 		shotToBeReturned.setYCoordinate(currentY);
-		 System.out.println("Here is my shot " + shotToBeReturned.getYCoordinate() + " Hood Angle " + shotToBeReturned.getGoalHoodAngle());
+		System.out.println("Here is my shot " + shotToBeReturned.getYCoordinate() + " Hood Angle "
+				+ shotToBeReturned.getGoalHoodAngle());
 		return shotToBeReturned;
 	}
 

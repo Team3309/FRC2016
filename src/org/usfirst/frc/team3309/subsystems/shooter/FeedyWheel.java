@@ -8,12 +8,14 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FeedyWheel extends ControlledSubsystem {
 
 	private static FeedyWheel instance;
+	private double autoPower = 0;
 	private Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_MOTOR);
 
 	public static FeedyWheel getInstance() {
@@ -46,7 +48,7 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	@Override
 	public void updateAuto() {
-
+		this.setFeedyWheel(autoPower);
 	}
 
 	@Override
@@ -57,10 +59,13 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
+		this.teleopController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " Power", this.feedyWheelSpark.get());
 	}
 
 	public void setFeedyWheel(double power) {
+		if(DriverStation.getInstance().isAutonomous())
+			autoPower = power;
 		this.feedyWheelSpark.set(-power);
 	}
 

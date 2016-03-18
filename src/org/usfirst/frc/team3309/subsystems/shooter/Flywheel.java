@@ -79,11 +79,15 @@ public class Flywheel extends ControlledSubsystem {
 
 	@Override
 	public void initAuto() {
+		hasGoneBack = false;
 
 	}
 
 	@Override
 	public void updateAuto() {
+		curVel = this.getRPS();
+		this.aimVelRPS = this.autoVel;
+		System.out.println("aimVel: " + this.aimVelRPS);
 		shootLikeRobie();
 	}
 
@@ -100,8 +104,8 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getXBut()) {
 			aimVelRPS = 160;
 		} else if (Controls.operatorController.getYBut()) {
-			// aimVelRPS = SmartDashboard.getNumber("TEST RPS");
-			aimVelRPS = 120;
+			 aimVelRPS = SmartDashboard.getNumber("TEST RPS");
+			//aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShot() != null) {
 				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
@@ -204,10 +208,7 @@ public class Flywheel extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		if (DriverStation.getInstance().isAutonomous())
-			autoController.sendToSmartDash();
-		else
-			teleopController.sendToSmartDash();
+		teleopController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
 		SmartDashboard.putNumber(this.getName() + " RPS", curVel);
 		SmartDashboard.putNumber(this.getName() + " Goal", this.aimVelRPS);

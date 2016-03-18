@@ -68,8 +68,8 @@ public class Hood extends ControlledSubsystem {
 		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 42.85;
 		} else if (Controls.operatorController.getYBut()) {
-			goalAngle = 28.6;
-			// goalAngle = SmartDashboard.getNumber("Test Angle");
+			//goalAngle = 28.6;
+			 goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShot() != null)
 				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
@@ -93,6 +93,7 @@ public class Hood extends ControlledSubsystem {
 		double output = 0;
 		curAngle = Sensors.getHoodAngle();
 		if (goalAngle >= 0) {
+			output = this.autoController.getOutputSignal(getInputState()).getMotor();
 		}
 		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0)) {
 			output = 0;

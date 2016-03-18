@@ -13,6 +13,7 @@ import org.usfirst.frc.team3309.auto.modes.SpyBotAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TurnInPlaceLAAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TurnToAngleAutoMode;
 import org.usfirst.frc.team3309.auto.modes.TwoBallAutoFromSpy;
+import org.usfirst.frc.team3309.auto.modes.TwoBallAutoMode;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossChevelDeFrise;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossDrawBridge;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossLowBar;
@@ -71,6 +72,7 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addObject("Go LOW inteke Up", new LowSpeedCrossAutoIntakeUp());
 		mainAutoChooser.addObject("Turn in Place", new TurnInPlaceLAAutoMode());
 		mainAutoChooser.addObject("Spy Bot Auto", new SpyBotAutoMode());
+		mainAutoChooser.addObject("TWO BALL", new TwoBallAutoMode());
 		mainAutoChooser.addObject("Go Forward Intake Down", new HighSpeedCrossAutoIntakeDownMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
 		startingPositionAutoChooser.addDefault("1", 1);
@@ -126,7 +128,7 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
 		Drive.getInstance().updateAuto();
-		Drive.getInstance().sendToSmartDash();
+		// Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateAuto();
@@ -145,10 +147,10 @@ public class Robot extends IterativeRobot {
 	}
 
 	Timer time = new Timer();
+
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
 
-		
 		time.start();
 		time.reset();
 		if (Vision.getInstance().getGoals().size() > 0)
@@ -165,6 +167,6 @@ public class Robot extends IterativeRobot {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println(time.get());
+		// System.out.println(time.get());
 	}
 }

@@ -17,13 +17,16 @@ public class DriveAngleVelocityController extends Controller {
 	private PIDPositionController turningController = new PIDPositionController(3, 0, 16.015);
 	private KragerTimer doneTimer = new KragerTimer(.5);
 	protected double goalAngle = 0;
+	private boolean isCompletable = true;
 
 	public DriveAngleVelocityController(double aimAngle) {
 		this.setName("DRIVE ANGLE VEL");
+		System.out.println("LOW GEAR: " + Drive.getInstance().isLowGear());
 		if (Drive.getInstance().isLowGear()) {
 			leftSideController.setConstants(.006, 0, .003, .001, 0);
 			rightSideController.setConstants(.006, 0, .003, .001, 0);
 			turningController.setConstants(6, 0, 13.015);
+			System.out.println("LOW GEAR!");
 		} else {
 			leftSideController.setConstants(.006, 0, .009, .001, 0);
 			rightSideController.setConstants(.006, 0, .009, .001, 0);
@@ -51,7 +54,7 @@ public class DriveAngleVelocityController extends Controller {
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		double error = goalAngle - inputState.getAngularPos();
-		double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + " Vel to Turn At");
+		//double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + " Vel to Turn At");
 		if (Math.abs(error) > 180) {
 			error = -KragerMath.sign(error) * (360 - Math.abs(error));
 			System.out.println("New Error: " + error);
@@ -70,7 +73,11 @@ public class DriveAngleVelocityController extends Controller {
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
-		System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
+		System.out.println("ANGLE: ");
+		turningController.printConstants();
+		leftSideController.printConstants();
+		rightSideController.printConstants();
+		// System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
 		leftState.setError(outputOfTurningController.getMotor() - inputState.getLeftVel());
 		rightState.setError(outputOfTurningController.getMotor() - inputState.getRightVel());
 		// rightSideController.setAimVel(outputOfTurningController.getMotor());
@@ -86,12 +93,22 @@ public class DriveAngleVelocityController extends Controller {
 
 	@Override
 	public boolean isCompleted() {
-		return doneTimer.isConditionMaintained(Drive.getInstance().isAngleCloseTo(goalAngle));
+		if (isCompletable)
+			return doneTimer.isConditionMaintained(Drive.getInstance().isAngleCloseTo(goalAngle));
+		return false;
 	}
 
 	public void sendToSmartDash() {
 		leftSideController.sendToSmartDash();
 		rightSideController.sendToSmartDash();
 		turningController.sendToSmartDash();
+	}
+
+	public boolean isCompletable() {
+		return isCompletable;
+	}
+
+	public void setCompletable(boolean isCompletable) {
+		this.isCompletable = isCompletable;
 	}
 }

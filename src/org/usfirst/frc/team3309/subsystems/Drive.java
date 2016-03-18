@@ -36,7 +36,7 @@ public class Drive extends ControlledSubsystem {
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal angle
 	 */
-	private static final double DRIVE_GYRO_LENIENCY = 1.2;
+	private static final double DRIVE_GYRO_LENIENCY = 1;
 
 	private static Drive instance;
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
@@ -44,6 +44,7 @@ public class Drive extends ControlledSubsystem {
 	private Solenoid sol = new Solenoid(0);
 
 	private Shot desiredShot;
+	private boolean isLowGear = true;
 
 	public boolean lowGearInAuto = false;
 	boolean isReset = false;
@@ -74,6 +75,7 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void initAuto() {
+		isLowGear = false;
 		autoController = new BlankController();
 	}
 
@@ -83,9 +85,10 @@ public class Drive extends ControlledSubsystem {
 			FaceVisionTargetController x = new FaceVisionTargetController();
 			x.setName("VISION");
 			x.reset();
-			if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
-				return;
-			}
+			x.setCompletable(false);
+			// if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
+			// return;
+			// }
 			System.out.println("Vision started");
 			if (DriverStation.getInstance().isAutonomous())
 				this.setAutoController(x);
@@ -115,8 +118,10 @@ public class Drive extends ControlledSubsystem {
 		}
 
 		if (Controls.driverController.getLB()) {
+			isLowGear = true;
 			sol.set(false);
 		} else {
+			isLowGear = false;
 			sol.set(true);
 		}
 		if (teleopController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
@@ -132,6 +137,11 @@ public class Drive extends ControlledSubsystem {
 	}
 
 	public void setHighGear(boolean bool) {
+		if (bool) {
+			isLowGear = false;
+		} else {
+			isLowGear = true;
+		}
 		sol.set(bool);
 	}
 
@@ -199,12 +209,12 @@ public class Drive extends ControlledSubsystem {
 	 */
 	public boolean isEncoderCloseTo(double encoderGoal) {
 		double factor = 1;
-		if(encoderGoal < 0) {
+		if (encoderGoal < 0) {
 			factor = -1;
 		}
 		if (getDistanceTraveled() * factor < encoderGoal + DRIVE_ENCODER_LENIENCY
 				&& factor * getDistanceTraveled() > encoderGoal - DRIVE_ENCODER_LENIENCY) {
-			//System.out.println("TRUE");
+			// System.out.println("TRUE");
 			return true;
 		}
 		return false;
@@ -280,7 +290,7 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		if (DriverStation.getInstance().isAutonomous()) 
+		if (DriverStation.getInstance().isAutonomous())
 			autoController.sendToSmartDash();
 		else
 			teleopController.sendToSmartDash();
@@ -307,6 +317,6 @@ public class Drive extends ControlledSubsystem {
 
 	public boolean isLowGear() {
 		// TODO Auto-generated method stub
-		return sol.get();
+		return isLowGear;
 	}
 }

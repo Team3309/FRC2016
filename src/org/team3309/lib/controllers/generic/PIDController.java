@@ -1,5 +1,7 @@
 package org.team3309.lib.controllers.generic;
 
+import java.util.concurrent.SynchronousQueue;
+
 import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
@@ -33,7 +35,7 @@ public abstract class PIDController extends Controller {
 	/**
 	 * Gains
 	 */
-	private double kP, kD, kI;
+	public double kP, kD, kI;
 	/**
 	 * Limit of the Integral. mIntegral is capped off at the kILimit.
 	 */
@@ -159,8 +161,8 @@ public abstract class PIDController extends Controller {
 		TIME_TO_BE_COMPLETE_MILLISECONDS = tIME_TO_BE_COMPLETE_MILLISECONDS;
 	}
 
-	public void setConstants( double kP, double kI, double kD) {
-		
+	public void setConstants(double kP, double kI, double kD) {
+
 		this.kP = kP;
 		this.kI = kI;
 		this.kD = kD;
@@ -175,6 +177,10 @@ public abstract class PIDController extends Controller {
 			return this.doneTimer.isConditionMaintained(Math.abs(previousError) < THRESHOLD);
 		}
 		return this.doneTimer.isConditionMaintained(false);
+	}
+
+	public void printConstants() {
+		System.out.println(this.getName() + "KP: " + this.kP + " KI: " + this.kI + " KD: " + this.kD);
 	}
 
 	@Override
