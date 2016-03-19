@@ -37,6 +37,7 @@ public class Vision implements Runnable {
 	private double goalHoodAngle = 0;
 	private double goalRPS = 0;
 	private Goal currentGoalToAimTowards;
+	private Shot currentShotToAimTowards;
 
 	public static Vision getInstance() {
 		if (instance == null) {
@@ -68,44 +69,7 @@ public class Vision implements Runnable {
 	}
 
 	public Shot getShotToAimTowards() {
-		if (currentGoalToAimTowards == null) {
-			return null;
-		}
-		Shot shotToBeReturned = new Shot(currentGoalToAimTowards.azimuth);
-		double closestShot = Integer.MAX_VALUE;
-		double currentY = currentGoalToAimTowards.y;
-		for (int i = 0; i < shots.length; i++) {
-			Shot shot = shots[i];
-			if (Math.abs(currentY - shot.getYCoordinate()) < closestShot) {
-				closestShot = Math.abs(currentY - shot.getYCoordinate());
-				shotToBeReturned.setGoalHoodAngle(shot.getGoalHoodAngle());
-				shotToBeReturned.setGoalRPS(shot.getGoalRPS());
-				shotToBeReturned.setYCoordinate(shot.getYCoordinate());
-				if (currentY > shot.getYCoordinate()) {
-					if (i != 0) {
-						Shot previousShot = shots[i - 1];
-						double slope = (previousShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
-								/ (previousShot.getYCoordinate() - shot.getYCoordinate());
-						double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
-						double newOutput = slope * currentY + b;
-						shotToBeReturned.setGoalHoodAngle(newOutput);
-					}
-				} else {
-					if (i != shots.length - 1) {
-						Shot upperShot = shots[i + 1];
-						double slope = (upperShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
-								/ (upperShot.getYCoordinate() - shot.getYCoordinate());
-						double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
-						double newOutput = slope * currentY + b;
-						shotToBeReturned.setGoalHoodAngle(newOutput);
-					}
-				}
-			}
-		}
-		shotToBeReturned.setYCoordinate(currentY);
-		System.out.println("Here is my shot " + shotToBeReturned.getYCoordinate() + " Hood Angle "
-				+ shotToBeReturned.getGoalHoodAngle());
-		return shotToBeReturned;
+		return currentShotToAimTowards;
 	}
 
 	public boolean hasShot() {
@@ -113,11 +77,11 @@ public class Vision implements Runnable {
 	}
 
 	public double getGoalHoodAngle() {
-		return goalHoodAngle;
+		return currentShotToAimTowards.getGoalHoodAngle();
 	}
 
 	public double getGoalRPS() {
-		return goalRPS;
+		return currentShotToAimTowards.getGoalRPS();
 	}
 
 	@Override
@@ -128,22 +92,55 @@ public class Vision implements Runnable {
 			double currentBiggest = 0;
 			if (currentGoals.size() != 0) {
 				for (Goal x : currentGoals) {
-					// System.out.println("Current: " + currentGoal);
 					if (Math.abs(x.width) > currentBiggest) {
 						currentBiggest = x.width;
 						currentGoalToAimTowards = x;
-
-						// System.out.println("Current: " + currentGoal);
 					}
 				}
 			} else {
 				currentGoalToAimTowards = null;
 			}
+			// Find Shot To Aim At
+			if (currentGoalToAimTowards == null) {
+				currentShotToAimTowards = null;
+				return;
+			}
+			currentShotToAimTowards = new Shot(currentGoalToAimTowards.azimuth);
+			double closestShot = Integer.MAX_VALUE;
+			double currentY = currentGoalToAimTowards.y;
+			for (int i = 0; i < shots.length; i++) {
+				Shot shot = shots[i];
+				if (Math.abs(currentY - shot.getYCoordinate()) < closestShot) {
+					closestShot = Math.abs(currentY - shot.getYCoordinate());
+					currentShotToAimTowards.setGoalHoodAngle(shot.getGoalHoodAngle());
+					currentShotToAimTowards.setGoalRPS(shot.getGoalRPS());
+					currentShotToAimTowards.setYCoordinate(shot.getYCoordinate());
+					if (currentY > shot.getYCoordinate()) {
+						if (i != 0) {
+							Shot previousShot = shots[i - 1];
+							double slope = (previousShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
+									/ (previousShot.getYCoordinate() - shot.getYCoordinate());
+							double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
+							double newOutput = slope * currentY + b;
+							currentShotToAimTowards.setGoalHoodAngle(newOutput);
+						}
+					} else {
+						if (i != shots.length - 1) {
+							Shot upperShot = shots[i + 1];
+							double slope = (upperShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
+									/ (upperShot.getYCoordinate() - shot.getYCoordinate());
+							double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
+							double newOutput = slope * currentY + b;
+							currentShotToAimTowards.setGoalHoodAngle(newOutput);
+						}
+					}
+				}
+			}
+			currentShotToAimTowards.setYCoordinate(currentY);
 		}
 	}
 
 	public List<Goal> getGoals() {
 		return VisionClient.getInstance().getGoals();
 	}
-
 }

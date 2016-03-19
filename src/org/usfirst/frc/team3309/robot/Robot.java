@@ -83,7 +83,7 @@ public class Robot extends IterativeRobot {
 		// Add Starting Positions and Goal To Shoot In in SendableChooser
 		startingPositionAutoChooser.addObject("2-Left", new Pos2ToLeft());
 		startingPositionAutoChooser.addObject("2-Center", new Pos2ToCenter());
-		startingPositionAutoChooser.addObject("3-Center",new Pos3ToCenter());
+		startingPositionAutoChooser.addObject("3-Center", new Pos3ToCenter());
 		startingPositionAutoChooser.addObject("3-Right", new Pos3ToRight());
 		startingPositionAutoChooser.addObject("4", new Pos4ToCenter());
 		startingPositionAutoChooser.addObject("5", new Pos5ToRight());
@@ -123,7 +123,7 @@ public class Robot extends IterativeRobot {
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
 			auto.setDefense((Operation) defenseAutoChooser.getSelected());
-			auto.setStartingPosition( (Operation) startingPositionAutoChooser.getSelected());
+			auto.setStartingPosition((Operation) startingPositionAutoChooser.getSelected());
 			(new Thread(auto)).start();
 		} else {
 			(new Thread((AutoRoutine) mainAutoChooser.getSelected())).start();
@@ -168,7 +168,7 @@ public class Robot extends IterativeRobot {
 		// Update the subsystems
 		Drive.getInstance().updateTeleop();
 		Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().updateTeleop();
+		Shooter.getInstance().manualControl();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateTeleop();
 		Intake.getInstance().sendToSmartDash();

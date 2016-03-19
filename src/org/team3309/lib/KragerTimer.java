@@ -22,6 +22,7 @@ public class KragerTimer extends Timer {
 	public KragerTimer(double timeToComplete) {
 		this.timeToComplete = timeToComplete;
 	}
+
 	/**
 	 * Run this in loop to check if condition has been true
 	 * 
@@ -30,11 +31,9 @@ public class KragerTimer extends Timer {
 	 */
 	public boolean isConditionMaintained(boolean isTrue) {
 		if (isTrue) {
-			//System.out.println("TRUE");
 			if (isConditionMaintained && this.get() > timeToComplete) {
-				//System.out.println("DONE WITH MAINTAINCE");
 				return true;
-			} else if (!isConditionMaintained){
+			} else if (!isConditionMaintained) {
 				this.start();
 				System.out.println("STARTING");
 				isConditionMaintained = true;

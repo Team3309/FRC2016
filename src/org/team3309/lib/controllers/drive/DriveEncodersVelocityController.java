@@ -92,7 +92,6 @@ public class DriveEncodersVelocityController extends Controller {
 			}
 		}
 		if (currentOperation != null) {
-			System.out.println("RUNNING COMMANDS");
 			try {
 				currentOperation.perform();
 			} catch (InterruptedException | TimedOutException e) {
@@ -100,33 +99,17 @@ public class DriveEncodersVelocityController extends Controller {
 			}
 		}
 		this.setMAX_ENCODER_VEL(currentVelocityPoint.rightVelocity, currentVelocityPoint.leftVelocity);
-		// System.out.println("CLOSET POINT " + closestPoint);
 		double error = goalEncoder - currentEncoder;
-		double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + " Vel to Go At");
-		/*
-		 * if (Math.abs(error) > 180) { error = -KragerMath.sign(error) * (360 -
-		 * Math.abs(error)); System.out.println("New Error: " + error); }
-		 */
+		// double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + "
+		// Vel to Go At");
 		SmartDashboard.putNumber("Goal Angle", goalAngle);
 		InputState state = new InputState();
 		state.setError(error); // sets angle error to be sent in turning PID
-		if (this.MAX_ENCODER_VEL_LEFT > this.MAX_ENCODER_VEL_RIGHT) {
-
-		} else if (this.MAX_ENCODER_VEL_LEFT < this.MAX_ENCODER_VEL_RIGHT) {
-
-		} else {
-
-		}
 		OutputSignal outputOfTurningController = encodersController.getOutputSignal(state); // outputs
 		SmartDashboard.putNumber("DRIVE Encoder VEL Output", outputOfTurningController.getMotor());
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
-		// System.out.println("DRIVE: ");
-		// turningController.printConstants();
-		// leftSideController.printConstants();
-		// rightSideController.printConstants();
-		// encodersController.printConstants();
 		if (Math.abs(outputOfTurningController.getMotor()) > MAX_ENCODER_VEL_LEFT) {
 			if (outputOfTurningController.getMotor() > 0) {
 				outputOfTurningController.setMotor(MAX_ENCODER_VEL_LEFT);
@@ -175,7 +158,8 @@ public class DriveEncodersVelocityController extends Controller {
 
 		double rightSideOutput = rightSideController.getOutputSignal(rightState).getMotor();
 		double leftSideOutput = leftSideController.getOutputSignal(leftState).getMotor();
-		//System.out.println("AIM VELs " + leftAimVel + " right Aim Vel " + -rightAimVel);
+		// System.out.println("AIM VELs " + leftAimVel + " right Aim Vel " +
+		// -rightAimVel);
 		if (this.MAX_ENCODER_VEL_LEFT == this.MAX_ENCODER_VEL_RIGHT) {
 			if (Math.abs(inputState.getAngularPos() - goalAngle) > 30) {
 				goalAngle = inputState.getAngularPos();
@@ -238,7 +222,6 @@ public class DriveEncodersVelocityController extends Controller {
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
 		return doneTimer.isConditionMaintained(Drive.getInstance().isEncoderCloseTo(goalEncoder));
 	}
 

@@ -180,7 +180,7 @@ public class RoutineBased {
 		}
 
 		mDrive.toVision();
-		System.out.println("RPS: " + shot.getGoalRPS() + " angke: " + shot.getGoalHoodAngle());
+		System.out.println("RPS: " + shot.getGoalRPS() + " angle: " + shot.getGoalHoodAngle());
 
 		try {
 			shot = Vision.getInstance().getShotToAimTowards();
