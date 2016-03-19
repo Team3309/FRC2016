@@ -42,6 +42,7 @@ public class Vision implements Runnable {
 	private Goal currentGoal;
 
 	// private Thread
+	
 
 	public static Vision getInstance() {
 		if (instance == null) {

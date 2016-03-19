@@ -1,11 +1,15 @@
 package org.team3309.lib.controllers.drive;
 
+import java.util.LinkedList;
+
 import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.usfirst.frc.team3309.auto.TimedOutException;
+import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 
@@ -18,19 +22,19 @@ public class DriveEncodersVelocityController extends Controller {
 	private PIDPositionController encodersController = new PIDPositionController(1, 0, 0);
 	private PIDPositionController turningController = new PIDPositionController(.06, 0, 0);
 	private KragerTimer doneTimer = new KragerTimer(.5);
-
+	private LinkedList<VelocityChangePoint> encoderChanges = new LinkedList<VelocityChangePoint>();
+	private LinkedList<Operation> operations = new LinkedList<Operation>();
 	private double goalAngle = 0;
 	private double goalEncoder = 0;
 	private double pastAim = 0;
 	private final double MAX_ACC = 5;
-	private double MAX_ENCODER_VEL = 100;
+	private double MAX_ENCODER_VEL_RIGHT = 100;
+	private double MAX_ENCODER_VEL_LEFT = 100;
 	private boolean isRampUp = false;
 
 	public DriveEncodersVelocityController(double encoderGoal) {
-		System.out.println("IS LOW GEAR: " + Drive.getInstance().isLowGear());
 		if (Drive.getInstance().isLowGear()) {
 			encodersController.setConstants(2, 0, 1.015);
-
 			turningController.setConstants(.06, 0, 0);
 			leftSideController.setConstants(.006, 0, .003, .001, 0);
 			rightSideController.setConstants(.006, 0, .004, .001, 0);
@@ -40,13 +44,7 @@ public class DriveEncodersVelocityController extends Controller {
 			leftSideController.setConstants(.006, 0, .009, .001, 0);
 			rightSideController.setConstants(.006, 0, .009, .001, 0);
 		}
-		System.out.println("IS LOW GEAR: " + Drive.getInstance().isLowGear());
-		turningController.printConstants();
-		leftSideController.printConstants();
-		rightSideController.printConstants();
-		encodersController.printConstants();
 		goalAngle = Sensors.getAngle();
-		// if (Drive.getInstance().isLowGear())
 		this.goalEncoder = encoderGoal;
 		this.setName("DRIVE ENCODER VEL");
 		this.leftSideController.setName("LEFT IDE VEL CONTROLER");
@@ -54,6 +52,7 @@ public class DriveEncodersVelocityController extends Controller {
 		this.encodersController.setName("ENCODER Controller");
 		this.turningController.setName("Turning Controller");
 		SmartDashboard.putNumber(this.getName() + " Vel to Go At", 0);
+		encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
 	}
 
 	@Override
@@ -67,11 +66,41 @@ public class DriveEncodersVelocityController extends Controller {
 
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
+
 		double currentEncoder = (Math.abs(inputState.getRightPos()) + Math.abs(inputState.getLeftPos())) / 2;
 		if (goalEncoder < 0) {
 			currentEncoder = -currentEncoder;
 		}
-
+		double closestPoint = Integer.MAX_VALUE;
+		VelocityChangePoint currentVelocityPoint = new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0);
+		for (VelocityChangePoint curPoint : encoderChanges) {
+			if (Math.abs(currentEncoder) > Math.abs(curPoint.encoder)) {
+				if (Math.abs(Math.abs(currentEncoder) - Math.abs(curPoint.encoder)) < closestPoint) {
+					currentVelocityPoint = curPoint;
+					closestPoint = Math.abs(Math.abs(currentEncoder) - Math.abs(curPoint.encoder));
+				}
+			}
+		}
+		closestPoint = Integer.MAX_VALUE;
+		Operation currentOperation = null;
+		for (Operation operation : operations) {
+			if (Math.abs(currentEncoder) > Math.abs(operation.encoder)) {
+				if (Math.abs(Math.abs(currentEncoder) - Math.abs(operation.encoder)) < closestPoint) {
+					currentOperation = operation;
+					closestPoint = Math.abs(Math.abs(currentEncoder) - Math.abs(operation.encoder));
+				}
+			}
+		}
+		if (currentOperation != null) {
+			System.out.println("RUNNING COMMANDS");
+			try {
+				currentOperation.perform();
+			} catch (InterruptedException | TimedOutException e) {
+				e.printStackTrace();
+			}
+		}
+		this.setMAX_ENCODER_VEL(currentVelocityPoint.rightVelocity, currentVelocityPoint.leftVelocity);
+		// System.out.println("CLOSET POINT " + closestPoint);
 		double error = goalEncoder - currentEncoder;
 		double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + " Vel to Go At");
 		/*
@@ -81,51 +110,92 @@ public class DriveEncodersVelocityController extends Controller {
 		SmartDashboard.putNumber("Goal Angle", goalAngle);
 		InputState state = new InputState();
 		state.setError(error); // sets angle error to be sent in turning PID
+		if (this.MAX_ENCODER_VEL_LEFT > this.MAX_ENCODER_VEL_RIGHT) {
+
+		} else if (this.MAX_ENCODER_VEL_LEFT < this.MAX_ENCODER_VEL_RIGHT) {
+
+		} else {
+
+		}
 		OutputSignal outputOfTurningController = encodersController.getOutputSignal(state); // outputs
 		SmartDashboard.putNumber("DRIVE Encoder VEL Output", outputOfTurningController.getMotor());
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
-		System.out.println("DRIVE: ");
-		turningController.printConstants();
-		leftSideController.printConstants();
-		rightSideController.printConstants();
-		encodersController.printConstants();
-		if (Math.abs(outputOfTurningController.getMotor()) > MAX_ENCODER_VEL) {
+		// System.out.println("DRIVE: ");
+		// turningController.printConstants();
+		// leftSideController.printConstants();
+		// rightSideController.printConstants();
+		// encodersController.printConstants();
+		if (Math.abs(outputOfTurningController.getMotor()) > MAX_ENCODER_VEL_LEFT) {
 			if (outputOfTurningController.getMotor() > 0) {
-				outputOfTurningController.setMotor(MAX_ENCODER_VEL);
+				outputOfTurningController.setMotor(MAX_ENCODER_VEL_LEFT);
 			} else {
-				outputOfTurningController.setMotor(-MAX_ENCODER_VEL);
+				outputOfTurningController.setMotor(-MAX_ENCODER_VEL_LEFT);
 			}
 		}
-		double aimVel = outputOfTurningController.getMotor();
+		double rightAimVel = outputOfTurningController.getMotor();
+		double leftAimVel = outputOfTurningController.getMotor();
+		if (Math.abs(rightAimVel) > MAX_ENCODER_VEL_RIGHT) {
+			if (rightAimVel > 0) {
+				rightAimVel = MAX_ENCODER_VEL_RIGHT;
+			} else {
+				rightAimVel = -MAX_ENCODER_VEL_RIGHT;
+			}
+		}
+		if (Math.abs(leftAimVel) > MAX_ENCODER_VEL_LEFT) {
+			if (leftAimVel > 0) {
+				leftAimVel = MAX_ENCODER_VEL_LEFT;
+			} else {
+				leftAimVel = -MAX_ENCODER_VEL_LEFT;
+			}
+		}
 		if (isRampUp) {
-			if (aimVel < 0)
-				aimVel = pastAim - MAX_ACC;
+			if (rightAimVel < 0)
+				rightAimVel = pastAim - MAX_ACC;
 			else
-				aimVel = pastAim + MAX_ACC;
-			if (Math.abs(aimVel) > Math.abs(this.MAX_ENCODER_VEL)) {
-				if (aimVel > 0) {
-					aimVel = MAX_ENCODER_VEL;
+				rightAimVel = pastAim + MAX_ACC;
+			if (Math.abs(rightAimVel) > Math.abs(this.MAX_ENCODER_VEL_RIGHT)) {
+				if (rightAimVel > 0) {
+					rightAimVel = MAX_ENCODER_VEL_RIGHT;
 				} else {
-					aimVel = -this.MAX_ENCODER_VEL;
+					rightAimVel = -this.MAX_ENCODER_VEL_RIGHT;
 				}
 				isRampUp = false;
 			}
 		}
-		leftState.setError(aimVel - inputState.getLeftVel());
-		rightState.setError(-aimVel - inputState.getRightVel());
+		leftState.setError(leftAimVel - inputState.getLeftVel());
+		rightState.setError(-rightAimVel - inputState.getRightVel());
 		// leftSideController.setAimVel(dashAimTurnVel);
 		// rightSideController.setAimVel(-dashAimTurnVel);
 		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());
 		// rightState.setError(-dashAimTurnVel - inputState.getRightVel());
 		InputState turningState = new InputState();
 		turningState.setError(goalAngle - inputState.getAngularPos());
-		double turn = turningController.getOutputSignal(turningState).getMotor();
-		double sideOutput = leftSideController.getOutputSignal(leftState).getMotor();
-		toBeReturnedSignal.setLeftRightMotor(sideOutput + turn, sideOutput - turn);
-		pastAim = aimVel;
+
+		double rightSideOutput = rightSideController.getOutputSignal(rightState).getMotor();
+		double leftSideOutput = leftSideController.getOutputSignal(leftState).getMotor();
+		//System.out.println("AIM VELs " + leftAimVel + " right Aim Vel " + -rightAimVel);
+		if (this.MAX_ENCODER_VEL_LEFT == this.MAX_ENCODER_VEL_RIGHT) {
+			if (Math.abs(inputState.getAngularPos() - goalAngle) > 30) {
+				goalAngle = inputState.getAngularPos();
+			}
+			double turn = turningController.getOutputSignal(turningState).getMotor();
+			toBeReturnedSignal.setLeftRightMotor(leftSideOutput + turn, leftSideOutput - turn);
+		} else {
+			toBeReturnedSignal.setLeftRightMotor(leftSideOutput, -rightSideOutput);
+		}
+
+		pastAim = rightAimVel;
 		return toBeReturnedSignal;
+	}
+
+	public LinkedList<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(LinkedList<Operation> operations) {
+		this.operations = operations;
 	}
 
 	public double getGoalAngle() {
@@ -144,12 +214,22 @@ public class DriveEncodersVelocityController extends Controller {
 		this.goalEncoder = goalEncoder;
 	}
 
-	public double getMAX_ENCODER_VEL() {
-		return MAX_ENCODER_VEL;
+	public double getMAX_ENCODER_VEL_RIGHT() {
+		return MAX_ENCODER_VEL_RIGHT;
+	}
+
+	public double getMAX_ENCODER_VEL_LEFT() {
+		return MAX_ENCODER_VEL_LEFT;
 	}
 
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL) {
-		MAX_ENCODER_VEL = mAX_ENCODER_VEL;
+		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL;
+		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL;
+	}
+
+	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL_RIGHT, double mAX_ENCODER_VEL_LEFT) {
+		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL_RIGHT;
+		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL_LEFT;
 	}
 
 	public void setRampUp(boolean bool) {
@@ -160,6 +240,15 @@ public class DriveEncodersVelocityController extends Controller {
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
 		return doneTimer.isConditionMaintained(Drive.getInstance().isEncoderCloseTo(goalEncoder));
+	}
+
+	public LinkedList<VelocityChangePoint> getEncoderChanges() {
+		return encoderChanges;
+	}
+
+	public void setEncoderChanges(LinkedList<VelocityChangePoint> encoderChanges) {
+		encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, MAX_ENCODER_VEL_LEFT, 0));
+		this.encoderChanges = encoderChanges;
 	}
 
 	public void sendToSmartDash() {

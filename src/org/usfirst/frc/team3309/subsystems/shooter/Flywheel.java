@@ -87,7 +87,6 @@ public class Flywheel extends ControlledSubsystem {
 	public void updateAuto() {
 		curVel = this.getRPS();
 		this.aimVelRPS = this.autoVel;
-		System.out.println("aimVel: " + this.aimVelRPS);
 		shootLikeRobie();
 	}
 
@@ -180,10 +179,11 @@ public class Flywheel extends ControlledSubsystem {
 		if (aimVelRPS != 0 && !hasGoneBack) {
 			FeedyWheel.getInstance().setFeedyWheel(-.5);
 			try {
-				Thread.sleep(130);
+				Thread.sleep(110);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
 
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;

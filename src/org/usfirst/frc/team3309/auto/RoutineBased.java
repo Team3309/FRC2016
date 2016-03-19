@@ -1,10 +1,19 @@
 package org.usfirst.frc.team3309.auto;
 
+import java.util.LinkedList;
+
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
+import org.team3309.lib.controllers.drive.VelocityChangePoint;
+import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
+import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
+import org.usfirst.frc.team3309.subsystems.shooter.Hood;
+import org.usfirst.frc.team3309.vision.Shot;
+import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -94,10 +103,52 @@ public class RoutineBased {
 		}
 	}
 
+	public void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> arrayOfVel) {
+		Sensors.resetDrive();
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
+		x.setMAX_ENCODER_VEL(maxEnc);
+		x.setEncoderChanges(arrayOfVel);
+		Drive.getInstance().setAutoController(x);
+		try {
+			this.waitForController(x, timeout);
+		} catch (Exception e) {
+		}
+		mDrive.stopDrive();
+	}
+
 	public void driveEncoder(double goal, double maxEnc, double timeout) {
 		Sensors.resetDrive();
 		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
 		x.setMAX_ENCODER_VEL(maxEnc);
+		Drive.getInstance().setAutoController(x);
+		try {
+			this.waitForController(x, timeout);
+		} catch (Exception e) {
+		}
+		mDrive.stopDrive();
+	}
+	
+	public void driveEncoder(double goal, double maxEnc, double timeout, boolean rampUp) {
+		Sensors.resetDrive();
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
+		x.setMAX_ENCODER_VEL(maxEnc);
+		x.setRampUp(rampUp);
+		Drive.getInstance().setAutoController(x);
+		try {
+			this.waitForController(x, timeout);
+		} catch (Exception e) {
+		}
+		mDrive.stopDrive();
+	}
+
+
+	public void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> arrayOfVel,
+			LinkedList<Operation> operations) {
+		Sensors.resetDrive();
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
+		x.setMAX_ENCODER_VEL(maxEnc);
+		x.setEncoderChanges(arrayOfVel);
+		x.setOperations(operations);
 		Drive.getInstance().setAutoController(x);
 		try {
 			this.waitForController(x, timeout);
@@ -115,6 +166,50 @@ public class RoutineBased {
 
 		}
 		mDrive.stopDrive();
+	}
+
+	public void toVision(double timeout) throws TimedOutException {
+		Shot shot = Vision.getInstance().getShot();
+		Timer waitTimer = new Timer();
+		waitTimer.start();
+		while (shot == null) {
+			if (waitTimer.get() > timeout)
+				throw new TimedOutException();
+			shot = Vision.getInstance().getShot();
+			System.out.println("LOOKING");
+		}
+
+		mDrive.toVision();
+		System.out.println("RPS: " + shot.getGoalRPS() + " angke: " + shot.getGoalHoodAngle());
+
+		try {
+			shot = Vision.getInstance().getShot();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			Thread.sleep(1000);
+			mDrive.toVision();
+			shot = Vision.getInstance().getShot();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+		} catch (Exception e) {
+
+		}
+		try {
+			Thread.sleep(1100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("BANG BANG");
+		FeedyWheel.getInstance().setFeedyWheel(1);
+
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		FeedyWheel.getInstance().setFeedyWheel(0);
+		Flywheel.getInstance().setAimVelRPSAuto(0);
+		Hood.getInstance().setGoalAngle(4);
 	}
 
 	public void waitForEndOfAuto() {

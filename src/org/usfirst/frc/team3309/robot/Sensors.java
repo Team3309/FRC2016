@@ -66,6 +66,10 @@ public class Sensors {
 		// System.out.println(navX.isMagnetometerCalibrated());
 		return navX.getYaw();
 	}
+	
+	public static double getRoll() {
+		return navX.getRoll();
+	}
 
 	public static void resetDrive() {
 		rightDrive.reset();

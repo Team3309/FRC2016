@@ -30,13 +30,13 @@ public class Drive extends ControlledSubsystem {
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal encoder averageÃ�.
 	 */
-	private static final double DRIVE_ENCODER_LENIENCY = 5;
+	private static final double DRIVE_ENCODER_LENIENCY = 9;
 
 	/**
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal angle
 	 */
-	private static final double DRIVE_GYRO_LENIENCY = 1;
+	private static final double DRIVE_GYRO_LENIENCY = 1.5;
 
 	private static Drive instance;
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
@@ -132,6 +132,7 @@ public class Drive extends ControlledSubsystem {
 	}
 
 	public void updateAuto() {
+		// System.out.println("DRIVE ANDLE: " + this.getAngle());
 		OutputSignal output = autoController.getOutputSignal(getInputState());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
@@ -290,14 +291,13 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		if (DriverStation.getInstance().isAutonomous())
-			autoController.sendToSmartDash();
-		else
+		if (!DriverStation.getInstance().isAutonomous())
 			teleopController.sendToSmartDash();
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
 		SmartDashboard.putNumber(this.getName() + " Anglular Vel", Sensors.getAngularVel());
+		SmartDashboard.putNumber(this.getName() + " Roll", Sensors.getRoll());
 		SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.getLeftDrive());
 		SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.getLeftDriveVel());
 		SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.getRightDrive());

@@ -1,5 +1,8 @@
 package org.usfirst.frc.team3309.robot;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
@@ -29,6 +32,7 @@ import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
+import org.usfirst.frc.team3309.vision.Goal;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -110,7 +114,7 @@ public class Robot extends IterativeRobot {
 	// Init to Auto
 	public void autonomousInit() {
 		Sensors.resetDrive();
-		Vision.getInstance().setLight(.2);
+		Vision.getInstance().setLight(.6);
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
@@ -128,7 +132,7 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
 		Drive.getInstance().updateAuto();
-		// Drive.getInstance().sendToSmartDash();
+		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateAuto();
@@ -153,8 +157,9 @@ public class Robot extends IterativeRobot {
 
 		time.start();
 		time.reset();
-		if (Vision.getInstance().getGoals().size() > 0)
-			System.out.println("Y: " + Vision.getInstance().getGoals().get(0).y);
+		List<Goal> goals = Vision.getInstance().getGoals();
+		if (goals.size() > 0)
+			System.out.println("Y: " + goals.get(0).y);
 		// Update the subsystems
 		Drive.getInstance().updateTeleop();
 		Drive.getInstance().sendToSmartDash();

@@ -16,7 +16,8 @@ public class KragerMath {
 	 * @return
 	 */
 	public static double sinDeg(double a) {
-		return Math.sin(a * (180 / Math.PI));
+		System.out.println("ANGLE: " + a + " after " + Math.sin(a * (180 / Math.PI)) + " deg " + Math.sin(a));
+		return Math.sin(a * (Math.PI / 180));
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class KragerMath {
 	 * @return
 	 */
 	public static double cosDeg(double a) {
-		return Math.cos(a * (180 / Math.PI));
+		return Math.cos(a *  (Math.PI / 180));
 	}
 
 	/**
@@ -38,7 +39,7 @@ public class KragerMath {
 	 * @return
 	 */
 	public static double tanDeg(double a) {
-		return Math.tan(a * (180 / Math.PI));
+		return Math.tan(a *  (Math.PI / 180));
 	}
 
 	public static double threshold(double input) {

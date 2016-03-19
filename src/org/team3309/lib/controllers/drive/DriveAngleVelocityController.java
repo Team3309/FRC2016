@@ -21,7 +21,7 @@ public class DriveAngleVelocityController extends Controller {
 
 	public DriveAngleVelocityController(double aimAngle) {
 		this.setName("DRIVE ANGLE VEL");
-		System.out.println("LOW GEAR: " + Drive.getInstance().isLowGear());
+		//System.out.println("LOW GEAR: " + Drive.getInstance().isLowGear());
 		if (Drive.getInstance().isLowGear()) {
 			leftSideController.setConstants(.006, 0, .003, .001, 0);
 			rightSideController.setConstants(.006, 0, .003, .001, 0);
@@ -73,10 +73,10 @@ public class DriveAngleVelocityController extends Controller {
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
-		System.out.println("ANGLE: ");
-		turningController.printConstants();
-		leftSideController.printConstants();
-		rightSideController.printConstants();
+		//System.out.println("ANGLE: ");
+		//turningController.printConstants();
+		//leftSideController.printConstants();
+		//rightSideController.printConstants();
 		// System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
 		leftState.setError(outputOfTurningController.getMotor() - inputState.getLeftVel());
 		rightState.setError(outputOfTurningController.getMotor() - inputState.getRightVel());

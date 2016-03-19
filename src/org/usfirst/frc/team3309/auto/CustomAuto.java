@@ -1,29 +1,25 @@
 package org.usfirst.frc.team3309.auto;
 
-import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
-import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos2ToLeft;
+import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
+import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 
 public class CustomAuto extends AutoRoutine {
 
 	private Operation defense;
 	private int startingPosition = 1;
-	private double[] turningAngles = { 0, 63.5, -30, -10, 10, 45 }; // Give it the
-																// startingPosition
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-		defense.perform();
-		Thread.sleep(500);
-		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(
-				mDrive.getAngle() + turningAngles[startingPosition]);
-		Drive.getInstance().setAutoController(turnToGoal);
-
-		try {
-			this.waitForController(turnToGoal, 4);
-		} catch (Exception e) {
-
-		}
+		// defense.perform();
+		// Thread.sleep(200);
+		// this.driveEncoder(10, 40, 1); // stopping effect
+		mDrive.setHighGear(true);
+		Hood.getInstance().setGoalAngle(30);
+		Flywheel.getInstance().setAimVelRPSAuto(140);
+		Thread.sleep(750);
+		(new Pos2ToLeft()).perform();
 		mDrive.stopDrive();
 	}
 
