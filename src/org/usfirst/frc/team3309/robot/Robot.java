@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3309.robot;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.usfirst.frc.team3309.auto.AutoRoutine;
@@ -33,6 +32,7 @@ import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
 import org.usfirst.frc.team3309.vision.Goal;
+import org.usfirst.frc.team3309.vision.IndicatingLights;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot {
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
-	private PowerDistributionPanel pdp = new PowerDistributionPanel();
+	
 
 	// Runs when Robot is turned on
 	public void robotInit() {
@@ -137,6 +137,7 @@ public class Robot extends IterativeRobot {
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateAuto();
 		Intake.getInstance().sendToSmartDash();
+		IndicatingLights.getInstance().update();
 	}
 
 	// Init to Tele
@@ -167,6 +168,7 @@ public class Robot extends IterativeRobot {
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateTeleop();
 		Intake.getInstance().sendToSmartDash();
+		IndicatingLights.getInstance().update();
 		try {
 			Thread.sleep(30);
 		} catch (InterruptedException e) {

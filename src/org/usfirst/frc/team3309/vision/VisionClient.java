@@ -29,9 +29,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class VisionClient implements Runnable {
+	
+	public enum GoalVisibility {
+		NOT_VISIBLE, 
+		VISIBLE,
+		LOCKED
+	}
 
 	private static final long TIMEOUT = 500;
-
 	private static VisionClient instance;
 
 	protected static VisionClient getInstance() {

@@ -121,6 +121,10 @@ public class Vision implements Runnable {
 				+ shotToBeReturned.getGoalHoodAngle());
 		return shotToBeReturned;
 	}
+	
+	public boolean hasShot() {
+		return currentGoal != null;
+	}
 
 	public double getGoalHoodAngle() {
 		return goalHoodAngle;
@@ -142,6 +146,7 @@ public class Vision implements Runnable {
 					if (Math.abs(x.width) > currentBiggest) {
 						currentBiggest = x.width;
 						currentGoal = x;
+						
 						// System.out.println("Current: " + currentGoal);
 					}
 				}
