@@ -169,13 +169,13 @@ public class RoutineBased {
 	}
 
 	public void toVision(double timeout) throws TimedOutException {
-		Shot shot = Vision.getInstance().getShot();
+		Shot shot = Vision.getInstance().getShotToAimTowards();
 		Timer waitTimer = new Timer();
 		waitTimer.start();
 		while (shot == null) {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
-			shot = Vision.getInstance().getShot();
+			shot = Vision.getInstance().getShotToAimTowards();
 			System.out.println("LOOKING");
 		}
 
@@ -183,12 +183,12 @@ public class RoutineBased {
 		System.out.println("RPS: " + shot.getGoalRPS() + " angke: " + shot.getGoalHoodAngle());
 
 		try {
-			shot = Vision.getInstance().getShot();
+			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
 			Thread.sleep(1000);
 			mDrive.toVision();
-			shot = Vision.getInstance().getShot();
+			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
 		} catch (Exception e) {

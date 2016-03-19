@@ -59,7 +59,7 @@ public class IndicatingLights {
 
 	public void update() {
 		if (Vision.getInstance().hasShot()) {
-			double azimuth = Vision.getInstance().getShot().getAzimuth();
+			double azimuth = Vision.getInstance().getShotToAimTowards().getAzimuth();
 			if (Math.abs(azimuth) < THRESHOLD_FOR_AZIMUTH) {
 				this.setIndicators(IndicatorState.BLUE);
 			} else {

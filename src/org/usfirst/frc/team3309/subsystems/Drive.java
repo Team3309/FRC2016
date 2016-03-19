@@ -80,7 +80,7 @@ public class Drive extends ControlledSubsystem {
 	}
 
 	public void toVision() {
-		this.desiredShot = Vision.getInstance().getShot();
+		this.desiredShot = Vision.getInstance().getShotToAimTowards();
 		if (this.desiredShot != null) {
 			FaceVisionTargetController x = new FaceVisionTargetController();
 			x.setName("VISION");
@@ -101,7 +101,7 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		if (Controls.operatorController.getBack() && !isReset) {
-			this.desiredShot = Vision.getInstance().getShot();
+			this.desiredShot = Vision.getInstance().getShotToAimTowards();
 			Vision.getInstance().setLight(.6);
 			if (this.desiredShot != null) {
 				toVision();

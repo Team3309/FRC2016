@@ -106,8 +106,8 @@ public class Flywheel extends ControlledSubsystem {
 			 aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 			//aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
-			if (Vision.getInstance().getShot() != null) {
-				aimVelRPS = Vision.getInstance().getShot().getGoalRPS();
+			if (Vision.getInstance().getShotToAimTowards() != null) {
+				aimVelRPS = Vision.getInstance().getShotToAimTowards().getGoalRPS();
 			}
 		} else {
 			offset = 0;

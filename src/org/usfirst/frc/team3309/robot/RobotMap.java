@@ -32,21 +32,17 @@ public class RobotMap {
 	// Sensors
 	public static final int ENCODERS_A_HOOK_DIGITAL = 15;
 	public static final int ENCODERS_B_HOOK_DIGITAL = 16;
-	public static final int ENCODERS_A_FEEDY_WHEEL_DIGITAL = 14;
-	public static final int ENCODERS_B_FEEDY_WHEEL_DIGITAL = 13;
-	public static final int ENCODERS_A_INTAKE_PIVOT_DIGITAL = 0;
-	public static final int ENCODERS_B_INTAKE_PIVOT_DIGITAL = 1;
+
 	public static final int ENCODERS_A_RIGHT_DRIVE_DIGITAL = 4;
 	public static final int ENCODERS_B_RIGHT_DRIVE_DIGITAL = 5;
 	public static final int ENCODERS_A_LEFT_DRIVE_DIGITAL = 2;
 	public static final int ENCODERS_B_LEFT_DRIVE_DIGITAL = 3;
 	public static final int SHOOTER_OPTICAL_SENSOR = 6;
-	public static final int ENCODERS_B_SHOOTER_DIGITAL = 12;
 	public static final int HOOD_ABS = 9;
 
 	// Indicators
-	public static final int INDICATOR_LIGHTS_BIT_0 = 5;
-	public static final int INDICATOR_LIGHTS_BIT_1 = 6;
+	public static final int INDICATOR_LIGHTS_BIT_0 = 11;
+	public static final int INDICATOR_LIGHTS_BIT_1 = 12;
 	// public static final int SHOOTER_COUNTER = 6;
 
 }

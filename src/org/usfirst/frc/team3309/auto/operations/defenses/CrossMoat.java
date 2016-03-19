@@ -33,9 +33,9 @@ public class CrossMoat extends Operation {
 		}
 		mDrive.stopDrive();
 
-		Shot shot = Vision.getInstance().getShot();
+		Shot shot = Vision.getInstance().getShotToAimTowards();
 		while (shot == null) {
-			shot = Vision.getInstance().getShot();
+			shot = Vision.getInstance().getShotToAimTowards();
 			System.out.println("LOOKING");
 		}
 		double angleBeforeVision = mDrive.getAngle();
@@ -44,11 +44,11 @@ public class CrossMoat extends Operation {
 		System.out.println("RPS: " + shot.getGoalRPS() + " angke: " + shot.getGoalHoodAngle());
 
 		try {
-			shot = Vision.getInstance().getShot();
+			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
 			Thread.sleep(500);
-			shot = Vision.getInstance().getShot();
+			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
 		} catch (Exception e) {

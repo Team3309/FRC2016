@@ -71,8 +71,8 @@ public class Hood extends ControlledSubsystem {
 			//goalAngle = 28.6;
 			 goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
-			if (Vision.getInstance().getShot() != null)
-				goalAngle = Vision.getInstance().getShot().getGoalHoodAngle();
+			if (Vision.getInstance().getShotToAimTowards() != null)
+				goalAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
 			else
 				goalAngle = 4;
 		} else {

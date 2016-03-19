@@ -16,8 +16,8 @@ public class FaceVisionTargetController extends DriveAngleVelocityController {
 
 	public FaceVisionTargetController() {
 		super(Sensors.getAngle());
-		if (Vision.getInstance().getShot() != null) {
-			aimShot = Vision.getInstance().getShot();
+		if (Vision.getInstance().getShotToAimTowards() != null) {
+			aimShot = Vision.getInstance().getShotToAimTowards();
 			this.setName("Turn To Vision");
 			this.goalAngle = aimShot.getAzimuth() + Sensors.getAngle();
 		} else {

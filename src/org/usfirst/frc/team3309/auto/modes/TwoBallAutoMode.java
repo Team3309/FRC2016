@@ -1,9 +1,14 @@
 package org.usfirst.frc.team3309.auto.modes;
 
+import java.util.LinkedList;
+
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
+import org.team3309.lib.controllers.drive.VelocityChangePoint;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
+import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
+import org.usfirst.frc.team3309.auto.operations.shooter.SetRPSAndHoodOperation;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
@@ -16,78 +21,38 @@ public class TwoBallAutoMode extends AutoRoutine {
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-		double firstAngle = Sensors.getAngle();
-		// TODO Auto-generated method stub
-		Drive.getInstance().setHighGear(true);
+		double firstAngle = mDrive.getAngle();
+		this.mDrive.setHighGear(true);
+		LinkedList<VelocityChangePoint> w = new LinkedList<VelocityChangePoint>();
+		w.add(new VelocityChangePoint(80, 17));
+		w.add(new VelocityChangePoint(190, 120));
+		w.add(new VelocityChangePoint(190, 150));
 
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(230);
-		x.setRampUp(true);
-		x.setMAX_ENCODER_VEL(80);
-		Drive.getInstance().setAutoController(x);
+		LinkedList<Operation> operations = new LinkedList<Operation>();
+		operations.add(new SetRPSAndHoodOperation(140, 140, 30));
+
+		this.driveEncoder(282, 150, 5, w, operations);
+
+		this.turnToAngle(mDrive.getAngle() + 63, 4);
+
+		double angleBeforeVision = mDrive.getAngle();
 		try {
-			this.waitForController(x, 7);
+			this.toVision(2);
 		} catch (Exception e) {
-
+			FeedyWheel.getInstance().setFeedyWheel(1);
+			Thread.sleep(400);
+			FeedyWheel.getInstance().setFeedyWheel(0);
 		}
-		mDrive.stopDrive();
-
-		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(mDrive.getAngle() + 45.5);
-		Drive.getInstance().setAutoController(turnToGoal);
-		try {
-			this.waitForController(turnToGoal, 4);
-		} catch (Exception e) {
-
-		}
-		mDrive.stopDrive();
+		Hood.getInstance().setGoalAngle(4);
+		Flywheel.getInstance().setAimVelRPSAuto(0);
+		this.turnToAngle(firstAngle, 4);
 		
-		// NOW Get Back
-		Shot shot = Vision.getInstance().getShot();
-		while (shot == null) {
-			shot = Vision.getInstance().getShot();
-			System.out.println("LOOKING");
-		}
+		LinkedList<VelocityChangePoint> goBackVels = new LinkedList<VelocityChangePoint>();
+		w.add(new VelocityChangePoint(60, 130));
+		w.add(new VelocityChangePoint(190, 230));
 
-		mDrive.toVision();
-		System.out.println("RPS: " + shot.getGoalRPS() + " angke: " + shot.getGoalHoodAngle());
-
-		Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-		Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-		Thread.sleep(500);
-		mDrive.toVision();
-		shot = Vision.getInstance().getShot();
-		Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-		Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-		Thread.sleep(500);
-		shot = Vision.getInstance().getShot();
-		Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-		Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-		Thread.sleep(500);
-		System.out.println("BANG");
-		Thread.sleep(1000);
-		System.out.println("BANG BANG");
-		Thread.sleep(2000);
-		FeedyWheel.getInstance().setFeedyWheel(1);
-		Thread.sleep(500);
-		FeedyWheel.getInstance().setFeedyWheel(0);
+		this.driveEncoder(-282, 150, 5, goBackVels);
 		
-		DriveAngleVelocityController turnToStartingPos = new DriveAngleVelocityController(firstAngle);
-		Drive.getInstance().setAutoController(turnToStartingPos);
-		try {
-			this.waitForController(turnToStartingPos, 4);
-		} catch (Exception e) {
-
-		}
-		
-		DriveEncodersVelocityController back = new DriveEncodersVelocityController(-230);
-		//x.setRampUp(true);
-		back.setMAX_ENCODER_VEL(80);
-		Drive.getInstance().setAutoController(back);
-		try {
-			this.waitForController(back, 7);
-		} catch (Exception e) {
-
-		}
-		mDrive.stopDrive();
 
 	}
 

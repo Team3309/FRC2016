@@ -8,18 +8,18 @@ import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 public class CustomAuto extends AutoRoutine {
 
 	private Operation defense;
-	private int startingPosition = 1;
+	private Operation startingPosition;
 
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
-		// defense.perform();
-		// Thread.sleep(200);
-		// this.driveEncoder(10, 40, 1); // stopping effect
+		defense.perform();
+		Thread.sleep(200);
+		this.driveEncoder(10, 40, 1); // stopping effect
 		mDrive.setHighGear(true);
 		Hood.getInstance().setGoalAngle(30);
 		Flywheel.getInstance().setAimVelRPSAuto(140);
 		Thread.sleep(750);
-		(new Pos2ToLeft()).perform();
+		startingPosition.perform();
 		mDrive.stopDrive();
 	}
 
@@ -31,12 +31,12 @@ public class CustomAuto extends AutoRoutine {
 		this.defense = defense;
 	}
 
-	public int getStartingPosition() {
+	public Operation getStartingPosition() {
 		return startingPosition;
 	}
 
-	public void setStartingPosition(int startingPosition) {
-		this.startingPosition = startingPosition;
+	public void setStartingPosition(Operation operation) {
+		this.startingPosition = operation;
 	}
 
 }

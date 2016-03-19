@@ -98,12 +98,7 @@ public class Sensors {
 	public static double getHoodAngle() {
 		double hoodAngle = Constants.getHoodBottomValue()
 				- ((1000000.0 * (hoodEncoder.getPeriod())) * (360.0 / 4096.0));
-		// double hoodAngle = (-1 * ((1000000.0 * (hoodEncoder.getPeriod())) *
-		// (360.0 / 4096.0)));
-
-		// System.out.println("HOOD ANGLE: " + hoodAngle);
 		while (hoodAngle > 360 || hoodAngle < -20) {
-
 			if (hoodAngle > 360) {
 				hoodAngle -= 360;
 			}

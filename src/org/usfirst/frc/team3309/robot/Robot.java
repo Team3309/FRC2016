@@ -26,6 +26,12 @@ import org.usfirst.frc.team3309.auto.operations.defenses.CrossRockWall;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossRoughTerrain;
 import org.usfirst.frc.team3309.auto.operations.defenses.CrossSallyPort;
 import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos2ToCenter;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos2ToLeft;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos3ToCenter;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos3ToRight;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos4ToCenter;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos5ToRight;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
@@ -37,7 +43,6 @@ import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,22 +54,18 @@ public class Robot extends IterativeRobot {
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
-	
 
 	// Runs when Robot is turned on
 	public void robotInit() {
-		System.out.println("INNIT");
+		System.out.println("Robot INIT");
 		Sensors.init();
-		pdp = new PowerDistributionPanel();
-		SmartDashboard.putNumber("ANGLE I AM TURNING ( ADDED TO OTHER)", 10);
 		try {
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			e.getMessage();
 		}
-		System.out.println("ONCE");
-		// Set up new Autos in Sendable Chooser
+		// Set up new Autos in SendableChooser
 		mainAutoChooser.addDefault("No Move", new NoMoveAuto());
 		mainAutoChooser.addObject("Go Straight", new GoForwardStraightAutoMode());
 		mainAutoChooser.addObject("Two Ball From Spy", new TwoBallAutoFromSpy());
@@ -79,12 +80,15 @@ public class Robot extends IterativeRobot {
 		mainAutoChooser.addObject("TWO BALL", new TwoBallAutoMode());
 		mainAutoChooser.addObject("Go Forward Intake Down", new HighSpeedCrossAutoIntakeDownMode());
 		SmartDashboard.putData("Auto", mainAutoChooser);
-		startingPositionAutoChooser.addDefault("1", 1);
-		startingPositionAutoChooser.addObject("2", 2);
-		startingPositionAutoChooser.addObject("3", 3);
-		startingPositionAutoChooser.addObject("4", 4);
-		startingPositionAutoChooser.addObject("5", 5);
+		// Add Starting Positions and Goal To Shoot In in SendableChooser
+		startingPositionAutoChooser.addObject("2-Left", new Pos2ToLeft());
+		startingPositionAutoChooser.addObject("2-Center", new Pos2ToCenter());
+		startingPositionAutoChooser.addObject("3-Center",new Pos3ToCenter());
+		startingPositionAutoChooser.addObject("3-Right", new Pos3ToRight());
+		startingPositionAutoChooser.addObject("4", new Pos4ToCenter());
+		startingPositionAutoChooser.addObject("5", new Pos5ToRight());
 		SmartDashboard.putData("Starting Position", startingPositionAutoChooser);
+		// Add Defenses in SendableChooser
 		defenseAutoChooser.addDefault("Low Bar", new CrossLowBar());
 		defenseAutoChooser.addObject("Cheval De Frise", new CrossChevelDeFrise());
 		defenseAutoChooser.addObject("Draw Bridge", new CrossDrawBridge());
@@ -119,7 +123,7 @@ public class Robot extends IterativeRobot {
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
 			auto.setDefense((Operation) defenseAutoChooser.getSelected());
-			auto.setStartingPosition((int) startingPositionAutoChooser.getSelected());
+			auto.setStartingPosition( (Operation) startingPositionAutoChooser.getSelected());
 			(new Thread(auto)).start();
 		} else {
 			(new Thread((AutoRoutine) mainAutoChooser.getSelected())).start();
