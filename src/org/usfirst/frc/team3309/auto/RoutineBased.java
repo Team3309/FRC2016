@@ -127,7 +127,7 @@ public class RoutineBased {
 		}
 		mDrive.stopDrive();
 	}
-	
+
 	public void driveEncoder(double goal, double maxEnc, double timeout, boolean rampUp) {
 		Sensors.resetDrive();
 		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
@@ -141,6 +141,22 @@ public class RoutineBased {
 		mDrive.stopDrive();
 	}
 
+	protected void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> w,
+			LinkedList<Operation> operations, boolean rampUp) {
+		Sensors.resetDrive();
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
+		x.setMAX_ENCODER_VEL(maxEnc);
+		x.setRampUp(rampUp);
+		x.setOperations(operations);
+		x.setEncoderChanges(w);
+		Drive.getInstance().setAutoController(x);
+		try {
+			this.waitForController(x, timeout);
+		} catch (Exception e) {
+		}
+		mDrive.stopDrive();
+
+	}
 
 	public void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> arrayOfVel,
 			LinkedList<Operation> operations) {

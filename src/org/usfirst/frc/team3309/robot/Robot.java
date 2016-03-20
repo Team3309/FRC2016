@@ -168,7 +168,7 @@ public class Robot extends IterativeRobot {
 		// Update the subsystems
 		Drive.getInstance().updateTeleop();
 		Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().manualControl();
+		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateTeleop();
 		Intake.getInstance().sendToSmartDash();

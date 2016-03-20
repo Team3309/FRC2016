@@ -29,15 +29,15 @@ public class TwoBallAutoMode extends AutoRoutine {
 		w.add(new VelocityChangePoint(190, 150));
 
 		LinkedList<Operation> operations = new LinkedList<Operation>();
-		operations.add(new SetRPSAndHoodOperation(140, 140, 30));
+		operations.add(new SetRPSAndHoodOperation(140, 170, 42));
 
-		this.driveEncoder(282, 150, 5, w, operations);
+		this.driveEncoder(282, 150, 5, w, operations, true);
 
-		this.turnToAngle(mDrive.getAngle() + 63, 4);
+		this.turnToAngle(mDrive.getAngle() + 61, 4);
 
 		double angleBeforeVision = mDrive.getAngle();
 		try {
-			this.toVision(2);
+			this.toVision(1);
 		} catch (Exception e) {
 			FeedyWheel.getInstance().setFeedyWheel(1);
 			Thread.sleep(400);
@@ -48,12 +48,15 @@ public class TwoBallAutoMode extends AutoRoutine {
 		this.turnToAngle(firstAngle, 4);
 		
 		LinkedList<VelocityChangePoint> goBackVels = new LinkedList<VelocityChangePoint>();
-		w.add(new VelocityChangePoint(60, 130));
-		w.add(new VelocityChangePoint(190, 230));
+		goBackVels.add(new VelocityChangePoint(60, 100));
+		goBackVels.add(new VelocityChangePoint(190, 230));
 
-		this.driveEncoder(-282, 150, 5, goBackVels);
+		this.driveEncoder(-230, 150, 5, goBackVels);
+		mDrive.stopDrive();
 		
 
 	}
+
+	
 
 }

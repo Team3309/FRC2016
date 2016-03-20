@@ -235,7 +235,6 @@ public class DriveEncodersVelocityController extends Controller {
 	}
 
 	public void sendToSmartDash() {
-		System.out.println("FDASFDSAFDSAFASD");
 		leftSideController.sendToSmartDash();
 		rightSideController.sendToSmartDash();
 		encodersController.sendToSmartDash();

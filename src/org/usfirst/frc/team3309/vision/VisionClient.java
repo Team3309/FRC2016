@@ -109,7 +109,7 @@ public class VisionClient implements Runnable {
 			this.lastTimeoutTime = lastUpdate;
 			System.out.println("Vision timed out");
 		}else {
-			//System.out.println("Got Vision Goals");
+		
 		}
 		List<Goal> goals = this.latestGoals;
 		this.lock.unlock();
