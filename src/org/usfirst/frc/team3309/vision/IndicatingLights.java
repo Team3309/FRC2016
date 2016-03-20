@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.vision;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class IndicatingLights {
 
@@ -11,8 +12,6 @@ public class IndicatingLights {
 	}
 
 	private static IndicatingLights instance;
-	private DigitalOutput bit0 = new DigitalOutput(RobotMap.INDICATOR_LIGHTS_BIT_0);
-	private DigitalOutput bit1 = new DigitalOutput(RobotMap.INDICATOR_LIGHTS_BIT_1);
 	private double THRESHOLD_FOR_AZIMUTH = 4;
 
 	public static IndicatingLights getInstance() {
@@ -26,32 +25,29 @@ public class IndicatingLights {
 
 	}
 
+	private NetworkTable lightsTable = NetworkTable.getTable("Lights");
+
 	private void setIndicators(IndicatorState state) {
 		switch (state) {
 
 		case OFF:
-			bit0.set(false);
-			bit1.set(false);
+			lightsTable.putString("Status", "Off");
 			break;
 
 		case RED:
-			bit0.set(true);
-			bit1.set(false);
+			lightsTable.putString("Status", "Red");
 			break;
 
 		case GREEN:
-			bit0.set(false);
-			bit1.set(true);
+			lightsTable.putString("Status", "Green");
 			break;
 
 		case BLUE:
-			bit0.set(true);
-			bit1.set(true);
+			lightsTable.putString("Status", "Blue");
 			break;
 
 		default:
-			bit0.set(false);
-			bit1.set(false);
+			lightsTable.putString("Status", "Off");
 			break;
 
 		}

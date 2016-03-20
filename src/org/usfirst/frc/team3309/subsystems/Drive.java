@@ -86,9 +86,7 @@ public class Drive extends ControlledSubsystem {
 			x.setName("VISION");
 			x.reset();
 			x.setCompletable(false);
-			// if (Math.abs(Vision.getInstance().getShot().getAzimuth()) < .5) {
-			// return;
-			// }
+			
 			System.out.println("Vision started");
 			if (DriverStation.getInstance().isAutonomous())
 				this.setAutoController(x);
@@ -104,6 +102,7 @@ public class Drive extends ControlledSubsystem {
 			this.desiredShot = Vision.getInstance().getShotToAimTowards();
 			Vision.getInstance().setLight(.6);
 			if (this.desiredShot != null) {
+				System.out.println("ACQUIRE NEW ANGLE");
 				toVision();
 			} else {
 				System.out.println("Vision does not see anything");

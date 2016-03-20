@@ -100,12 +100,10 @@ public class Vision implements Runnable {
 			} else {
 				currentGoalToAimTowards = null;
 			}
-			System.out.println("LETS CHECK");
 			// Find Shot To Aim At
 			if (currentGoalToAimTowards == null) {
 				currentShotToAimTowards = null;
 			} else {
-				System.out.println("THERE IS A SHOT");
 				currentShotToAimTowards = new Shot(currentGoalToAimTowards.azimuth);
 				double closestShot = Integer.MAX_VALUE;
 				double currentY = currentGoalToAimTowards.y;

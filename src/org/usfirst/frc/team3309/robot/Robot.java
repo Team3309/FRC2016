@@ -44,6 +44,7 @@ import org.usfirst.frc.team3309.vision.Vision;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -153,9 +154,11 @@ public class Robot extends IterativeRobot {
 		Compressor compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
 		compressor.start();
+
 	}
 
 	Timer time = new Timer();
+	
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
@@ -170,7 +173,7 @@ public class Robot extends IterativeRobot {
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().updateTeleop();
+		Intake.getInstance().manualControl();
 		Intake.getInstance().sendToSmartDash();
 		IndicatingLights.getInstance().update();
 		try {
