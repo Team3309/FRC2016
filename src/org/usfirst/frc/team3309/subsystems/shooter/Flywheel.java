@@ -101,7 +101,7 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getB()) {
 			aimVelRPS = 130;
 		} else if (Controls.operatorController.getXBut()) {
-			aimVelRPS = 160;
+			aimVelRPS = 180;
 		} else if (Controls.operatorController.getYBut()) {
 			 aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 			//aimVelRPS = 120;
@@ -177,9 +177,9 @@ public class Flywheel extends ControlledSubsystem {
 			output = 0;
 		}
 		if (aimVelRPS != 0 && !hasGoneBack) {
-			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			FeedyWheel.getInstance().setFeedyWheel(-1);
 			try {
-				Thread.sleep(110);
+				Thread.sleep(150);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

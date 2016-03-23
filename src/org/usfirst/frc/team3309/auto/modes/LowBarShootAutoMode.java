@@ -10,6 +10,7 @@ import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
+import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Hood;
@@ -24,6 +25,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
 		Drive.getInstance().setHighGear(true);
+		IntakePivot.getInstance().toIntakePosition();
 		double startAngle = mDrive.getAngle();
 		Sensors.resetDrive();
 		DriveEncodersVelocityController goFast = new DriveEncodersVelocityController(282); // 282
@@ -75,29 +77,29 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		}
 		double angleBeforeVision = mDrive.getAngle();
 
-		mDrive.toVision();
-		System.out.println("RPS: " + shot.getGoalRPS() + " angke: " + shot.getGoalHoodAngle());
+		this.toVision(6);
 
-		try {
-			shot = Vision.getInstance().getShotToAimTowards();
-			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-			Thread.sleep(500);
-			shot = Vision.getInstance().getShotToAimTowards();
-			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-		} catch (Exception e) {
+		/*
+		 * mDrive.toVision(); System.out.println("RPS: " + shot.getGoalRPS() +
+		 * " angke: " + shot.getGoalHoodAngle());
+		 * 
+		 * try { shot = Vision.getInstance().getShotToAimTowards();
+		 * Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+		 * Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+		 * Thread.sleep(500); shot = Vision.getInstance().getShotToAimTowards();
+		 * Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+		 * Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle()); } catch
+		 * (Exception e) {
+		 * 
+		 * } Thread.sleep(1000); System.out.println("BANG BANG");
+		 * FeedyWheel.getInstance().setFeedyWheel(1); double
+		 * errorFromStartingVision = mDrive.getAngle() - angleBeforeVision;
+		 * Thread.sleep(500); FeedyWheel.getInstance().setFeedyWheel(0);
+		 * Flywheel.getInstance().setAimVelRPSAuto(0);
+		 * Hood.getInstance().setGoalAngle(4);
+		 */
 
-		}
-		Thread.sleep(1000);
-		System.out.println("BANG BANG");
-		FeedyWheel.getInstance().setFeedyWheel(1);
 		double errorFromStartingVision = mDrive.getAngle() - angleBeforeVision;
-		Thread.sleep(500);
-		FeedyWheel.getInstance().setFeedyWheel(0);
-		Flywheel.getInstance().setAimVelRPSAuto(0);
-		Hood.getInstance().setGoalAngle(4);
-
 		System.out.println("HERS SOME STUFF Vision: " + angleBeforeVision + " dis: " + this.DISTANCE_TO_GOAL
 				+ " angleBeforeVision: " + angleBeforeVision + " error from start " + errorFromStartingVision);
 		double distanceToGoBack = (KragerMath.sinDeg(angleBeforeVision) * this.DISTANCE_TO_GOAL)

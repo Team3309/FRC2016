@@ -292,6 +292,9 @@ public class Drive extends ControlledSubsystem {
 	public void sendToSmartDash() {
 		if (!DriverStation.getInstance().isAutonomous())
 			teleopController.sendToSmartDash();
+		else {
+			autoController.sendToSmartDash();
+		}
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());

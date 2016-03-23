@@ -147,8 +147,8 @@ public class DriveEncodersVelocityController extends Controller {
 				isRampUp = false;
 			}
 		}
-		leftState.setError(leftAimVel - inputState.getLeftVel());
-		rightState.setError(-rightAimVel - inputState.getRightVel());
+		leftState.setError(leftAimVel + inputState.getLeftVel());
+		rightState.setError(-rightAimVel + inputState.getRightVel());
 		// leftSideController.setAimVel(dashAimTurnVel);
 		// rightSideController.setAimVel(-dashAimTurnVel);
 		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());

@@ -93,11 +93,14 @@ public class DriveCheezyDriveEquation extends Controller {
 			}
 			overPower = 1.0;
 			if (isHighGear) {
-				sensitivity = 1.0;
+				sensitivity = .35;
 			} else {
-				sensitivity = 1.0;
+				sensitivity = .35;
 			}
-			angularPower = wheel;
+			angularPower = wheel * sensitivity;
+			if (wheel == 1 && wheel == -1) {
+				angularPower = wheel;
+			}
 		} else {
 			overPower = 0.0;
 			angularPower = Math.abs(throttle) * wheel * sensitivity - quickStopAccumulator;

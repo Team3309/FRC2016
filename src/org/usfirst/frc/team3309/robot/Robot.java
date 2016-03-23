@@ -37,6 +37,7 @@ import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
+import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 import org.usfirst.frc.team3309.vision.Goal;
 import org.usfirst.frc.team3309.vision.IndicatingLights;
 import org.usfirst.frc.team3309.vision.Vision;
@@ -158,7 +159,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	Timer time = new Timer();
-	
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
@@ -173,7 +173,7 @@ public class Robot extends IterativeRobot {
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().manualControl();
+		Intake.getInstance().updateTeleop();
 		Intake.getInstance().sendToSmartDash();
 		IndicatingLights.getInstance().update();
 		try {

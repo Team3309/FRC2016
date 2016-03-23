@@ -21,10 +21,10 @@ public class DriveAngleVelocityController extends Controller {
 
 	public DriveAngleVelocityController(double aimAngle) {
 		this.setName("DRIVE ANGLE VEL");
-		//System.out.println("LOW GEAR: " + Drive.getInstance().isLowGear());
+		// System.out.println("LOW GEAR: " + Drive.getInstance().isLowGear());
 		if (Drive.getInstance().isLowGear()) {
-			leftSideController.setConstants(.006, 0, .003, .001, 0);
-			rightSideController.setConstants(.006, 0, .003, .001, 0);
+			leftSideController.setConstants(.006, 0, .003, .0003, 0);
+			rightSideController.setConstants(.006, 0, .003, .0003, 0);
 			turningController.setConstants(6, 0, 13.015);
 			System.out.println("LOW GEAR!");
 		} else {
@@ -35,8 +35,8 @@ public class DriveAngleVelocityController extends Controller {
 		this.leftSideController.setName("LEFT IDE VEL CONTROLER");
 		this.rightSideController.setName("RIGHT IDE VEL CONTROLER");
 		this.turningController.setName("Turning Angle Controller");
-		leftSideController.kILimit = .7;
-		rightSideController.kILimit = .7;
+		leftSideController.kILimit = .3;
+		rightSideController.kILimit = .3;
 		goalAngle = aimAngle;
 
 		SmartDashboard.putNumber(this.getName() + " Vel to Turn At", 0);
@@ -54,7 +54,8 @@ public class DriveAngleVelocityController extends Controller {
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		double error = goalAngle - inputState.getAngularPos();
-		//double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + " Vel to Turn At");
+		// double dashAimTurnVel = SmartDashboard.getNumber(this.getName() + "
+		// Vel to Turn At");
 		if (Math.abs(error) > 180) {
 			error = -KragerMath.sign(error) * (360 - Math.abs(error));
 			System.out.println("New Error: " + error);
@@ -70,24 +71,27 @@ public class DriveAngleVelocityController extends Controller {
 																							// to
 																							// send
 		SmartDashboard.putNumber("DRIVE ANGLE VEL Output", outputOfTurningController.getMotor());
+		System.out.println("OUTPUT FOR TURNING: " + outputOfTurningController.getMotor());
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
-		//System.out.println("ANGLE: ");
-		//turningController.printConstants();
-		//leftSideController.printConstants();
-		//rightSideController.printConstants();
+		// System.out.println("ANGLE: ");
+		// turningController.printConstants();
+		// leftSideController.printConstants();
+		// rightSideController.printConstants();
 		// System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
-		leftState.setError(outputOfTurningController.getMotor() - inputState.getLeftVel());
-		rightState.setError(outputOfTurningController.getMotor() - inputState.getRightVel());
+		leftState.setError(-outputOfTurningController.getMotor() - inputState.getLeftVel());
+		rightState.setError(-outputOfTurningController.getMotor() - inputState.getRightVel());
 		// rightSideController.setAimVel(outputOfTurningController.getMotor());
 		// leftSideController.setAimVel(outputOfTurningController.getMotor());
 		// leftSideController.setAimVel(dashAimTurnVel);
 		// rightSideController.setAimVel(dashAimTurnVel);
 		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());
 		// rightState.setError(dashAimTurnVel - inputState.getRightVel());
-		toBeReturnedSignal.setLeftRightMotor(leftSideController.getOutputSignal(leftState).getMotor(),
-				-rightSideController.getOutputSignal(rightState).getMotor());
+		toBeReturnedSignal.setLeftRightMotor(-leftSideController.getOutputSignal(leftState).getMotor(),
+				rightSideController.getOutputSignal(rightState).getMotor());
+		System.out.println("left: " + leftSideController.getOutputSignal(leftState).getMotor() + " right: "
+				+ rightSideController.getOutputSignal(rightState).getMotor());
 		return toBeReturnedSignal;
 	}
 
