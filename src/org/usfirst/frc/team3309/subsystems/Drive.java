@@ -86,7 +86,7 @@ public class Drive extends ControlledSubsystem {
 			x.setName("VISION");
 			x.reset();
 			x.setCompletable(false);
-			
+
 			System.out.println("Vision started");
 			if (DriverStation.getInstance().isAutonomous())
 				this.setAutoController(x);
@@ -100,7 +100,7 @@ public class Drive extends ControlledSubsystem {
 	public void updateTeleop() {
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShotToAimTowards();
-			Vision.getInstance().setLight(.6);
+			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 			if (this.desiredShot != null) {
 				System.out.println("ACQUIRE NEW ANGLE");
 				toVision();
@@ -112,9 +112,10 @@ public class Drive extends ControlledSubsystem {
 
 		} else {
 			isReset = false;
-			Vision.getInstance().setLight(.70);
+			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 			this.setTeleopController(new DriveCheezyDriveEquation());
 		}
+		Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 
 		if (Controls.driverController.getLB()) {
 			isLowGear = true;

@@ -106,7 +106,6 @@ public class DriveEncodersVelocityController extends Controller {
 		InputState state = new InputState();
 		state.setError(error); // sets angle error to be sent in turning PID
 		OutputSignal outputOfTurningController = encodersController.getOutputSignal(state); // outputs
-		SmartDashboard.putNumber("DRIVE Encoder VEL Output", outputOfTurningController.getMotor());
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
@@ -147,8 +146,12 @@ public class DriveEncodersVelocityController extends Controller {
 				isRampUp = false;
 			}
 		}
-		leftState.setError(leftAimVel + inputState.getLeftVel());
-		rightState.setError(-rightAimVel + inputState.getRightVel());
+		leftAimVel = -leftAimVel;
+		SmartDashboard.putNumber("DRIVE Encoder VEL Output", outputOfTurningController.getMotor());
+		SmartDashboard.putNumber("DRIVE ENCODER RIGHT", rightAimVel);
+		SmartDashboard.putNumber("DRIVE ENCODER LEFT", leftAimVel);
+		leftState.setError(leftAimVel - inputState.getLeftVel());
+		rightState.setError(rightAimVel - inputState.getRightVel());
 		// leftSideController.setAimVel(dashAimTurnVel);
 		// rightSideController.setAimVel(-dashAimTurnVel);
 		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());
@@ -160,14 +163,16 @@ public class DriveEncodersVelocityController extends Controller {
 		double leftSideOutput = leftSideController.getOutputSignal(leftState).getMotor();
 		// System.out.println("AIM VELs " + leftAimVel + " right Aim Vel " +
 		// -rightAimVel);
+		//SmartDashboard.putString("HardCore Power", "RIGHT: " + rightSideOutput + " LEFT " +leftSideOutput);
 		if (this.MAX_ENCODER_VEL_LEFT == this.MAX_ENCODER_VEL_RIGHT) {
 			if (Math.abs(inputState.getAngularPos() - goalAngle) > 30) {
 				goalAngle = inputState.getAngularPos();
 			}
 			double turn = turningController.getOutputSignal(turningState).getMotor();
-			toBeReturnedSignal.setLeftRightMotor(leftSideOutput + turn, leftSideOutput - turn);
+			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput + turn, 
+					-leftSideOutput - turn );// - +
 		} else {
-			toBeReturnedSignal.setLeftRightMotor(leftSideOutput, -rightSideOutput);
+			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput, rightSideOutput);
 		}
 
 		pastAim = rightAimVel;

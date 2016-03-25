@@ -102,12 +102,12 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		try {
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() - 1);
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
 			Thread.sleep(1000);
 			mDrive.toVision();
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() - 1);
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
 		} catch (Exception e) {
 
 		}
@@ -129,6 +129,10 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		Hood.getInstance().setGoalAngle(4);
 		
 		//VISION ENDED
+		mDrive.stopDrive();
+		Thread.sleep(15000);
+	
+		
 		this.toVision(20);
 		double errorFromStartingVision = mDrive.getAngle() - angleBeforeVision;
 		System.out.println("HERS SOME STUFF Vision: " + angleBeforeVision + " dis: " + this.DISTANCE_TO_GOAL

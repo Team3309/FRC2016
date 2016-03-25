@@ -17,6 +17,8 @@
 package org.usfirst.frc.team3309.vision;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team3309.robot.RobotMap;
 
 import java.util.List;
@@ -24,13 +26,14 @@ import java.util.List;
 public class Vision implements Runnable {
 
 	private final Thread thread;
+	public double BRIGHTNESS = .2;
 
 	// These are the shots
 	private static Shot[] shots = { new Shot(140, 27.5, .57291), new Shot(140, 31.3003309, 0.308),
 			new Shot(140, 33.303309, 0.091666), new Shot(160, 33.8, .0708), new Shot(160, 34.2, -.04375),
 			new Shot(160, 34.9, -.164), new Shot(160, 37.9, -.2541), new Shot(160, 38.2, -.3565),
 			new Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(180, 42.4, -.702),
-			new Shot(180, 41, -.79375), new Shot(180, 42.5, -.94555) };
+			new Shot(180, 43.5, -.777), new Shot(180, 42.5, -.94555) };
 	// new Shot(goalRPS, goalHood, y)
 
 	private static Vision instance;
@@ -50,6 +53,7 @@ public class Vision implements Runnable {
 
 	private Vision() {
 		thread = new Thread(this);
+		SmartDashboard.putNumber("VISION BRIGHTNESS", BRIGHTNESS);
 	}
 
 	public void start() {
@@ -87,6 +91,7 @@ public class Vision implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
+			this.BRIGHTNESS = SmartDashboard.getNumber("VISION BRIGHTNESS", .2);
 			// wait for new goals to be available and then process them
 			List<Goal> currentGoals = VisionClient.getInstance().getGoals();
 			double currentBiggest = 0;
@@ -123,7 +128,7 @@ public class Vision implements Runnable {
 										/ (previousShot.getYCoordinate() - shot.getYCoordinate());
 								double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
-								shotToBeSet.setGoalHoodAngle(newOutput);
+								shotToBeSet.setGoalHoodAngle(newOutput + 1);
 							}
 						} else {
 							if (i != shots.length - 1) {
@@ -132,7 +137,7 @@ public class Vision implements Runnable {
 										/ (upperShot.getYCoordinate() - shot.getYCoordinate());
 								double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
-								shotToBeSet.setGoalHoodAngle(newOutput);
+								shotToBeSet.setGoalHoodAngle(newOutput + 1);
 							}
 						}
 					}

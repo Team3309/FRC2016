@@ -39,7 +39,8 @@ public class Hood extends ControlledSubsystem {
 		this.autoController = new PIDPositionController(0.51, 0.001, .014);
 		((PIDController) this.teleopController).kILimit = .2;
 		this.teleopController.setName("Hood Angle");
-		((PIDController) this.teleopController).setTHRESHOLD(.4);
+		((PIDController) this.teleopController).setTHRESHOLD(.4
+				);
 		((PIDController) this.autoController).kILimit = .2;
 		this.autoController.setName("Hood Angle");
 		((PIDController) this.autoController).setTHRESHOLD(.4);
@@ -64,9 +65,9 @@ public class Hood extends ControlledSubsystem {
 		if (Controls.operatorController.getA()) {
 			goalAngle = 14.65;
 		} else if (Controls.operatorController.getB()) {
-			goalAngle = 28.6;
+			goalAngle = 29;
 		} else if (Controls.operatorController.getXBut()) {
-			goalAngle = 42.85;
+			goalAngle = 42;
 		} else if (Controls.operatorController.getYBut()) {
 			// goalAngle = 28.6;
 			goalAngle = SmartDashboard.getNumber("Test Angle");

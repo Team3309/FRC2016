@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.vision;
 
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -8,7 +9,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 public class IndicatingLights {
 
 	private enum IndicatorState {
-		OFF, RED, GREEN, BLUE
+		OFF, RED, LOCKED, BLUE
 	}
 
 	private static IndicatingLights instance;
@@ -25,29 +26,44 @@ public class IndicatingLights {
 
 	}
 
-	private NetworkTable lightsTable = NetworkTable.getTable("Lights");
+	private NetworkTable lightsTable = NetworkTable.getTable("Status");
 
 	private void setIndicators(IndicatorState state) {
 		switch (state) {
 
 		case OFF:
-			lightsTable.putString("Status", "Off");
+			lightsTable.putBoolean("Red", false);
+			lightsTable.putBoolean("Blue", false);
+			lightsTable.putBoolean("Locked", false);
+			lightsTable.putNumber("Power", Flywheel.getInstance().getPercent());
 			break;
 
 		case RED:
-			lightsTable.putString("Status", "Red");
+			lightsTable.putBoolean("Red", true);
+			lightsTable.putBoolean("Blue", false);
+			lightsTable.putBoolean("Locked", false);
+			lightsTable.putNumber("Power", Flywheel.getInstance().getPercent());
 			break;
 
-		case GREEN:
-			lightsTable.putString("Status", "Green");
+		case LOCKED:
+			lightsTable.putBoolean("Red", false);
+			lightsTable.putBoolean("Blue", true);
+			lightsTable.putBoolean("Locked", true);
+			lightsTable.putNumber("Power", Flywheel.getInstance().getPercent());
 			break;
 
 		case BLUE:
-			lightsTable.putString("Status", "Blue");
+			lightsTable.putBoolean("Red", false);
+			lightsTable.putBoolean("Blue", true);
+			lightsTable.putBoolean("Locked", false);
+			lightsTable.putNumber("Power", Flywheel.getInstance().getPercent());
 			break;
 
 		default:
-			lightsTable.putString("Status", "Off");
+			lightsTable.putBoolean("Red", false);
+			lightsTable.putBoolean("Blue", false);
+			lightsTable.putBoolean("Locked", false);
+			lightsTable.putNumber("Power", Flywheel.getInstance().getPercent());
 			break;
 
 		}
@@ -57,9 +73,9 @@ public class IndicatingLights {
 		if (Vision.getInstance().hasShot()) {
 			double azimuth = Vision.getInstance().getShotToAimTowards().getAzimuth();
 			if (Math.abs(azimuth) < THRESHOLD_FOR_AZIMUTH) {
-				this.setIndicators(IndicatorState.BLUE);
+				this.setIndicators(IndicatorState.LOCKED);
 			} else {
-				this.setIndicators(IndicatorState.GREEN);
+				this.setIndicators(IndicatorState.BLUE);
 			}
 		} else {
 			this.setIndicators(IndicatorState.RED);

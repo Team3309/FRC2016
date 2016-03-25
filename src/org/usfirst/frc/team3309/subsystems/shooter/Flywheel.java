@@ -41,8 +41,8 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.teleopController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
-		this.autoController = new FeedForwardWithPIDController(.005, 0, .023, 0.000, 0.00);
+		this.teleopController = new FeedForwardWithPIDController(.005, 0, .008, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(.005, 0, .008, 0.000, 0.00);
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		this.autoController.setName("Flywheel");
@@ -177,9 +177,9 @@ public class Flywheel extends ControlledSubsystem {
 			output = 0;
 		}
 		if (aimVelRPS != 0 && !hasGoneBack) {
-			FeedyWheel.getInstance().setFeedyWheel(-1);
+			FeedyWheel.getInstance().setFeedyWheel(-.5);
 			try {
-				Thread.sleep(150);
+				Thread.sleep(120);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -206,6 +206,12 @@ public class Flywheel extends ControlledSubsystem {
 		return input;
 	}
 
+	public double getPercent() {
+		if (aimVelRPS == 0)
+			return 0;
+		return (double) curVel/(aimVelRPS - 10) * 100;
+	}
+	
 	@Override
 	public void sendToSmartDash() {
 		teleopController.sendToSmartDash();

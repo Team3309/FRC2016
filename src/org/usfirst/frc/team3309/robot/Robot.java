@@ -115,12 +115,13 @@ public class Robot extends IterativeRobot {
 
 	// Called repeatedly in disabled mode
 	public void disabledPeriodic() {
+		Vision.getInstance().setLight(0);
 	}
 
 	// Init to Auto
 	public void autonomousInit() {
 		Sensors.resetDrive();
-		Vision.getInstance().setLight(.6);
+		Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
 			CustomAuto auto = (CustomAuto) mainAutoChooser.getSelected();
@@ -138,7 +139,7 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
 		Drive.getInstance().updateAuto();
-		Drive.getInstance().sendToSmartDash();
+		//Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateAuto();
@@ -166,11 +167,13 @@ public class Robot extends IterativeRobot {
 		time.start();
 		time.reset();
 		List<Goal> goals = Vision.getInstance().getGoals();
-		if (goals.size() > 0)
+		if (goals.size() > 0) {
 			System.out.println("Y: " + goals.get(0).y);
+			SmartDashboard.putNumber("Y Value", goals.get(0).y);
+		}
 		// Update the subsystems
 		Drive.getInstance().updateTeleop();
-		Drive.getInstance().sendToSmartDash();
+		//Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateTeleop();

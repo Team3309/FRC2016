@@ -66,7 +66,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	public void setFeedyWheel(double power) {
 		if(DriverStation.getInstance().isAutonomous())
 			autoPower = power;
-		this.feedyWheelSpark.set(-power);
+		this.feedyWheelSpark.set(power);
 	}
 
 	@Override
