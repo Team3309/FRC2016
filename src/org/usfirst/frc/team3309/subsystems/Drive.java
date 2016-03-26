@@ -36,7 +36,7 @@ public class Drive extends ControlledSubsystem {
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal angle
 	 */
-	private static final double DRIVE_GYRO_LENIENCY = 1.5;
+	private static final double DRIVE_GYRO_LENIENCY = .5;
 
 	private static Drive instance;
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);

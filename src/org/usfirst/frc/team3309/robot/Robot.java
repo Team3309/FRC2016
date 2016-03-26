@@ -116,6 +116,7 @@ public class Robot extends IterativeRobot {
 	// Called repeatedly in disabled mode
 	public void disabledPeriodic() {
 		Vision.getInstance().setLight(0);
+		//IndicatingLights.getInstance().update();
 	}
 
 	// Init to Auto

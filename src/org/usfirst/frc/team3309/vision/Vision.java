@@ -26,21 +26,21 @@ import java.util.List;
 public class Vision implements Runnable {
 
 	private final Thread thread;
-	public double BRIGHTNESS = .2;
+	public double BRIGHTNESS = .3;
 
 	// These are the shots
 	private static Shot[] shots = { new Shot(140, 27.5, .57291), new Shot(140, 31.3003309, 0.308),
 			new Shot(140, 33.303309, 0.091666), new Shot(160, 33.8, .0708), new Shot(160, 34.2, -.04375),
 			new Shot(160, 34.9, -.164), new Shot(160, 37.9, -.2541), new Shot(160, 38.2, -.3565),
 			new Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(180, 42.4, -.702),
-			new Shot(180, 43.5, -.777), new Shot(180, 42.5, -.94555) };
+			new Shot(180, 46, -.777), new Shot(180, 42.5, -.94555) };
 	// new Shot(goalRPS, goalHood, y)
 
 	private static Vision instance;
 	private double goalHoodAngle = 0;
 	private double goalRPS = 0;
 	private Goal currentGoalToAimTowards;
-	private Shot currentShotToAimTowards;
+	private Shot currentShotToAimTowards;		
 
 	public static Vision getInstance() {
 		if (instance == null) {

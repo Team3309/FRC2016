@@ -5,12 +5,14 @@ import java.util.LinkedList;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.team3309.lib.controllers.drive.DriveWhileOnADefenseController;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
+import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 
 public class CrossRockWall extends Operation {
 
 	@Override
 	public void perform() {
 		mDrive.setHighGear(false);
+		IntakePivot.getInstance().toUpPosition();
 		LinkedList<VelocityChangePoint> a = new LinkedList<VelocityChangePoint>();
 		a.add(new VelocityChangePoint(400, 40));
 		a.add(new VelocityChangePoint(400, 50));

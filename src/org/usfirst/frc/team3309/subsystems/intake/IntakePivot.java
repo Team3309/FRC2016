@@ -18,8 +18,8 @@ public class IntakePivot extends ControlledSubsystem {
 
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
-	private double UP_ANGLE = 4;
-	private double INTAKE_ANGLE = 95;
+	private double UP_ANGLE = 1;
+	private double INTAKE_ANGLE = 91;
 	// up = 4, intake_angle = 92;
 	private double goalAngle = INTAKE_ANGLE;
 	private boolean isAtHighPoint = false;
@@ -93,7 +93,7 @@ public class IntakePivot extends ControlledSubsystem {
 		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
-				output = .04;
+				output = .08;
 			} else {
 				output = .08;
 			}
@@ -176,7 +176,7 @@ public class IntakePivot extends ControlledSubsystem {
 	@Override
 	public void manualControl() {
 		if (KragerMath.threshold(Controls.operatorController.getLeftY()) == 0) {
-			this.setIntakePivot(.073309);
+			this.setIntakePivot(.0);
 		} else {
 			this.setIntakePivot(0.75 * KragerMath.threshold(Controls.operatorController.getLeftY()));
 		}

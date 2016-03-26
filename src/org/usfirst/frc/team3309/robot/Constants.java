@@ -5,7 +5,7 @@ public class Constants {
 	public static boolean IS_HOOD_SENSOR_REVERSED_COMP = true;
 	public static double HOOD_BOTTOM_VALUE_COMP = -84;
 	public static double HOOD_BOTTOM_VALUE_PRACTICE = -165.0;
-	public static double PIVOT_TOP_VALUE_COMP = 306;
+	public static double PIVOT_TOP_VALUE_COMP = -56;
 	public static double PIVOT_TOP_VALUE_PRACTICE = -40;
 
 	public static boolean isComp = true;

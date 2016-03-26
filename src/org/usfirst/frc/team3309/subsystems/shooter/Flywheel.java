@@ -103,11 +103,13 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getXBut()) {
 			aimVelRPS = 180;
 		} else if (Controls.operatorController.getYBut()) {
-			 aimVelRPS = SmartDashboard.getNumber("TEST RPS");
-			//aimVelRPS = 120;
+			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
+			// aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				aimVelRPS = Vision.getInstance().getShotToAimTowards().getGoalRPS();
+			} else {
+				aimVelRPS = 140;
 			}
 		} else {
 			offset = 0;
@@ -183,7 +185,6 @@ public class Flywheel extends ControlledSubsystem {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
 
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
@@ -209,9 +210,13 @@ public class Flywheel extends ControlledSubsystem {
 	public double getPercent() {
 		if (aimVelRPS == 0)
 			return 0;
-		return (double) curVel/(aimVelRPS - 10) * 100;
+		double x = (double) curVel / (aimVelRPS - 10) * 100;
+		if (x > 100) {
+			x = 100;
+		}
+		return x;
 	}
-	
+
 	@Override
 	public void sendToSmartDash() {
 		teleopController.sendToSmartDash();
