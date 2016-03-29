@@ -5,6 +5,7 @@ import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
@@ -85,7 +86,11 @@ public class Flywheel extends ControlledSubsystem {
 
 	@Override
 	public void updateAuto() {
-		curVel = this.getRPS();
+		try {
+			curVel = this.getRPS();
+		} catch (SensorDoesNotReturnException e) {
+			this.setShooter(.7);
+		}
 		this.aimVelRPS = this.autoVel;
 		shootLikeRobie();
 	}
@@ -94,7 +99,12 @@ public class Flywheel extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		// manualControl();
-		curVel = this.getRPS();
+		try {
+			curVel = this.getRPS();
+		} catch (SensorDoesNotReturnException e) {
+			this.manualControl();
+			return;
+		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
 			aimVelRPS = 103;
@@ -227,7 +237,7 @@ public class Flywheel extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " Right", rightSpark.getSpeed());
 	}
 
-	private double getRPS() {
+	private double getRPS() throws SensorDoesNotReturnException {
 		pastVel = Sensors.getShooterRPS();
 		return Sensors.getShooterRPS();
 	}
@@ -249,12 +259,16 @@ public class Flywheel extends ControlledSubsystem {
 	}
 
 	public boolean isShooterInRange() {
-		if (this.getRPS() < aimVelRPS + 6 && this.getRPS() > aimVelRPS - 6)
-			return true;
+		try {
+			if (this.getRPS() < aimVelRPS + 6 && this.getRPS() > aimVelRPS - 6)
+				return true;
+		} catch (SensorDoesNotReturnException e) {
+			return false;
+		}
 		return false;
 	}
 
-	private double getRPM() {
+	private double getRPM() throws SensorDoesNotReturnException {
 		return 60 * Sensors.getShooterRPS();
 	}
 

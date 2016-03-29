@@ -61,6 +61,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Robot INIT");
 		Sensors.init();
+		System.out.println("Sensors INIT");
 		try {
 
 		} catch (Exception e) {
@@ -149,7 +150,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	// Init to Tele
-	public void teleopInit() {
+	public void teleopInit() 
+	{
 		Drive.getInstance().initTeleop();
 		Shooter.getInstance().initTeleop();
 		Intake.getInstance().initTeleop();
@@ -157,29 +159,40 @@ public class Robot extends IterativeRobot {
 		Compressor compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
 		compressor.start();
-
+		System.out.println("Teleop INIT");
 	}
 
 	Timer time = new Timer();
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-
+		
 		time.start();
 		time.reset();
+		//Need to insert a if(visionClientConnected) to only run this code if the client is connected, like, if client is actually rx data from server
+		/*
 		List<Goal> goals = Vision.getInstance().getGoals();
 		if (goals.size() > 0) {
 			System.out.println("Y: " + goals.get(0).y);
 			SmartDashboard.putNumber("Y Value", goals.get(0).y);
 		}
+		*/
 		// Update the subsystems
 		Drive.getInstance().updateTeleop();
 		//Drive.getInstance().sendToSmartDash();
-		Shooter.getInstance().updateTeleop();
+		//TODO: Fix the method below to make it non-blocking
+		Shooter.getInstance().updateTeleop(); //This method blocks somewhere, probably somewhere where it interfaces with the Vision Client
+		
+
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().updateTeleop();
+		Intake.getInstance().manualControl();
 		Intake.getInstance().sendToSmartDash();
 		IndicatingLights.getInstance().update();
+		
+		
+		//Set loop speed
+		double timeItTook = time.get();
+		System.out.println("IT Took " + timeItTook + " ms");
 		try {
 			Thread.sleep(30);
 		} catch (InterruptedException e) {

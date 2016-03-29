@@ -109,7 +109,7 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void updateAuto() {
-		double output = -teleopController.getOutputSignal(getInputState()).getMotor();
+		double output = -autoController.getOutputSignal(getInputState()).getMotor();
 		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
@@ -176,7 +176,7 @@ public class IntakePivot extends ControlledSubsystem {
 	@Override
 	public void manualControl() {
 		if (KragerMath.threshold(Controls.operatorController.getLeftY()) == 0) {
-			this.setIntakePivot(.0);
+			this.setIntakePivot(.075);
 		} else {
 			this.setIntakePivot(0.75 * KragerMath.threshold(Controls.operatorController.getLeftY()));
 		}

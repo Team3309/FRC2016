@@ -87,18 +87,25 @@ public class Sensors {
 	}
 
 	// Shooter
-	public static double getShooterRPS() {
+	public static double getShooterRPS() throws SensorDoesNotReturnException {
 		double currentShooter = (1 / shooterEncoder.getPeriod());
 		if (Math.abs(1 / shooterEncoder.getPeriod()) - (pastShooter) > 250)
-			return pastShooter;
+			throw new SensorDoesNotReturnException();
 		pastShooter = currentShooter;
+
 		return currentShooter;
 	}
 
-	public static double getHoodAngle() {
+	public static double getHoodAngle() throws SensorDoesNotReturnException {
 		double hoodAngle = Constants.getHoodBottomValue()
 				- ((1000000.0 * (hoodEncoder.getPeriod())) * (360.0 / 4096.0));
+		/*
+		 * if (hoodAngle > 360) hoodAngle = hoodAngle % 360; if (hoodAngle <
+		 * -20) hoodAngle = -1 * (hoodAngle % 360);
+		 */
+
 		while (hoodAngle > 360 || hoodAngle < -20) {
+			System.out.println("HOOD ANGLE IS " + hoodAngle);
 			if (hoodAngle > 360) {
 				hoodAngle -= 360;
 			}

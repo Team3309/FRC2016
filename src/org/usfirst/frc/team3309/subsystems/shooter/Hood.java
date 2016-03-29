@@ -7,6 +7,7 @@ import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
@@ -59,7 +60,12 @@ public class Hood extends ControlledSubsystem {
 
 	@Override
 	public void updateTeleop() {
-		curAngle = Sensors.getHoodAngle();
+		try {
+			curAngle = Sensors.getHoodAngle();
+		}catch (SensorDoesNotReturnException e) {
+			this.manualControl();
+			return;
+		}
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
@@ -93,7 +99,11 @@ public class Hood extends ControlledSubsystem {
 	@Override
 	public void updateAuto() {
 		double output = 0;
-		curAngle = Sensors.getHoodAngle();
+		try {
+			curAngle = Sensors.getHoodAngle();
+		}catch (SensorDoesNotReturnException e) {
+			return;
+		}
 		if (goalAngle >= 0) {
 			output = this.autoController.getOutputSignal(getInputState()).getMotor();
 		}
@@ -109,7 +119,11 @@ public class Hood extends ControlledSubsystem {
 			autoController.sendToSmartDash();
 		} else
 			teleopController.sendToSmartDash();
-		SmartDashboard.putNumber(this.getName() + " angle", Sensors.getHoodAngle());
+		try {
+			SmartDashboard.putNumber(this.getName() + " angle", Sensors.getHoodAngle());
+		}catch (SensorDoesNotReturnException e) {
+			SmartDashboard.putNumber(this.getName() + " angle", -100000);
+		}
 		SmartDashboard.putNumber(this.getName() + " goal angle", goalAngle);
 		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.get());
 	}
@@ -127,7 +141,6 @@ public class Hood extends ControlledSubsystem {
 
 	@Override
 	public void manualControl() {
-		curAngle = Sensors.getHoodAngle();
 		this.setHood(KragerMath.threshold(Controls.operatorController.getRightY()));
 	}
 
