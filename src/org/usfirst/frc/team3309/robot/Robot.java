@@ -34,6 +34,7 @@ import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos4ToCenter;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos5ToRight;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
+import org.usfirst.frc.team3309.subsystems.Climber;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
@@ -56,6 +57,8 @@ public class Robot extends IterativeRobot {
 	private SendableChooser mainAutoChooser = new SendableChooser();
 	private SendableChooser defenseAutoChooser = new SendableChooser();
 	private SendableChooser startingPositionAutoChooser = new SendableChooser();
+
+	private final double LOOP_SPEED_MS = 40;
 
 	// Runs when Robot is turned on
 	public void robotInit() {
@@ -117,7 +120,7 @@ public class Robot extends IterativeRobot {
 	// Called repeatedly in disabled mode
 	public void disabledPeriodic() {
 		Vision.getInstance().setLight(0);
-		//IndicatingLights.getInstance().update();
+		// IndicatingLights.getInstance().update();
 	}
 
 	// Init to Auto
@@ -141,7 +144,7 @@ public class Robot extends IterativeRobot {
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
 		Drive.getInstance().updateAuto();
-		//Drive.getInstance().sendToSmartDash();
+		// Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();
 		Intake.getInstance().updateAuto();
@@ -150,11 +153,11 @@ public class Robot extends IterativeRobot {
 	}
 
 	// Init to Tele
-	public void teleopInit() 
-	{
+	public void teleopInit() {
 		Drive.getInstance().initTeleop();
 		Shooter.getInstance().initTeleop();
 		Intake.getInstance().initTeleop();
+		Climber.getInstance().initTeleop();
 		Vision.getInstance().setLight(0);
 		Compressor compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
@@ -166,38 +169,39 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during operator control
 	public void teleopPeriodic() {
-		
+
 		time.start();
 		time.reset();
-		//Need to insert a if(visionClientConnected) to only run this code if the client is connected, like, if client is actually rx data from server
 		/*
-		List<Goal> goals = Vision.getInstance().getGoals();
-		if (goals.size() > 0) {
-			System.out.println("Y: " + goals.get(0).y);
-			SmartDashboard.putNumber("Y Value", goals.get(0).y);
-		}
-		*/
+		 * List<Goal> goals = Vision.getInstance().getGoals(); if (goals.size()
+		 * > 0) { System.out.println("Y: " + goals.get(0).y);
+		 * SmartDashboard.putNumber("Y Value", goals.get(0).y); }
+		 */
 		// Update the subsystems
 		Drive.getInstance().updateTeleop();
-		//Drive.getInstance().sendToSmartDash();
-		//TODO: Fix the method below to make it non-blocking
-		Shooter.getInstance().updateTeleop(); //This method blocks somewhere, probably somewhere where it interfaces with the Vision Client
-		
-
+		// Drive.getInstance().sendToSmartDash();
+		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();
-		Intake.getInstance().manualControl();
+		Intake.getInstance().updateTeleop();
 		Intake.getInstance().sendToSmartDash();
+		Climber.getInstance().updateTeleop();
 		IndicatingLights.getInstance().update();
-		
-		
-		//Set loop speed
+
+		// Set loop speed
 		double timeItTook = time.get();
-		System.out.println("IT Took " + timeItTook + " ms");
+		long overhead = (long) (LOOP_SPEED_MS - (1000 * timeItTook));
+		// System.out.println("IT Took " + timeItTook + " ms");
+		// System.out.println("Loop overhead: " + overhead + " ms");
+
 		try {
-			Thread.sleep(30);
-		} catch (InterruptedException e) {
+			if (overhead > 5) {
+				Thread.sleep(overhead);
+			} else {
+				Thread.sleep(5);
+				System.out.println("Loop Speed too fast!!!");
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// System.out.println(time.get());
 	}
 }

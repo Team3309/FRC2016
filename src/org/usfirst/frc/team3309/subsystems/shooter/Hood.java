@@ -40,11 +40,11 @@ public class Hood extends ControlledSubsystem {
 		this.autoController = new PIDPositionController(0.51, 0.001, .014);
 		((PIDController) this.teleopController).kILimit = .2;
 		this.teleopController.setName("Hood Angle");
-		((PIDController) this.teleopController).setTHRESHOLD(.4
+		((PIDController) this.teleopController).setTHRESHOLD(.6
 				);
 		((PIDController) this.autoController).kILimit = .2;
 		this.autoController.setName("Hood Angle");
-		((PIDController) this.autoController).setTHRESHOLD(.4);
+		((PIDController) this.autoController).setTHRESHOLD(.6);
 		SmartDashboard.putNumber("Test Angle", 15);
 	}
 

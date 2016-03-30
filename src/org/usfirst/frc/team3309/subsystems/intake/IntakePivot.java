@@ -42,6 +42,7 @@ public class IntakePivot extends ControlledSubsystem {
 		autoController.setName("Pivot");
 		teleopController.setName("Pivot");
 		goalAngle = INTAKE_ANGLE;
+		//intakePivot.
 	}
 
 	@Override
@@ -170,13 +171,13 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public void setIntakePivot(double power) {
-		this.intakePivot.set(-power);
+		this.intakePivot.set(power);
 	}
 
 	@Override
 	public void manualControl() {
 		if (KragerMath.threshold(Controls.operatorController.getLeftY()) == 0) {
-			this.setIntakePivot(.075);
+			this.setIntakePivot(.00);
 		} else {
 			this.setIntakePivot(0.75 * KragerMath.threshold(Controls.operatorController.getLeftY()));
 		}

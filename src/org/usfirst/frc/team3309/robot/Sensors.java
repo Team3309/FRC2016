@@ -97,6 +97,7 @@ public class Sensors {
 	}
 
 	public static double getHoodAngle() throws SensorDoesNotReturnException {
+		//System.out.println("");
 		double hoodAngle = Constants.getHoodBottomValue()
 				- ((1000000.0 * (hoodEncoder.getPeriod())) * (360.0 / 4096.0));
 		/*
@@ -104,14 +105,20 @@ public class Sensors {
 		 * -20) hoodAngle = -1 * (hoodAngle % 360);
 		 */
 
+		int counts = 0;
 		while (hoodAngle > 360 || hoodAngle < -20) {
-			System.out.println("HOOD ANGLE IS " + hoodAngle);
+			//System.out.println("HOOD ANGLE IS " + hoodAngle);
+
 			if (hoodAngle > 360) {
 				hoodAngle -= 360;
 			}
 			if (hoodAngle < -20) {
 				hoodAngle += 360;
 			}
+			if (counts > 1000) {
+				throw new SensorDoesNotReturnException();
+			}
+			counts++;
 		}
 
 		return hoodAngle;

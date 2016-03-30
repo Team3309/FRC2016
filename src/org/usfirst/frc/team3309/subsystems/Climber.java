@@ -1,14 +1,17 @@
 package org.usfirst.frc.team3309.subsystems;
 
-import org.team3309.lib.KragerSystem;
-import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
-import org.usfirst.frc.team3309.subsystems.climber.Carriage;
-import org.usfirst.frc.team3309.subsystems.shooter.Hood;
+import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.controllers.statesandsignals.InputState;
+import org.usfirst.frc.team3309.driverstation.Controls;
 
-public class Climber extends KragerSystem {
+import edu.wpi.first.wpilibj.Solenoid;
+
+public class Climber extends ControlledSubsystem {
 	private static Climber instance;
-	private static Carriage mCarriage = Carriage.getInstance();
-	private static Hood mHood = Hood.getInstance();
+
+	private Solenoid pivot = new Solenoid(1);
+	private Solenoid leftCarriage = new Solenoid(2);
+	private Solenoid rightCarriage = new Solenoid(3);
 
 	/**
 	 * Singleton Pattern
@@ -38,25 +41,37 @@ public class Climber extends KragerSystem {
 
 	@Override
 	public void updateTeleop() {
-		mCarriage.updateTeleop();
-		mHood.updateTeleop();
+		System.out.println(Controls.operatorController.getPOV());
+		if (Controls.operatorController.getPOV() == 0) {
+			pivot.set(true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			rightCarriage.set(true);
+			leftCarriage.set(true);
+		}
 	}
 
 	@Override
 	public void updateAuto() {
-		mCarriage.updateAuto();
-		mHood.updateAuto();
+
 	}
 
 	@Override
 	public void sendToSmartDash() {
-		mCarriage.sendToSmartDash();
-		mHood.sendToSmartDash();
+
 	}
 
 	@Override
 	public void manualControl() {
-		mCarriage.manualControl();
-		mHood.manualControl();
+
+	}
+
+	@Override
+	public InputState getInputState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

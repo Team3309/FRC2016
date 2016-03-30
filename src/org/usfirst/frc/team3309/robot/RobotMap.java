@@ -43,6 +43,8 @@ public class RobotMap {
 	// Indicators
 	public static final int INDICATOR_LIGHTS_BIT_0 = 11;
 	public static final int INDICATOR_LIGHTS_BIT_1 = 12;
+	
+	public static final int FLEX_SENSORS_ANALOG = 2;
 	// public static final int SHOOTER_COUNTER = 6;
 
 }

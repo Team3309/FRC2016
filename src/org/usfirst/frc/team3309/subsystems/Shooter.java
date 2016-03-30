@@ -1,9 +1,12 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.KragerSystem;
+import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Hood;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Shooter extends KragerSystem {
 
@@ -49,7 +52,12 @@ public class Shooter extends KragerSystem {
 	public void updateTeleop() {
 		mFlywheel.updateTeleop();
 		mHood.updateTeleop();
-		mFeedyWheel.manualControl();
+		mFeedyWheel.updateTeleop();
+		if (mFlywheel.isShooterInRange() && mHood.isOnTarget() && mFlywheel.getAimVelRPS() != 0) {
+			Controls.operatorController.setRumble((float) 0.9);
+		} else {
+			Controls.operatorController.setRumble((float) 0);
+		}
 	}
 
 	@Override

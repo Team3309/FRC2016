@@ -6,9 +6,9 @@ public class Constants {
 	public static double HOOD_BOTTOM_VALUE_COMP = -84;
 	public static double HOOD_BOTTOM_VALUE_PRACTICE = -165.0;
 	public static double PIVOT_TOP_VALUE_COMP = -56;
-	public static double PIVOT_TOP_VALUE_PRACTICE = -40;
+	public static double PIVOT_TOP_VALUE_PRACTICE = -103;
 
-	public static boolean isComp = true;
+	public static boolean isComp = false;
 
 	public static double valueForCompOrPractice(double compValue, double practiceValue) {
 		if (isComp) {
