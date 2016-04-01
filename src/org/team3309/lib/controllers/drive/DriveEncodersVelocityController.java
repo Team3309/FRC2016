@@ -216,15 +216,19 @@ public class DriveEncodersVelocityController extends Controller {
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL) {
 		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL;
 		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL;
+		/*if (encoderChanges.size() == 1) {
 			encoderChanges = new LinkedList<VelocityChangePoint>();
 			encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
+		}*/
 	}
 
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL_RIGHT, double mAX_ENCODER_VEL_LEFT) {
 		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL_RIGHT;
 		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL_LEFT;
+		/*if (encoderChanges.size() == 1) {
 			encoderChanges = new LinkedList<VelocityChangePoint>();
 			encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
+		}*/
 	}
 
 	public void setRampUp(boolean bool) {
