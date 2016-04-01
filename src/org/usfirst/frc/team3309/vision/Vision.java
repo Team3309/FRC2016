@@ -29,11 +29,17 @@ public class Vision implements Runnable {
 	public double BRIGHTNESS = .3;
 
 	// These are the shots
-	private static Shot[] shots = { new Shot(140, 27.5, .57291), new Shot(140, 31.3003309, 0.308),
+/*	private static Shot[] shots = { new Shot(140, 27.5, .57291), new Shot(140, 31.3003309, 0.308),
 			new Shot(140, 33.303309, 0.091666), new Shot(160, 33.8, .0708), new Shot(160, 34.2, -.04375),
 			new Shot(160, 34.9, -.164), new Shot(160, 37.9, -.2541), new Shot(160, 38.2, -.3565),
 			new Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(180, 42.4, -.702),
 			new Shot(180, 46, -.777), new Shot(180, 42.5, -.94555) };
+			*/
+	private static Shot[] shots = { new Shot(120, 29, .681), new Shot(120, 31.4, 0.450),
+			new Shot(120, 33.4, 0.308), new Shot(120, 35.4, .148), new Shot(120, 36.4, -.004),
+			new Shot(140, 38.5, -.005), new Shot(140, 40.0, -.140), new Shot(140, 42.4, -.279),
+			new Shot(140, 44, -.4), new Shot(140, 45.3, -.490), new Shot(160, 46.3, -.491),
+			new Shot(160, 47.4, -.59), new Shot(160, 50.9, -.94555) };
 	// new Shot(goalRPS, goalHood, y)
 
 	private static Vision instance;
@@ -128,7 +134,7 @@ public class Vision implements Runnable {
 										/ (previousShot.getYCoordinate() - shot.getYCoordinate());
 								double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
-								shotToBeSet.setGoalHoodAngle(newOutput + 1);
+								shotToBeSet.setGoalHoodAngle(newOutput );
 							}
 						} else {
 							if (i != shots.length - 1) {
@@ -137,7 +143,7 @@ public class Vision implements Runnable {
 										/ (upperShot.getYCoordinate() - shot.getYCoordinate());
 								double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
-								shotToBeSet.setGoalHoodAngle(newOutput + 1);
+								shotToBeSet.setGoalHoodAngle(newOutput );
 							}
 						}
 					}

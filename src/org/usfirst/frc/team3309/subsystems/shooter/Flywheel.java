@@ -102,8 +102,8 @@ public class Flywheel extends ControlledSubsystem {
 		try {
 			curVel = this.getRPS();
 		} catch (SensorDoesNotReturnException e) {
-			this.manualControl();
-			return;
+			//this.manualControl();
+			//return;
 		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
@@ -118,6 +118,7 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				aimVelRPS = Vision.getInstance().getShotToAimTowards().getGoalRPS();
+				//aimVelRPS = 140;
 			} else {
 				aimVelRPS = 140;
 			}

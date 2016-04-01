@@ -19,9 +19,17 @@ public class IntakePivot extends ControlledSubsystem {
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
 	private double UP_ANGLE = 1;
-	private double INTAKE_ANGLE = 91;
+	private double INTAKE_ANGLE = 88.3309;
 	// up = 4, intake_angle = 92;
 	private double goalAngle = INTAKE_ANGLE;
+	public double getGoalAngle() {
+		return goalAngle;
+	}
+
+	public void setGoalAngle(double goalAngle) {
+		this.goalAngle = goalAngle;
+	}
+
 	private boolean isAtHighPoint = false;
 	private boolean isButtonBeingHeld = false;
 
@@ -36,7 +44,12 @@ public class IntakePivot extends ControlledSubsystem {
 	// .007, 0, .016
 	private IntakePivot(String name) {
 		super(name);
-		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		// aBS
+		//intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		// Relative
+		intakePivot.reverseSensor(true);
+		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		
 		teleopController = new PIDPositionController(.012, 0, .005);
 		autoController = new PIDPositionController(.012, 0, .005);
 		autoController.setName("Pivot");
@@ -99,6 +112,12 @@ public class IntakePivot extends ControlledSubsystem {
 				output = .08;
 			}
 		}
+		if (Controls.driverController.getA()) {
+			intakePivot.setEncPosition(0);
+			intakePivot.setPosition(0);
+			intakePivot.setPulseWidthPosition(0);
+			
+		}
 		if (Math.abs(output) > .5) {
 			if (output > 0)
 				output = .5;
@@ -111,7 +130,7 @@ public class IntakePivot extends ControlledSubsystem {
 	@Override
 	public void updateAuto() {
 		double output = -autoController.getOutputSignal(getInputState()).getMotor();
-		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
+		if ((this.getPivotAngle() > 160 && this.goalAngle > -5)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
 				output = .04;
@@ -129,8 +148,9 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public double getPivotAngle() {
-		double curAngle = Constants.getPivotTopValue()
-				- ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
+		//double curAngle = Constants.getPivotTopValue()
+			//	- ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
+		double curAngle = -(intakePivot.getEncPosition()  * (360.0 / 4096.0) )/250;
 		// System.out.println("INTAKE PIVOT: " + curAngle);
 		while (curAngle > 360) {
 			curAngle -= 360;

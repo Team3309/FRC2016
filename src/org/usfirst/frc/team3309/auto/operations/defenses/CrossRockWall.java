@@ -26,6 +26,7 @@ public class CrossRockWall extends Operation {
 			this.waitForController(driveOverWall, 50);
 		} catch (Exception e) {
 		}
+		this.driveEncoder(10, 40, 1); // stopping effect
 		//super.driveEncoder(800, 150, 50, a);
 	}
 

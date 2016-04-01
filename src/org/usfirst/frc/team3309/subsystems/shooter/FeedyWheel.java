@@ -64,11 +64,11 @@ public class FeedyWheel extends ControlledSubsystem {
 		this.manualControl();
 		// }
 		System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
-		if (Math.abs(currentFlex - pastFlex) > .005 && this.feedyWheelSpark.get() != 0)
-			Controls.driverController.setRumble((float) 0.9);
+		/*if (Math.abs(currentFlex - pastFlex) > .005 && this.feedyWheelSpark.get() != 0)
+			//Controls.driverController.setRumble((float) 0.9);
 		else {
-			Controls.driverController.setRumble((float) 0);
-		}
+			//Controls.driverController.setRumble((float) 0);
+		}*/
 		pastFlex = currentFlex;// averages.getLast();
 	}
 

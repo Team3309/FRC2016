@@ -118,6 +118,7 @@ public class DriveEncodersVelocityController extends Controller {
 		}
 		double rightAimVel = outputOfTurningController.getMotor();
 		double leftAimVel = outputOfTurningController.getMotor();
+		System.out.println("CODE SAYS RIGHT AIM " + rightAimVel + " LEFT AIM: " + leftAimVel);
 		if (Math.abs(rightAimVel) > MAX_ENCODER_VEL_RIGHT) {
 			if (rightAimVel > 0) {
 				rightAimVel = MAX_ENCODER_VEL_RIGHT;
@@ -132,6 +133,7 @@ public class DriveEncodersVelocityController extends Controller {
 				leftAimVel = -MAX_ENCODER_VEL_LEFT;
 			}
 		}
+		System.out.println("AFTER, CODE SAYS RIGHT AIM " + rightAimVel + " LEFT AIM: " + leftAimVel);
 		if (isRampUp) {
 			if (rightAimVel < 0)
 				rightAimVel = pastAim - MAX_ACC;
@@ -214,11 +216,15 @@ public class DriveEncodersVelocityController extends Controller {
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL) {
 		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL;
 		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL;
+			encoderChanges = new LinkedList<VelocityChangePoint>();
+			encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
 	}
 
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL_RIGHT, double mAX_ENCODER_VEL_LEFT) {
 		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL_RIGHT;
 		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL_LEFT;
+			encoderChanges = new LinkedList<VelocityChangePoint>();
+			encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
 	}
 
 	public void setRampUp(boolean bool) {

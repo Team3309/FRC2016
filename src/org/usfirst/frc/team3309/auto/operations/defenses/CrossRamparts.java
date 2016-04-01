@@ -4,7 +4,9 @@ public class CrossRamparts extends Operation {
 
 	@Override
 	public void perform() {
-		// TODO Auto-generated method stub
+		CrossRockWall cross = new CrossRockWall();
+		cross.perform();
+		this.driveEncoder(60, 400, 2);
 
 	}
 }

@@ -15,6 +15,7 @@ import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class RoutineBased {
@@ -177,7 +178,7 @@ public class RoutineBased {
 		DriveAngleVelocityController x = new DriveAngleVelocityController(goal);
 		Drive.getInstance().setAutoController(x);
 		try {
-			this.waitForController(x, 4);
+			this.waitForController(x, timeout);
 		} catch (Exception e) {
 
 		}
@@ -188,7 +189,7 @@ public class RoutineBased {
 		Shot shot = Vision.getInstance().getShotToAimTowards();
 		Timer waitTimer = new Timer();
 		waitTimer.start();
-		while (shot == null) {
+		while (shot == null && DriverStation.getInstance().isAutonomous()) {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
 			shot = Vision.getInstance().getShotToAimTowards();

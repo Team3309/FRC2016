@@ -4,7 +4,8 @@ public class CrossRoughTerrain extends Operation{
 
 	@Override
 	public void perform() {
-		
+		CrossRockWall cross = new CrossRockWall();
+		cross.perform();
 	}
 	
 }

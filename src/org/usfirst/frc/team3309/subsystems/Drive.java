@@ -104,6 +104,7 @@ public class Drive extends ControlledSubsystem {
 			if (this.desiredShot != null) {
 				System.out.println("ACQUIRE NEW ANGLE");
 				toVision();
+				Controls.driverController.setRumble(1);
 			} else {
 				System.out.println("Vision does not see anything");
 				isReset = false;
@@ -114,6 +115,7 @@ public class Drive extends ControlledSubsystem {
 			isReset = false;
 			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 			this.setTeleopController(new DriveCheezyDriveEquation());
+			Controls.driverController.setRumble(0);
 		}
 		Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 
@@ -291,11 +293,11 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		if (!DriverStation.getInstance().isAutonomous())
+		/*if (!DriverStation.getInstance().isAutonomous())
 			teleopController.sendToSmartDash();
 		else {
 			autoController.sendToSmartDash();
-		}
+		}*/
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());

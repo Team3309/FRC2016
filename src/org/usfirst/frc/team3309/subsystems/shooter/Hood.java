@@ -81,10 +81,10 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShotToAimTowards() != null)
 				goalAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
 			else
-				goalAngle = 3;
+				goalAngle = 25;
 			System.out.println("Goal Angle: " + goalAngle);
 		} else {
-			goalAngle = 3;
+			goalAngle = 4;
 		}
 		if (goalAngle >= 0) {
 			output = this.teleopController.getOutputSignal(getInputState()).getMotor();

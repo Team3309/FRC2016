@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  */
 public class Sensors {
-	public static Encoder leftDrive;
-	public static Encoder rightDrive;
+	private static Encoder leftDrive;
+	private static Encoder rightDrive;
 	private static Counter shooterEncoder;
 	private static Encoder hookEncoder;
 	private static Counter hoodEncoder;
@@ -79,11 +79,11 @@ public class Sensors {
 	}
 
 	public static double getLeftDrive() {
-		return leftDrive.get() / 100;
+		return -leftDrive.get() / 100;
 	}
 
 	public static double getLeftDriveVel() {
-		return leftDrive.getRate() / 100;
+		return -leftDrive.getRate() / 100;
 	}
 
 	// Shooter

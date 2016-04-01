@@ -14,7 +14,7 @@ public class CustomAuto extends AutoRoutine {
 	public void routine() throws TimedOutException, InterruptedException {
 		defense.perform();
 		Thread.sleep(200);
-		this.driveEncoder(10, 40, 1); // stopping effect
+		
 		mDrive.setHighGear(true);
 		Hood.getInstance().setGoalAngle(30);
 		Flywheel.getInstance().setAimVelRPSAuto(140);
