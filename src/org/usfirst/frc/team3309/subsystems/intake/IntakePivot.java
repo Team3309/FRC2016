@@ -19,9 +19,10 @@ public class IntakePivot extends ControlledSubsystem {
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
 	private double UP_ANGLE = 1;
-	private double INTAKE_ANGLE = 88.3309;
+	private double INTAKE_ANGLE = 90.3309;
 	// up = 4, intake_angle = 92;
 	private double goalAngle = INTAKE_ANGLE;
+
 	public double getGoalAngle() {
 		return goalAngle;
 	}
@@ -45,22 +46,22 @@ public class IntakePivot extends ControlledSubsystem {
 	private IntakePivot(String name) {
 		super(name);
 		// aBS
-		//intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		// intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		// Relative
 		intakePivot.reverseSensor(true);
 		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		
+
 		teleopController = new PIDPositionController(.012, 0, .005);
 		autoController = new PIDPositionController(.012, 0, .005);
 		autoController.setName("Pivot");
 		teleopController.setName("Pivot");
 		goalAngle = INTAKE_ANGLE;
-		//intakePivot.
+		// intakePivot.
 	}
 
 	@Override
 	public void initTeleop() {
-
+		goalAngle = UP_ANGLE;
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class IntakePivot extends ControlledSubsystem {
 			intakePivot.setEncPosition(0);
 			intakePivot.setPosition(0);
 			intakePivot.setPulseWidthPosition(0);
-			
+
 		}
 		if (Math.abs(output) > .5) {
 			if (output > 0)
@@ -148,9 +149,9 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public double getPivotAngle() {
-		//double curAngle = Constants.getPivotTopValue()
-			//	- ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
-		double curAngle = -(intakePivot.getEncPosition()  * (360.0 / 4096.0) )/250;
+		// double curAngle = Constants.getPivotTopValue()
+		// - ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
+		double curAngle = -(intakePivot.getEncPosition() * (360.0 / 4096.0)) / 250;
 		// System.out.println("INTAKE PIVOT: " + curAngle);
 		while (curAngle > 360) {
 			curAngle -= 360;
@@ -191,7 +192,7 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public void setIntakePivot(double power) {
-		this.intakePivot.set(power);
+		this.intakePivot.set(-power);
 	}
 
 	@Override

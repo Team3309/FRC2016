@@ -42,7 +42,7 @@ public class Climber extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		//System.out.println(Controls.operatorController.getPOV());
-		if (Controls.operatorController.getPOV() == 0) {
+		if (Controls.operatorController.getPOV() == 90) {
 			pivot.set(true);
 			try {
 				Thread.sleep(1000);

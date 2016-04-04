@@ -29,6 +29,7 @@ public class Flywheel extends ControlledSubsystem {
 
 	private double pastVel = 0;
 
+	private double lastVisionShot;
 	private boolean hasGoneBack = false;
 	/**
 	 * Value added to maxVelRPM
@@ -107,28 +108,34 @@ public class Flywheel extends ControlledSubsystem {
 		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
-			aimVelRPS = 103;
+			aimVelRPS = 120;
 		} else if (Controls.operatorController.getB()) {
-			aimVelRPS = 130;
+			aimVelRPS = 120;
 		} else if (Controls.operatorController.getXBut()) {
-			aimVelRPS = 180;
+			aimVelRPS = 160;
 		} else if (Controls.operatorController.getYBut()) {
 			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 			// aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				aimVelRPS = Vision.getInstance().getShotToAimTowards().getGoalRPS();
+				this.lastVisionShot = Vision.getInstance().getShotToAimTowards().getGoalRPS();
 				//aimVelRPS = 140;
 			} else {
 				aimVelRPS = 140;
 			}
-		} else {
+		} else if (Controls.operatorController.getPOV() == 0){
+			aimVelRPS = this.lastVisionShot;
+		}else { 
 			offset = 0;
 			aimVelRPS = 0;
 			aimAccRPS = 0;
 			hasGoneBack = false;
 		}
 		shootLikeRobie();
+		
+		
+		
 	}
 
 	/**

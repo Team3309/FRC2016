@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.drive.DriveAngleController;
+import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
 import org.team3309.lib.controllers.drive.FaceVisionTargetController;
 import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
@@ -110,6 +111,14 @@ public class Drive extends ControlledSubsystem {
 				isReset = false;
 			}
 		} else if (Controls.operatorController.getBack()) {
+
+		} else if (Controls.operatorController.getLB() && !isReset) {
+			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(this.getAngle());
+			driveAngleHardCore.setCompletable(false);
+			driveAngleHardCore.turningController.setConstants(6, 0, 16);
+			this.setTeleopController(driveAngleHardCore);
+			isReset = true;
+		} else if (Controls.operatorController.getLB()) {
 
 		} else {
 			isReset = false;
@@ -293,11 +302,11 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		/*if (!DriverStation.getInstance().isAutonomous())
-			teleopController.sendToSmartDash();
-		else {
-			autoController.sendToSmartDash();
-		}*/
+		/*
+		 * if (!DriverStation.getInstance().isAutonomous())
+		 * teleopController.sendToSmartDash(); else {
+		 * autoController.sendToSmartDash(); }
+		 */
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());

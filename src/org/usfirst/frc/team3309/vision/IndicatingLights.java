@@ -71,11 +71,14 @@ public class IndicatingLights {
 
 	public void update() {
 		if (Vision.getInstance().hasShot()) {
-			double azimuth = Vision.getInstance().getShotToAimTowards().getAzimuth();
-			if (Math.abs(azimuth) < THRESHOLD_FOR_AZIMUTH) {
-				this.setIndicators(IndicatorState.LOCKED);
-			} else {
-				this.setIndicators(IndicatorState.BLUE);
+			Shot shot = Vision.getInstance().getShotToAimTowards();
+			if (shot != null) {
+				double azimuth = shot.getAzimuth();
+				if (Math.abs(azimuth) < THRESHOLD_FOR_AZIMUTH) {
+					this.setIndicators(IndicatorState.LOCKED);
+				} else {
+					this.setIndicators(IndicatorState.BLUE);
+				}
 			}
 		} else {
 			this.setIndicators(IndicatorState.RED);

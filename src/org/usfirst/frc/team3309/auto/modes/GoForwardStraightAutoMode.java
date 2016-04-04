@@ -39,7 +39,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		LinkedList<VelocityChangePoint> w = new LinkedList<VelocityChangePoint>();
 		w.add(new VelocityChangePoint(50, 100));
 		w.add(new VelocityChangePoint(150, 150));
-		w.add(new VelocityChangePoint(80, 150, 220));
+		w.add(new VelocityChangePoint(80, 150, 230));
 		w.add(new VelocityChangePoint(150, 330));
 		goFast.setEncoderChanges(w);
 
@@ -84,35 +84,57 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		Thread.sleep(500);
 		// NOW Get Back
 		double angleBeforeVision = mDrive.getAngle();
-		
-		/// THIS IS ALL VISION 
+
+		/// THIS IS ALL VISION
 		Shot shot = Vision.getInstance().getShotToAimTowards();
 		Timer waitTimer = new Timer();
 		waitTimer.start();
+		double countInDirection = 0;
+		double direction = -1; // left first
 		while (shot == null) {
 			if (waitTimer.get() > 20)
 				throw new TimedOutException();
+			this.turnToAngle(mDrive.getAngle() + (5 * direction), 1);
+			countInDirection++;
+			if (countInDirection == 5) {
+				countInDirection = 0;
+				direction = -direction;
+			}
+			Thread.sleep(200);
 			shot = Vision.getInstance().getShotToAimTowards();
+
 			System.out.println("LOOKING");
 		}
 
 		mDrive.toVision();
-		//System.out.println("RPS: " + shot.getGoalRPS() + " angle: " + shot.getGoalHoodAngle());
+		// System.out.println("RPS: " + shot.getGoalRPS() + " angle: " +
+		// shot.getGoalHoodAngle());
 
 		try {
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() + 2);
 			Thread.sleep(1000);
 			mDrive.toVision();
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
-			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() + 2);
 		} catch (Exception e) {
 
 		}
 		try {
-			Thread.sleep(1100);
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		try {
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() + 2);
+		} catch (Exception e) {
+
+		}
+		try {
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -127,12 +149,11 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		FeedyWheel.getInstance().setFeedyWheel(0);
 		Flywheel.getInstance().setAimVelRPSAuto(0);
 		Hood.getInstance().setGoalAngle(4);
-		
-		//VISION ENDED
+
+		// VISION ENDED
 		mDrive.stopDrive();
 		Thread.sleep(15000);
-	
-		
+
 		this.toVision(20);
 		double errorFromStartingVision = mDrive.getAngle() - angleBeforeVision;
 		System.out.println("HERS SOME STUFF Vision: " + angleBeforeVision + " dis: " + this.DISTANCE_TO_GOAL
@@ -142,44 +163,36 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		mDrive.stopDrive();
 		Thread.sleep(15000);
 		/*
-		Sensors.resetDrive();
-		System.out.println("DISTANCE TO GO BACKL " + distanceToGoBack);
-		DriveEncodersVelocityController goTowardsGoalBack = new DriveEncodersVelocityController(
-				-Math.abs(distanceToGoBack) - 5);
-		goTowardsGoalBack.setMAX_ENCODER_VEL(150);
-		Drive.getInstance().setAutoController(goTowardsGoalBack);
-		try {
-			this.waitForController(goTowardsGoalBack, 90);
-		} catch (Exception e) {
-
-		}
-		mDrive.stopDrive();
-
-		DriveAngleVelocityController turnToGoalBack = new DriveAngleVelocityController(startAngle);
-		Drive.getInstance().setAutoController(turnToGoalBack);
-
-		try {
-			this.waitForController(turnToGoalBack, 4);
-		} catch (Exception e) {
-
-		}
-		mDrive.stopDrive();
-
-		Thread.sleep(15000);
-		/*Sensors.resetDrive();
-		DriveEncodersVelocityController xBack = new DriveEncodersVelocityController(-230);
-		xBack.setMAX_ENCODER_VEL(120);
-		LinkedList<VelocityChangePoint> a = new LinkedList<VelocityChangePoint>();
-		a.add(new VelocityChangePoint(60, 90));
-		xBack.setEncoderChanges(a);
-		Drive.getInstance().setAutoController(xBack);
-		try {
-			this.waitForController(xBack, 7);
-		} catch (Exception e) {
-
-		}
-		mDrive.stopDrive();
-*/
+		 * Sensors.resetDrive(); System.out.println("DISTANCE TO GO BACKL " +
+		 * distanceToGoBack); DriveEncodersVelocityController goTowardsGoalBack
+		 * = new DriveEncodersVelocityController( -Math.abs(distanceToGoBack) -
+		 * 5); goTowardsGoalBack.setMAX_ENCODER_VEL(150);
+		 * Drive.getInstance().setAutoController(goTowardsGoalBack); try {
+		 * this.waitForController(goTowardsGoalBack, 90); } catch (Exception e)
+		 * {
+		 * 
+		 * } mDrive.stopDrive();
+		 * 
+		 * DriveAngleVelocityController turnToGoalBack = new
+		 * DriveAngleVelocityController(startAngle);
+		 * Drive.getInstance().setAutoController(turnToGoalBack);
+		 * 
+		 * try { this.waitForController(turnToGoalBack, 4); } catch (Exception
+		 * e) {
+		 * 
+		 * } mDrive.stopDrive();
+		 * 
+		 * Thread.sleep(15000); /*Sensors.resetDrive();
+		 * DriveEncodersVelocityController xBack = new
+		 * DriveEncodersVelocityController(-230); xBack.setMAX_ENCODER_VEL(120);
+		 * LinkedList<VelocityChangePoint> a = new
+		 * LinkedList<VelocityChangePoint>(); a.add(new VelocityChangePoint(60,
+		 * 90)); xBack.setEncoderChanges(a);
+		 * Drive.getInstance().setAutoController(xBack); try {
+		 * this.waitForController(xBack, 7); } catch (Exception e) {
+		 * 
+		 * } mDrive.stopDrive();
+		 */
 	}
 
 }
