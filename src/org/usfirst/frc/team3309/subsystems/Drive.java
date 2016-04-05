@@ -210,6 +210,14 @@ public class Drive extends ControlledSubsystem {
 		return (Math.abs(Sensors.getLeftDrive()) + Math.abs(Sensors.getRightDrive())) / 2;
 	}
 
+	public double getLeftPower() {
+		return this.left.get();
+	}
+
+	public double getRightPower() {
+		return this.right.get();
+	}
+
 	/**
 	 * returns if the current average of encoders (aka distance traveled) is
 	 * close to the encoderGoal. Uses DRIVE_ENCODER_LENIENCY to tell if it is
@@ -330,7 +338,6 @@ public class Drive extends ControlledSubsystem {
 	}
 
 	public boolean isLowGear() {
-		// TODO Auto-generated method stub
 		return isLowGear;
 	}
 }
