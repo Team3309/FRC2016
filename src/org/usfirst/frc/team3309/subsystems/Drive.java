@@ -11,6 +11,7 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
@@ -160,23 +161,31 @@ public class Drive extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState input = new InputState();
-		try {
-			input.setAngularPos(Sensors.getAngle());
-		} catch (ExceptionInInitializerError e) {
-			for (StackTraceElement w : e.getStackTrace())
-				System.out.println(w);
-			System.out.println(e.getCause());
-		}
+		input.setAngularPos(Sensors.getAngle());
 		input.setAngularVel(Sensors.getAngularVel());
-		input.setLeftPos(Sensors.getLeftDrive());
-		input.setLeftVel(Sensors.getLeftDriveVel());
-		input.setRightVel(Sensors.getRightDriveVel());
-		input.setRightPos(Sensors.getRightDrive());
+		// Check and send off leftSide
+		try {
+			input.setLeftPos(Sensors.getLeftDrive());
+			input.setLeftVel(Sensors.getLeftDriveVel());
+		} catch (Exception e) {
+			// Way to show that the value is bad
+			input.setLeftPos(Double.MIN_VALUE);
+			input.setLeftVel(Double.MIN_VALUE);
+		}
+		// Check and send off rightSide
+		try {
+			input.setRightVel(Sensors.getRightDriveVel());
+			input.setRightPos(Sensors.getRightDrive());
+		} catch (Exception e) {
+			// Way to show that the value is bad
+			input.setRightVel(Double.MIN_VALUE);
+			input.setRightPos(Double.MIN_VALUE);
+		}
 		return input;
 	}
 
 	/**
-	 * Creates and runs a controller that gets the drive to the given setoiunt
+	 * Creates and runs a controller that gets the drive to the given setpoint
 	 * 
 	 * @param encoders
 	 *            goal encoder values
@@ -206,7 +215,7 @@ public class Drive extends ControlledSubsystem {
 	 * 
 	 * @return the average of the left and right to get the distance traveled
 	 */
-	public double getDistanceTraveled() {
+	public double getDistanceTraveled() throws SensorDoesNotReturnException {
 		return (Math.abs(Sensors.getLeftDrive()) + Math.abs(Sensors.getRightDrive())) / 2;
 	}
 
@@ -232,10 +241,12 @@ public class Drive extends ControlledSubsystem {
 		if (encoderGoal < 0) {
 			factor = -1;
 		}
-		if (getDistanceTraveled() * factor < encoderGoal + DRIVE_ENCODER_LENIENCY
-				&& factor * getDistanceTraveled() > encoderGoal - DRIVE_ENCODER_LENIENCY) {
-			// System.out.println("TRUE");
-			return true;
+		try {
+			if (getDistanceTraveled() * factor < encoderGoal + DRIVE_ENCODER_LENIENCY
+					&& factor * getDistanceTraveled() > encoderGoal - DRIVE_ENCODER_LENIENCY) {
+				return true;
+			}
+		} catch (Exception e) {
 		}
 		return false;
 	}
@@ -249,8 +260,12 @@ public class Drive extends ControlledSubsystem {
 	 * @return
 	 */
 	public boolean isAngleCloseTo(double angleGoal) {
-		if (getAngle() < angleGoal + DRIVE_GYRO_LENIENCY && getDistanceTraveled() > angleGoal - DRIVE_GYRO_LENIENCY) {
-			return true;
+		try {
+			if (getAngle() < angleGoal + DRIVE_GYRO_LENIENCY
+					&& getDistanceTraveled() > angleGoal - DRIVE_GYRO_LENIENCY) {
+				return true;
+			}
+		} catch (Exception e) {
 		}
 		return false;
 	}
@@ -320,10 +335,21 @@ public class Drive extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
 		SmartDashboard.putNumber(this.getName() + " Anglular Vel", Sensors.getAngularVel());
 		SmartDashboard.putNumber(this.getName() + " Roll", Sensors.getRoll());
-		SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.getLeftDrive());
-		SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.getLeftDriveVel());
-		SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.getRightDrive());
-		SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.getRightDriveVel());
+		// Default to 0
+		try {
+			SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.getLeftDrive());
+			SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.getLeftDriveVel());
+		} catch (Exception e) {
+			SmartDashboard.putNumber(this.getName() + " Left Encoder", 0);
+			SmartDashboard.putNumber(this.getName() + " Left Rate", 0);
+		}
+		try {
+			SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.getRightDrive());
+			SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.getRightDriveVel());
+		} catch (Exception e) {
+			SmartDashboard.putNumber(this.getName() + " Right Encoder", 0);
+			SmartDashboard.putNumber(this.getName() + " Right Rate", 0);
+		}
 	}
 
 	@Override

@@ -75,7 +75,10 @@ public class Sensors {
 		return curEncoder;
 	}
 
-	public static double getRightDriveVel() {
+	public static double getRightDriveVel() throws SensorDoesNotReturnException {
+		if (rightBadCounts > 100) {
+			throw new SensorDoesNotReturnException();
+		}
 		return rightDrive.getRate() / 100;
 	}
 
@@ -91,7 +94,10 @@ public class Sensors {
 		return curEncoder;
 	}
 
-	public static double getLeftDriveVel() {
+	public static double getLeftDriveVel() throws SensorDoesNotReturnException {
+		if (leftBadCounts > 100) {
+			throw new SensorDoesNotReturnException();
+		}
 		return -leftDrive.getRate() / 100;
 	}
 
