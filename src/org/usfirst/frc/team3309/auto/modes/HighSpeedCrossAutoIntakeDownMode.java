@@ -3,6 +3,7 @@
  */
 package org.usfirst.frc.team3309.auto.modes;
 
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.generic.OnlyPowerController;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
@@ -17,19 +18,15 @@ public class HighSpeedCrossAutoIntakeDownMode extends AutoRoutine {
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
 		IntakePivot.getInstance().toIntakePosition();
-		// DriveEncodersControllerBasePower x = new
-		// DriveEncodersControllerBasePower(25000, 4);
-		// Drive.getInstance().setController(x);
 		OnlyPowerController x = new OnlyPowerController();
 		x.setLeftPower(.4);
 		x.setRightPower(.4);
 		Drive.getInstance().setTeleopController(x);
-		Thread.sleep(6000);
+		KragerTimer.delayMS(6000);
 		x.setLeftPower(0);
 		x.setRightPower(0);
 		mDrive.setTeleopController(x);
 		mDrive.stopDrive();
-		//this.waitForDrive(10000000);
 		System.out.println("Auto is done");
 	}
 }

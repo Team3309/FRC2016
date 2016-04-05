@@ -45,4 +45,22 @@ public class KragerTimer extends Timer {
 		}
 		return false;
 	}
+
+	/**
+	 * Delay the current thread seconds
+	 * 
+	 * @param seconds
+	 */
+	public static void delaySeconds(double seconds) {
+		KragerTimer.delay(seconds);
+	}
+
+	/**
+	 * Delay the current thread milliseconds
+	 * 
+	 * @param milliseconds
+	 */
+	public static void delayMS(double ms) {
+		KragerTimer.delayMS(ms / 1000);
+	}
 }

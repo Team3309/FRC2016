@@ -13,7 +13,7 @@ public class LowBarAutoMode extends AutoRoutine {
 	public void routine() throws TimedOutException, InterruptedException {
 		IntakePivot.getInstance().toIntakePosition();
 		mDrive.setHighGear(true);
-		//Thread.sleep(1000);
+		//KragerTimer.delayMS(1000);
 		// BlankController blankController = new BlankController();
 		// blankController.setPower(.4);
 
@@ -26,8 +26,8 @@ public class LowBarAutoMode extends AutoRoutine {
 		 * OnlyPowerController x = new OnlyPowerController();
 		 * x.setLeftPower(.4); x.setRightPower(.4);
 		 * Drive.getInstance().setController(x); //
-		 * mDrive.setController(blankController); // Thread.sleep(4000);
-		 * Thread.sleep(6000); x.setLeftPower(0); x.setRightPower(0);
+		 * mDrive.setController(blankController); // KragerTimer.delayMS(4000);
+		 * KragerTimer.delayMS(6000); x.setLeftPower(0); x.setRightPower(0);
 		 * mDrive.setController(x);
 		 */
 		//mDrive.stopDrive();
@@ -43,7 +43,7 @@ public class LowBarAutoMode extends AutoRoutine {
 
 		// blankController.setPower(0);
 		// mDrive.setController(blankController);
-		// Thread.sleep(1000);
+		// KragerTimer.delayMS(1000);
 		/*
 		 * while (mDrive.getDistanceTraveled() < 23000) {
 		 * mDrive.setLeftRight(.4, .4); }

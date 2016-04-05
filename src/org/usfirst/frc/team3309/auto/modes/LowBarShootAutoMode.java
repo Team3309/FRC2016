@@ -3,6 +3,7 @@ package org.usfirst.frc.team3309.auto.modes;
 import java.util.LinkedList;
 
 import org.team3309.lib.KragerMath;
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
@@ -11,7 +12,6 @@ import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
-import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 import org.usfirst.frc.team3309.vision.Shot;
@@ -56,7 +56,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		Flywheel.getInstance().setAimVelRPSAuto(140);
 		Hood.getInstance().setGoalAngle(30);
 		mDrive.stopDrive();
-		Thread.sleep(250);
+		KragerTimer.delayMS(250);
 		Sensors.resetDrive();
 		DriveEncodersVelocityController goTowardsGoal = new DriveEncodersVelocityController(DISTANCE_TO_GOAL);
 		goTowardsGoal.setMAX_ENCODER_VEL(150);
@@ -86,15 +86,16 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		 * try { shot = Vision.getInstance().getShotToAimTowards();
 		 * Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 		 * Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-		 * Thread.sleep(500); shot = Vision.getInstance().getShotToAimTowards();
+		 * KragerTimer.delayMS(500); shot =
+		 * Vision.getInstance().getShotToAimTowards();
 		 * Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 		 * Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle()); } catch
 		 * (Exception e) {
 		 * 
-		 * } Thread.sleep(1000); System.out.println("BANG BANG");
+		 * } KragerTimer.delayMS(1000); System.out.println("BANG BANG");
 		 * FeedyWheel.getInstance().setFeedyWheel(1); double
 		 * errorFromStartingVision = mDrive.getAngle() - angleBeforeVision;
-		 * Thread.sleep(500); FeedyWheel.getInstance().setFeedyWheel(0);
+		 * KragerTimer.delayMS(500); FeedyWheel.getInstance().setFeedyWheel(0);
 		 * Flywheel.getInstance().setAimVelRPSAuto(0);
 		 * Hood.getInstance().setGoalAngle(4);
 		 */

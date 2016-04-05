@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
@@ -9,7 +10,6 @@ import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -103,8 +103,8 @@ public class Flywheel extends ControlledSubsystem {
 		try {
 			curVel = this.getRPS();
 		} catch (SensorDoesNotReturnException e) {
-			//this.manualControl();
-			//return;
+			// this.manualControl();
+			// return;
 		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
@@ -120,22 +120,20 @@ public class Flywheel extends ControlledSubsystem {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				aimVelRPS = Vision.getInstance().getShotToAimTowards().getGoalRPS();
 				this.lastVisionShot = Vision.getInstance().getShotToAimTowards().getGoalRPS();
-				//aimVelRPS = 140;
+				// aimVelRPS = 140;
 			} else {
 				aimVelRPS = 140;
 			}
-		} else if (Controls.operatorController.getPOV() == 0){
+		} else if (Controls.operatorController.getPOV() == 0) {
 			aimVelRPS = this.lastVisionShot;
-		}else { 
+		} else {
 			offset = 0;
 			aimVelRPS = 0;
 			aimAccRPS = 0;
 			hasGoneBack = false;
 		}
 		shootLikeRobie();
-		
-		
-		
+
 	}
 
 	/**
@@ -156,11 +154,7 @@ public class Flywheel extends ControlledSubsystem {
 		}
 		if (power != 0 && !hasGoneBack) {
 			FeedyWheel.getInstance().setFeedyWheel(-.5);
-			try {
-				Thread.sleep(75);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			KragerTimer.delayMS(75);
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
 		}
@@ -198,12 +192,7 @@ public class Flywheel extends ControlledSubsystem {
 		}
 		if (aimVelRPS != 0 && !hasGoneBack) {
 			FeedyWheel.getInstance().setFeedyWheel(-.5);
-			try {
-				Thread.sleep(120);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
+			KragerTimer.delayMS(120);
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
 		}

@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.auto;
 
 import java.util.LinkedList;
 
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
@@ -34,7 +35,7 @@ public class RoutineBased {
 			if (waitTimer.get() > timeout) {
 				throw new TimedOutException();
 			}
-			Thread.sleep(100);
+			KragerTimer.delayMS(100);
 		}
 	}
 
@@ -54,7 +55,7 @@ public class RoutineBased {
 			if (waitTimer.get() > timeout) {
 				throw new TimedOutException();
 			}
-			Thread.sleep(100);
+			KragerTimer.delayMS(100);
 		}
 	}
 
@@ -73,11 +74,7 @@ public class RoutineBased {
 		while (!mDrive.isEncoderCloseTo(encoderGoal)) {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			KragerTimer.delayMS(50);
 		}
 	}
 
@@ -96,11 +93,7 @@ public class RoutineBased {
 		while (!mDrive.isAngleCloseTo(angleGoal)) {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			KragerTimer.delayMS(100);
 		}
 	}
 
@@ -203,7 +196,7 @@ public class RoutineBased {
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
-			Thread.sleep(1000);
+			KragerTimer.delayMS(1000);
 			mDrive.toVision();
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
@@ -211,19 +204,12 @@ public class RoutineBased {
 		} catch (Exception e) {
 
 		}
-		try {
-			Thread.sleep(1100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
+		KragerTimer.delayMS(1100);
 		System.out.println("BANG BANG");
 		FeedyWheel.getInstance().setFeedyWheel(1);
 
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		KragerTimer.delayMS(500);
 		FeedyWheel.getInstance().setFeedyWheel(0);
 		Flywheel.getInstance().setAimVelRPSAuto(0);
 		Hood.getInstance().setGoalAngle(4);
@@ -232,7 +218,7 @@ public class RoutineBased {
 	public void waitForEndOfAuto() {
 		while (autoTimer.get() < 14.900) {
 			try {
-				Thread.sleep(100);
+				KragerTimer.delayMS(100);
 			} catch (Exception e) {
 
 			}

@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.auto.modes;
 
 import java.util.LinkedList;
 
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
@@ -35,7 +36,7 @@ public class TwoBallAutoMode extends AutoRoutine {
 			this.toVision(1);
 		} catch (Exception e) {
 			FeedyWheel.getInstance().setFeedyWheel(1);
-			Thread.sleep(400);
+			KragerTimer.delayMS(400);
 			FeedyWheel.getInstance().setFeedyWheel(0);
 		}
 		Hood.getInstance().setGoalAngle(4);

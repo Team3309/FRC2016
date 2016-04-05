@@ -2,6 +2,7 @@ package org.usfirst.frc.team3309.robot;
 
 import java.util.List;
 
+import org.team3309.lib.KragerTimer;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
@@ -38,7 +39,6 @@ import org.usfirst.frc.team3309.subsystems.Climber;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
-import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 import org.usfirst.frc.team3309.vision.Goal;
 import org.usfirst.frc.team3309.vision.IndicatingLights;
 import org.usfirst.frc.team3309.vision.Vision;
@@ -46,7 +46,6 @@ import org.usfirst.frc.team3309.vision.Vision;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -111,6 +110,23 @@ public class Robot extends IterativeRobot {
 		Vision.getInstance().start();
 	}
 
+	private void manageLoopSpeed() {
+		// Loop Speed
+		double timeItTook = time.get();
+		long overhead = (long) (LOOP_SPEED_MS - (1000 * timeItTook));
+		try {
+			if (overhead > 5) {
+
+				KragerTimer.delayMS(overhead);
+			} else {
+				KragerTimer.delayMS(5);
+				System.out.println("Loop Speed too fast!!!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	// When first put into disabled mode
 	public void disabledInit() {
 		Vision.getInstance().setLight(0);
@@ -120,7 +136,7 @@ public class Robot extends IterativeRobot {
 	// Called repeatedly in disabled mode
 	public void disabledPeriodic() {
 		Vision.getInstance().setLight(0);
-		// IndicatingLights.getInstance().update();
+		manageLoopSpeed();
 	}
 
 	// Init to Auto
@@ -150,6 +166,8 @@ public class Robot extends IterativeRobot {
 		Intake.getInstance().updateAuto();
 		Intake.getInstance().sendToSmartDash();
 		IndicatingLights.getInstance().update();
+
+		manageLoopSpeed();
 	}
 
 	// Init to Tele
@@ -189,21 +207,6 @@ public class Robot extends IterativeRobot {
 		Climber.getInstance().updateTeleop();
 		IndicatingLights.getInstance().update();
 
-		// Set loop speed
-		double timeItTook = time.get();
-		long overhead = (long) (LOOP_SPEED_MS - (1000 * timeItTook));
-		// System.out.println("IT Took " + timeItTook + " ms");
-		// System.out.println("Loop overhead: " + overhead + " ms");
-
-		try {
-			if (overhead > 5) {
-				Thread.sleep(overhead);
-			} else {
-				Thread.sleep(5);
-				System.out.println("Loop Speed too fast!!!");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		manageLoopSpeed();
 	}
 }

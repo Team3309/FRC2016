@@ -1,10 +1,9 @@
 package org.usfirst.frc.team3309.auto.modes;
 
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnInPlaceLAAutoMode extends AutoRoutine {
 
@@ -16,7 +15,7 @@ public class TurnInPlaceLAAutoMode extends AutoRoutine {
 		DriveAngleVelocityController angleVel = new DriveAngleVelocityController(this.mDrive.getAngle() + 200);
 		angleVel.setCompletable(false);
 		mDrive.setAutoController(angleVel);
-		Thread.sleep(342515);
+		KragerTimer.delayMS(342515);
 	}
 
 }

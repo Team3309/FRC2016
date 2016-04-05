@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
 
@@ -41,14 +42,10 @@ public class Climber extends ControlledSubsystem {
 
 	@Override
 	public void updateTeleop() {
-		//System.out.println(Controls.operatorController.getPOV());
+		// System.out.println(Controls.operatorController.getPOV());
 		if (Controls.operatorController.getPOV() == 90) {
 			pivot.set(true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			KragerTimer.delayMS(1000);
 			rightCarriage.set(true);
 			leftCarriage.set(true);
 		}

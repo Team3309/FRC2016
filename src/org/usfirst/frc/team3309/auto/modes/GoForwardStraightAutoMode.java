@@ -3,7 +3,7 @@ package org.usfirst.frc.team3309.auto.modes;
 import java.util.LinkedList;
 
 import org.team3309.lib.KragerMath;
-import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
@@ -69,7 +69,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		Hood.getInstance().setGoalAngle(30);
 		mDrive.stopDrive();
 		/*
-		 * Thread.sleep(500); Sensors.resetDrive();
+		 * KragerTimer.delayMS(500); Sensors.resetDrive();
 		 * DriveEncodersVelocityController goTowardsGoal = new
 		 * DriveEncodersVelocityController(DISTANCE_TO_GOAL);
 		 * goTowardsGoal.setMAX_ENCODER_VEL(150);
@@ -81,7 +81,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		 * } mDrive.stopDrive();
 		 */
 
-		Thread.sleep(500);
+		KragerTimer.delayMS(500);
 		// NOW Get Back
 		double angleBeforeVision = mDrive.getAngle();
 
@@ -100,7 +100,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 				countInDirection = 0;
 				direction = -direction;
 			}
-			Thread.sleep(200);
+			KragerTimer.delayMS(200);
 			shot = Vision.getInstance().getShotToAimTowards();
 
 			System.out.println("LOOKING");
@@ -114,7 +114,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() + 2);
-			Thread.sleep(1000);
+			KragerTimer.delayMS(1000);
 			mDrive.toVision();
 			shot = Vision.getInstance().getShotToAimTowards();
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
@@ -122,37 +122,24 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		} catch (Exception e) {
 
 		}
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		KragerTimer.delayMS(3000);
 		try {
 			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
 			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle() + 2);
 		} catch (Exception e) {
 
 		}
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		KragerTimer.delayMS(1000);
 		System.out.println("BANG BANG");
 		FeedyWheel.getInstance().setFeedyWheel(1);
-
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		KragerTimer.delayMS(500);
 		FeedyWheel.getInstance().setFeedyWheel(0);
 		Flywheel.getInstance().setAimVelRPSAuto(0);
 		Hood.getInstance().setGoalAngle(4);
 
 		// VISION ENDED
 		mDrive.stopDrive();
-		Thread.sleep(15000);
+		KragerTimer.delayMS(15000);
 
 		this.toVision(20);
 		double errorFromStartingVision = mDrive.getAngle() - angleBeforeVision;
@@ -161,7 +148,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		double distanceToGoBack = (KragerMath.sinDeg(angleBeforeVision) * 110)
 				/ (KragerMath.sinDeg(angleBeforeVision + errorFromStartingVision));
 		mDrive.stopDrive();
-		Thread.sleep(15000);
+		KragerTimer.delayMS(15000);
 		/*
 		 * Sensors.resetDrive(); System.out.println("DISTANCE TO GO BACKL " +
 		 * distanceToGoBack); DriveEncodersVelocityController goTowardsGoalBack
@@ -182,7 +169,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		 * 
 		 * } mDrive.stopDrive();
 		 * 
-		 * Thread.sleep(15000); /*Sensors.resetDrive();
+		 * KragerTimer.delayMS(15000); /*Sensors.resetDrive();
 		 * DriveEncodersVelocityController xBack = new
 		 * DriveEncodersVelocityController(-230); xBack.setMAX_ENCODER_VEL(120);
 		 * LinkedList<VelocityChangePoint> a = new

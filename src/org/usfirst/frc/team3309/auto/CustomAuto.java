@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3309.auto;
 
+import org.team3309.lib.KragerTimer;
 import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
-import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos2ToLeft;
 import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 
@@ -13,12 +13,12 @@ public class CustomAuto extends AutoRoutine {
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
 		defense.perform();
-		Thread.sleep(200);
+		KragerTimer.delayMS(200);
 		
 		mDrive.setHighGear(true);
 		Hood.getInstance().setGoalAngle(30);
 		Flywheel.getInstance().setAimVelRPSAuto(140);
-		Thread.sleep(750);
+		KragerTimer.delayMS(750);
 		startingPosition.perform();
 		mDrive.stopDrive();
 	}

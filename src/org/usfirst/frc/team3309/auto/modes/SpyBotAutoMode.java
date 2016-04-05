@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3309.auto.modes;
 
+import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
@@ -22,17 +23,17 @@ public class SpyBotAutoMode extends AutoRoutine {
 		}
 		mDrive.stopDrive();
 
-		Thread.sleep(500);
+		KragerTimer.delayMS(500);
 		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(mDrive.getAngle() - 77.53309);
 		Drive.getInstance().setAutoController(turnToGoal);
-		
+
 		try {
 			this.waitForController(turnToGoal, 4);
 		} catch (Exception e) {
 
 		}
 		mDrive.stopDrive();
-		
+
 		Sensors.resetDrive();
 		DriveEncodersVelocityController toGo = new DriveEncodersVelocityController(55);
 		x.setMAX_ENCODER_VEL(100);
