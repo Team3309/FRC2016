@@ -66,8 +66,12 @@ public class DriveEncodersVelocityController extends Controller {
 
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
-
-		double currentEncoder = (Math.abs(inputState.getRightPos()) + Math.abs(inputState.getLeftPos())) / 2;
+		double currentEncoder = 0;
+		try {
+			currentEncoder = (Math.abs(inputState.getRightPos()) + Math.abs(inputState.getLeftPos())) / 2;
+		}catch (Exception e) {
+			
+		}
 		if (goalEncoder < 0) {
 			currentEncoder = -currentEncoder;
 		}
