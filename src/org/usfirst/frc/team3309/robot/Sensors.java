@@ -17,16 +17,19 @@ import edu.wpi.first.wpilibj.SerialPort;
  *
  */
 public class Sensors {
+	// Drive
 	private static Encoder leftDrive;
 	private static Encoder rightDrive;
-	private static Counter shooterEncoder;
-	private static Counter hoodEncoder;
-	private static AHRS navX;
-	private static double pastShooter = 0.0;
-	private static double pastLeft = 0.0;
-	private static double pastRight = 0.0;
+	private static double pastLeftEncoder = 0.0;
+	private static double pastRightEncoder = 0.0;
 	private static double rightBadCounts = 0;
 	private static double leftBadCounts = 0;
+	private static AHRS navX;
+	// Shooter
+	private static Counter flywheelEncoder;
+	private static Counter hoodEncoder;
+	private static double pastFlywheelRPS = 0.0;
+
 	private static PowerDistributionPanel pdp = new PowerDistributionPanel();
 
 	public static void init() {
@@ -37,7 +40,7 @@ public class Sensors {
 		rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL,
 				false);
 		leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
-		shooterEncoder = new Counter(RobotMap.SHOOTER_OPTICAL_SENSOR);
+		flywheelEncoder = new Counter(RobotMap.SHOOTER_OPTICAL_SENSOR);
 		navX = new AHRS(SerialPort.Port.kMXP);
 		hoodEncoder = new Counter(new DigitalInput(RobotMap.HOOD_ABS));
 		hoodEncoder.setSemiPeriodMode(true);
@@ -65,13 +68,13 @@ public class Sensors {
 
 	public static double getRightDrive() throws SensorDoesNotReturnException {
 		double curEncoder = rightDrive.get() / 100;
-		if (Math.abs(curEncoder - pastRight) > 5 && Drive.getInstance().getRightPower() > .7) {
+		if (Math.abs(curEncoder - pastRightEncoder) > 5 && Drive.getInstance().getRightPower() > .7) {
 			rightBadCounts++;
 		}
 		if (rightBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
 		}
-		pastRight = curEncoder;
+		pastRightEncoder = curEncoder;
 		return curEncoder;
 	}
 
@@ -84,13 +87,13 @@ public class Sensors {
 
 	public static double getLeftDrive() throws SensorDoesNotReturnException {
 		double curEncoder = leftDrive.get() / 100;
-		if (Math.abs(curEncoder - pastLeft) > 5 && Drive.getInstance().getLeftPower() > .7) {
+		if (Math.abs(curEncoder - pastLeftEncoder) > 5 && Drive.getInstance().getLeftPower() > .7) {
 			leftBadCounts++;
 		}
 		if (leftBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
 		}
-		pastLeft = curEncoder;
+		pastLeftEncoder = curEncoder;
 		return curEncoder;
 	}
 
@@ -103,10 +106,10 @@ public class Sensors {
 
 	// Shooter
 	public static double getShooterRPS() throws SensorDoesNotReturnException {
-		double currentShooter = (1 / shooterEncoder.getPeriod());
-		if (Math.abs(1 / shooterEncoder.getPeriod()) - (pastShooter) > 350)
+		double currentShooter = (1 / flywheelEncoder.getPeriod());
+		if (Math.abs(1 / flywheelEncoder.getPeriod()) - (pastFlywheelRPS) > 350)
 			throw new SensorDoesNotReturnException();
-		pastShooter = currentShooter;
+		pastFlywheelRPS = currentShooter;
 		return currentShooter;
 	}
 

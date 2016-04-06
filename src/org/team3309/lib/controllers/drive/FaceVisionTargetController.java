@@ -3,11 +3,8 @@ package org.team3309.lib.controllers.drive;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.Sensors;
-import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FaceVisionTargetController extends DriveAngleVelocityController {
 

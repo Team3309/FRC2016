@@ -21,9 +21,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	private double autoPower = 0;
 	private Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_MOTOR);
 	private double currentFlex = 0;
-	private LinkedList<Double> averages = new LinkedList<Double>();
-	private boolean isLiningUpForShooter = true;
-	private final double GOAL_POS_FOR_SHOOTER = 2.44;
+	private LinkedList<Double> averagesForFlexSamples = new LinkedList<Double>();
 	private double pastFlex = currentFlex;
 
 	public static FeedyWheel getInstance() {
@@ -51,36 +49,21 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	@Override
 	public void updateTeleop() {
-		currentFlex = input.getVoltage();// averageFlex();
-		//System.out.println("Voltage: " + currentFlex);
-		/*
-		 * if (isLiningUpForShooter &&
-		 * (KragerMath.threshold(Controls.driverController.getRightTrigger()) ==
-		 * 0 && KragerMath.threshold(Controls.driverController.getLeftTrigger())
-		 * == 0)) { double output =
-		 * this.teleopController.getOutputSignal(getInputState()).getMotor();
-		 * this.setFeedyWheel(output); } else {
-		 */
+		currentFlex = input.getVoltage();// averageFlex()
 		this.manualControl();
-		// }
 		System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
-		/*if (Math.abs(currentFlex - pastFlex) > .005 && this.feedyWheelSpark.get() != 0)
-			//Controls.driverController.setRumble((float) 0.9);
-		else {
-			//Controls.driverController.setRumble((float) 0);
-		}*/
 		pastFlex = currentFlex;// averages.getLast();
 	}
 
 	private double averageFlex() {
-		averages.addFirst(input.getVoltage());
+		averagesForFlexSamples.addFirst(input.getVoltage());
 		double sum = 0;
-		if (averages.size() > 10)
-			averages.removeLast();
-		for (int i = 0; i < averages.size(); i++) {
-			sum += averages.get(i);
+		if (averagesForFlexSamples.size() > 10)
+			averagesForFlexSamples.removeLast();
+		for (int i = 0; i < averagesForFlexSamples.size(); i++) {
+			sum += averagesForFlexSamples.get(i);
 		}
-		return sum / averages.size();
+		return sum / averagesForFlexSamples.size();
 	}
 
 	@Override
@@ -91,7 +74,6 @@ public class FeedyWheel extends ControlledSubsystem {
 	@Override
 	public InputState getInputState() {
 		InputState state = new InputState();
-		state.setError(this.GOAL_POS_FOR_SHOOTER - currentFlex);
 		return state;
 	}
 

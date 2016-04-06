@@ -1,9 +1,7 @@
 package org.usfirst.frc.team3309.vision;
 
-import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class IndicatingLights {

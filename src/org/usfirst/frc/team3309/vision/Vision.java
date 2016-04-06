@@ -16,12 +16,12 @@
 
 package org.usfirst.frc.team3309.vision;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.List;
 
 import org.usfirst.frc.team3309.robot.RobotMap;
 
-import java.util.List;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision implements Runnable {
 
