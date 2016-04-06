@@ -36,8 +36,12 @@ public class DriveAngularAndForwardVelocityEquationController extends Controller
 		InputState inputForRightVel = inputState;
 		InputState inputForAng = inputState;
 		// Add the error for each controller from the inputState
-		inputForLeftVel.setError(aimLeftVelocity - inputState.getLeftVel());
-		inputForRightVel.setError(aimRightVelocity - inputState.getRightVel());
+		try {
+			inputForLeftVel.setError(aimLeftVelocity - inputState.getLeftVel());
+			inputForRightVel.setError(aimRightVelocity - inputState.getRightVel());
+		} catch (Exception e) {
+			return new OutputSignal();
+		}
 		inputForAng.setError(aimAngularVelocity - inputState.getAngularVel());
 		OutputSignal leftOutput = leftController.getOutputSignal(inputForLeftVel);
 		OutputSignal rightOutput = rightController.getOutputSignal(inputForRightVel);

@@ -30,6 +30,12 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
+		double currentDistance = 0;
+		try { // if no encoders, return 0's
+			currentDistance = Drive.getInstance().getDistanceTraveled();
+		} catch (Exception e) {
+			return new OutputSignal();
+		}
 		// Input States for the three controllers
 		InputState inputForAng = inputState;
 		// Add the error for each controller from the inputState
@@ -39,10 +45,10 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 		OutputSignal signal = new OutputSignal();
 		if (Math.abs(basePower) < Math.abs(originalBasePower)) {
 			basePower += originalBasePower / 10;
-		} else if (Drive.getInstance().getDistanceTraveled() > Math.abs(goalEncoder)) {
+		} else if (currentDistance > Math.abs(goalEncoder)) {
 			// basePower = -originalBasePower;
 			isOver = true;
-		} else if (Drive.getInstance().getDistanceTraveled() < Math.abs(goalEncoder)) {
+		} else if (currentDistance < Math.abs(goalEncoder)) {
 			basePower = originalBasePower;
 		}
 		System.out.println("Here is turn power: " + angularOutput.getMotor());

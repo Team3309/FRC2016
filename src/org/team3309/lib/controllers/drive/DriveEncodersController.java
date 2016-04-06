@@ -40,15 +40,15 @@ public class DriveEncodersController extends Controller {
 		// InputState inputForRightVel = inputState;
 		InputState inputForAng = new InputState();
 		// Add the error for each controller from the inputState
-		double x = (goalEncoder - inputState.getLeftPos());
+		double x = 0;
+		try {
+			x = (goalEncoder - inputState.getLeftPos());
+		} catch (Exception e) {
+			return new OutputSignal();
+		}
 		inputForLinear.setError(x);
-		System.out.println("GOAL: " + x);
-		// inputForRightVel.setError(goalEncoder - inputState.getRightPos());
 		inputForAng.setError(goalAngle - inputState.getAngularPos());
-		// System.out.println(inputForLinear.getError());
 		OutputSignal linearOutput = linearController.getOutputSignal(inputForLinear);
-		// OutputSignal rightOutput =
-		// rightController.getOutputSignal(inputForRightVel);
 		OutputSignal angularOutput = angController.getOutputSignal(inputForAng);
 		// Prepare the output
 		OutputSignal signal = new OutputSignal();

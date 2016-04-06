@@ -69,8 +69,8 @@ public class DriveEncodersVelocityController extends Controller {
 		double currentEncoder = 0;
 		try {
 			currentEncoder = (Math.abs(inputState.getRightPos()) + Math.abs(inputState.getLeftPos())) / 2;
-		}catch (Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		if (goalEncoder < 0) {
 			currentEncoder = -currentEncoder;
@@ -156,8 +156,12 @@ public class DriveEncodersVelocityController extends Controller {
 		SmartDashboard.putNumber("DRIVE Encoder VEL Output", outputOfTurningController.getMotor());
 		SmartDashboard.putNumber("DRIVE ENCODER RIGHT", rightAimVel);
 		SmartDashboard.putNumber("DRIVE ENCODER LEFT", leftAimVel);
-		leftState.setError(leftAimVel - inputState.getLeftVel());
-		rightState.setError(rightAimVel - inputState.getRightVel());
+		try { // if encoders are broken
+			leftState.setError(leftAimVel - inputState.getLeftVel());
+			rightState.setError(rightAimVel - inputState.getRightVel());
+		} catch (Exception e) {
+			return new OutputSignal();
+		}
 		// leftSideController.setAimVel(dashAimTurnVel);
 		// rightSideController.setAimVel(-dashAimTurnVel);
 		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());
@@ -169,14 +173,15 @@ public class DriveEncodersVelocityController extends Controller {
 		double leftSideOutput = leftSideController.getOutputSignal(leftState).getMotor();
 		// System.out.println("AIM VELs " + leftAimVel + " right Aim Vel " +
 		// -rightAimVel);
-		//SmartDashboard.putString("HardCore Power", "RIGHT: " + rightSideOutput + " LEFT " +leftSideOutput);
+		// SmartDashboard.putString("HardCore Power", "RIGHT: " +
+		// rightSideOutput + " LEFT " +leftSideOutput);
 		if (this.MAX_ENCODER_VEL_LEFT == this.MAX_ENCODER_VEL_RIGHT) {
 			if (Math.abs(inputState.getAngularPos() - goalAngle) > 30) {
 				goalAngle = inputState.getAngularPos();
 			}
 			double turn = turningController.getOutputSignal(turningState).getMotor();
-			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput + turn, 
-					-leftSideOutput - turn );// - +
+			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput + turn, -leftSideOutput - turn);// -
+																									// +
 		} else {
 			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput, rightSideOutput);
 		}
@@ -220,19 +225,21 @@ public class DriveEncodersVelocityController extends Controller {
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL) {
 		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL;
 		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL;
-		/*if (encoderChanges.size() == 1) {
-			encoderChanges = new LinkedList<VelocityChangePoint>();
-			encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
-		}*/
+		/*
+		 * if (encoderChanges.size() == 1) { encoderChanges = new
+		 * LinkedList<VelocityChangePoint>(); encoderChanges.add(new
+		 * VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0)); }
+		 */
 	}
 
 	public void setMAX_ENCODER_VEL(double mAX_ENCODER_VEL_RIGHT, double mAX_ENCODER_VEL_LEFT) {
 		MAX_ENCODER_VEL_RIGHT = mAX_ENCODER_VEL_RIGHT;
 		MAX_ENCODER_VEL_LEFT = mAX_ENCODER_VEL_LEFT;
-		/*if (encoderChanges.size() == 1) {
-			encoderChanges = new LinkedList<VelocityChangePoint>();
-			encoderChanges.add(new VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0));
-		}*/
+		/*
+		 * if (encoderChanges.size() == 1) { encoderChanges = new
+		 * LinkedList<VelocityChangePoint>(); encoderChanges.add(new
+		 * VelocityChangePoint(MAX_ENCODER_VEL_RIGHT, 0)); }
+		 */
 	}
 
 	public void setRampUp(boolean bool) {

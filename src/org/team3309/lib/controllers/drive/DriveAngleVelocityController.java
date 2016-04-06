@@ -80,8 +80,12 @@ public class DriveAngleVelocityController extends Controller {
 		// leftSideController.printConstants();
 		// rightSideController.printConstants();
 		// System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
-		leftState.setError(-outputOfTurningController.getMotor() - inputState.getLeftVel());
-		rightState.setError(-outputOfTurningController.getMotor() - inputState.getRightVel());
+		try {
+			leftState.setError(-outputOfTurningController.getMotor() - inputState.getLeftVel());
+			rightState.setError(-outputOfTurningController.getMotor() - inputState.getRightVel());
+		} catch (Exception e) {
+			return new OutputSignal();
+		}
 		// rightSideController.setAimVel(outputOfTurningController.getMotor());
 		// leftSideController.setAimVel(outputOfTurningController.getMotor());
 		// leftSideController.setAimVel(dashAimTurnVel);
