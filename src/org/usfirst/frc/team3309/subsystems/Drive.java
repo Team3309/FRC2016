@@ -41,16 +41,16 @@ public class Drive extends ControlledSubsystem {
 	private static final double DRIVE_GYRO_LENIENCY = .5;
 
 	private static Drive instance;
+	// Actuators
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
 	private Spark right = new Spark(RobotMap.RIGHT_DRIVE);
-	private Solenoid sol = new Solenoid(0);
+	private Solenoid sol = new Solenoid(RobotMap.SHIFTER);
 
 	private Shot desiredShot;
 	private boolean isLowGear = true;
 
 	public boolean lowGearInAuto = false;
 	boolean isReset = false;
-	DriveAngleController x = new DriveAngleController(this.getAngle() + 5);
 
 	/**
 	 * Singleton Pattern

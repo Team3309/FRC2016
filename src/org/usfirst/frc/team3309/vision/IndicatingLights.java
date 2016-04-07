@@ -11,7 +11,8 @@ public class IndicatingLights {
 	}
 
 	private static IndicatingLights instance;
-	private double THRESHOLD_FOR_AZIMUTH = 4;
+	private double THRESHOLD_FOR_AZIMUTH = 3;
+	private NetworkTable lightsTable = NetworkTable.getTable("Status");
 
 	public static IndicatingLights getInstance() {
 		if (instance == null) {
@@ -23,8 +24,6 @@ public class IndicatingLights {
 	private IndicatingLights() {
 
 	}
-
-	private NetworkTable lightsTable = NetworkTable.getTable("Status");
 
 	private void setIndicators(IndicatorState state) {
 		switch (state) {
