@@ -61,6 +61,6 @@ public class KragerTimer extends Timer {
 	 * @param milliseconds
 	 */
 	public static void delayMS(double ms) {
-		KragerTimer.delayMS(ms / 1000);
+		KragerTimer.delay(ms / 1000);
 	}
 }

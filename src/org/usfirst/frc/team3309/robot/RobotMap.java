@@ -37,6 +37,8 @@ public class RobotMap {
 	// Manifold
 	public static final int SHIFTER = 0;
 	public static final int CLIMBER_LATCHES = 1;
-	public static final int CLIMBER_LEFT = 2;
-	public static final int CLIMBER_RIGHT = 3;
+	public static final int CLIMBER_LEFT_UP = 2;
+	public static final int CLIMBER_LEFT_DOWN = 3;
+	public static final int CLIMBER_RIGHT_UP = 4;
+	public static final int CLIMBER_RIGHT_DOWN = 5;
 }

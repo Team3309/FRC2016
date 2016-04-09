@@ -8,7 +8,7 @@ public class Constants {
 	public static double PIVOT_TOP_VALUE_COMP = -53;//
 	public static double PIVOT_TOP_VALUE_PRACTICE = -102;
 
-	public static boolean isComp = true;
+	public static boolean isComp = false;
 
 	public static double valueForCompOrPractice(double compValue, double practiceValue) {
 		if (isComp) {

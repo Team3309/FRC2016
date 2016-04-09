@@ -120,7 +120,7 @@ public class Robot extends IterativeRobot {
 				KragerTimer.delayMS(overhead);
 			} else {
 				KragerTimer.delayMS(5);
-				System.out.println("Loop Speed too fast!!!");
+				System.out.println("Loop Speed too fast!!! " + overhead);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,7 +136,7 @@ public class Robot extends IterativeRobot {
 	// Called repeatedly in disabled mode
 	public void disabledPeriodic() {
 		Vision.getInstance().setLight(0);
-		manageLoopSpeed();
+		// ();
 	}
 
 	// Init to Auto
@@ -159,6 +159,8 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
+		time.start();
+		time.reset();
 		Drive.getInstance().updateAuto();
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateAuto();
