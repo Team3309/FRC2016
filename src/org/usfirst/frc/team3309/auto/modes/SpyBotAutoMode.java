@@ -13,7 +13,7 @@ public class SpyBotAutoMode extends AutoRoutine {
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
 		mDrive.setHighGear(true);
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(75);
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(Drive.getInstance(), 75);
 		x.setMAX_ENCODER_VEL(100);
 		Drive.getInstance().setAutoController(x);
 		try {
@@ -24,7 +24,8 @@ public class SpyBotAutoMode extends AutoRoutine {
 		mDrive.stopDrive();
 
 		KragerTimer.delayMS(500);
-		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(mDrive.getAngle() - 77.53309);
+		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(Drive.getInstance(),
+				mDrive.getAngle() - 77.53309);
 		Drive.getInstance().setAutoController(turnToGoal);
 
 		try {
@@ -35,7 +36,7 @@ public class SpyBotAutoMode extends AutoRoutine {
 		mDrive.stopDrive();
 
 		Sensors.resetDrive();
-		DriveEncodersVelocityController toGo = new DriveEncodersVelocityController(55);
+		DriveEncodersVelocityController toGo = new DriveEncodersVelocityController(Drive.getInstance(), 55);
 		x.setMAX_ENCODER_VEL(100);
 		Drive.getInstance().setAutoController(toGo);
 		try {

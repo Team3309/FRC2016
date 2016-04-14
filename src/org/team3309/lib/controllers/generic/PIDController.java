@@ -1,5 +1,6 @@
 package org.team3309.lib.controllers.generic;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
@@ -67,7 +68,29 @@ public abstract class PIDController extends Controller {
 	protected KragerTimer doneTimer = new KragerTimer(TIME_TO_BE_COMPLETE_MILLISECONDS);
 	private double factor = 1;
 
-	public PIDController(double kP, double kI, double kD) {
+	public PIDController(ControlledSubsystem system, boolean hasSeparateThread, double kP, double kI, double kD) {
+		super(system, hasSeparateThread);
+		if ((kP < .001 || kI < .001 || kD < .001) && kP != 0 && kI != 0 && kD != 0) {
+			this.isSmallGain = true;
+		} else {
+			this.isSmallGain = false;
+		}
+		this.kP = kP;
+		this.kI = kI;
+		this.kD = kD;
+
+		if (isSmallGain) {
+			factor = 10;
+		} else {
+			factor = 1;
+		}
+		SmartDashboard.putNumber(this.getName() + " kP", kP * Math.pow(factor, 3));
+		SmartDashboard.putNumber(this.getName() + " kI", kI * Math.pow(factor, 3));
+		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
+	}
+	
+	public PIDController(ControlledSubsystem system, double kP, double kI, double kD) {
+		super(system);
 		if ((kP < .001 || kI < .001 || kD < .001) && kP != 0 && kI != 0 && kD != 0) {
 			this.isSmallGain = true;
 		} else {
@@ -87,8 +110,13 @@ public abstract class PIDController extends Controller {
 		SmartDashboard.putNumber(this.getName() + " kD", kD * Math.pow(factor, 3));
 	}
 
-	public PIDController(double kP, double kI, double kD, double kILimit) {
-		this(kP, kI, kD);
+	public PIDController(ControlledSubsystem system, boolean hasSeparateThread, double kP, double kI, double kD, double kILimit) {
+		this(system, hasSeparateThread, kP, kI, kD);
+		this.kILimit = kILimit;
+	}
+	
+	public PIDController(ControlledSubsystem system, double kP, double kI, double kD, double kILimit) {
+		this(system, kP, kI, kD);
 		this.kILimit = kILimit;
 	}
 
@@ -101,11 +129,18 @@ public abstract class PIDController extends Controller {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+
+	@Override
+	public void update(InputState inputState) {
 		double error = inputState.getError();
 
-		// Add to mIntegral term
-		mIntegral += error;
+		if (Math.abs((kP * error) + (kD * (error - previousError))) < 1.0) {
+			// Add to mIntegral term
+			mIntegral += error;
+		}
 
 		// Check for integral hitting the limit
 		if (mIntegral * kI > kILimit)
@@ -124,7 +159,7 @@ public abstract class PIDController extends Controller {
 		// + "kD: " + (kD * (error - previousError)));
 		signal.setMotor(output);
 		previousError = error;
-		return signal;
+		this.lastOutputState = signal;
 	}
 
 	/**

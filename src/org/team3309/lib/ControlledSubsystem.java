@@ -20,11 +20,7 @@ public abstract class ControlledSubsystem extends KragerSystem {
 
 	public ControlledSubsystem(String name) {
 		super(name);
-<<<<<<< HEAD
 		System.out.println("Controlled: " + name);
-=======
-		teleopController = new BlankController();
->>>>>>> parent of 887d793... restructured for separate loops
 	}
 
 	/*

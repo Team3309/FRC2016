@@ -1,10 +1,19 @@
 package org.team3309.lib.controllers.generic;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 
 public class OnlyPowerController extends Controller {
+
+	public OnlyPowerController(ControlledSubsystem subsystem) {
+		super(subsystem);
+	}
+
+	public OnlyPowerController(ControlledSubsystem subsystem, boolean hasSeparateThread) {
+		super(subsystem, hasSeparateThread);
+	}
 
 	/**
 	 * Controller that returns only zero values. Used when a subsystem is
@@ -39,11 +48,16 @@ public class OnlyPowerController extends Controller {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+
+	@Override
+	public void update(InputState inputState) {
 		OutputSignal signal = new OutputSignal();
 		signal.setLeftRightMotor(leftPower, rightPower);
 		signal.setMotor(power);
-		return signal; // Returns only zeros for everything
+		this.lastOutputState = signal; // Returns only zeros for everything
 	}
 
 	@Override

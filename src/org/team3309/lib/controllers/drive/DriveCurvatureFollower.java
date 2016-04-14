@@ -1,5 +1,6 @@
 package org.team3309.lib.controllers.drive;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
@@ -24,7 +25,8 @@ public class DriveCurvatureFollower extends Controller {
 	private Pose[] path;
 	private int currentGoalIndex = 0;
 
-	public DriveCurvatureFollower(Pose[] path) {
+	public DriveCurvatureFollower(ControlledSubsystem system, Pose[] path) {
+		super(system);
 		this.path = path;
 	}
 
@@ -34,7 +36,12 @@ public class DriveCurvatureFollower extends Controller {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+
+	@Override
+	public void update(InputState inputState) {
 		OutputSignal output = new OutputSignal();
 		double a = path[currentGoalIndex].x - inputState.getX();
 		double b = path[currentGoalIndex].y - inputState.getY();
@@ -59,7 +66,7 @@ public class DriveCurvatureFollower extends Controller {
 		// translationalController.getOutputSignal(inputState).getMotor() -
 		// angularController.getOutputSignal(inputState).getMotor();
 		// output.setLeftRightMotor(leftSide, rightSide);
-		return output;
+		this.lastOutputState = output;
 	}
 
 	@Override
