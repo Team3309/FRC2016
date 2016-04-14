@@ -43,8 +43,8 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.setTeleopController(new FeedForwardWithPIDController(this, .005, 0, .008, 0.000, 0.00));
-		this.setAutoController(new FeedForwardWithPIDController(this, .005, 0, .008, 0.000, 0.00));
+		this.teleopController = new FeedForwardWithPIDController(this, .005, 0, .008, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(this, .005, 0, .008, 0.000, 0.00);
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		this.autoController.setName("Flywheel");

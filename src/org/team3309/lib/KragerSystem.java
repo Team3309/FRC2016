@@ -18,7 +18,6 @@ public abstract class KragerSystem {
 	 */
 	public KragerSystem(String name) {
 		this.name = name;
-		System.out.println("NAME: " + name);
 	}
 
 	public String getName() {

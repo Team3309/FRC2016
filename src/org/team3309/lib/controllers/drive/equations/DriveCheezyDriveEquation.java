@@ -12,23 +12,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCheezyDriveEquation extends Controller {
 
-	private static int instances = 0;
-	private int instanceNum = 0;
-
 	public DriveCheezyDriveEquation(ControlledSubsystem subsystem) {
 		super(subsystem);
-		instanceNum = instances;
-		instances++;
-		this.setName("CHEZY " + instances);
-		//this.update(subsystem.getInputState());
 	}
 
 	public DriveCheezyDriveEquation(ControlledSubsystem subsystem, boolean hasSeparateThread) {
 		super(subsystem, hasSeparateThread);
-		instanceNum = instances;
-		instances++;
-		this.setName("CHEZY " + instances);
-		//this.update(subsystem.getInputState());
 	}
 
 	@Override

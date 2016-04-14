@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Krager
  *
  */
-public class Drive extends ControlledSubsystem {
+public class Drive extends ControlledSubsystem implements Runnable {
 	/**
 	 * Used to give a certain gap that the drive would be ok with being within
 	 * its goal encoder averageÃ�.
@@ -55,7 +55,7 @@ public class Drive extends ControlledSubsystem {
 	public boolean lowGearInAuto = false;
 	boolean isReset = false;
 
-	private static boolean isLocked = false;
+	private final Thread thread;
 
 	/**
 	 * Singleton Pattern
@@ -63,38 +63,34 @@ public class Drive extends ControlledSubsystem {
 	 * @return the single instance
 	 */
 	public static Drive getInstance() {
-		if (instance == null && !isLocked) {
-			isLocked = true;
+		if (instance == null)
 			instance = new Drive("Drive");
-		}
 		return instance;
 	}
 
 	private Drive(String name) {
 		super(name);
+		thread = new Thread(this);
+		teleopController = new DriveCheezyDriveEquation(Drive.getInstance());
+		autoController = new BlankController(Drive.getInstance());
+	}
 
-		this.print("What ");
-		this.setTeleopController(new DriveCheezyDriveEquation(this));
-		this.setAutoController(new BlankController(this));
+	public void start() {
+		thread.start();
+		teleopController.start();
+		autoController.start();
 	}
 
 	@Override
 	public void initTeleop() {
-		if (autoController.thread != null) {
-			autoController.thread.stop();
-		}
-		this.setTeleopController(new DriveCheezyDriveEquation(Drive.getInstance()));
+		teleopController = new DriveCheezyDriveEquation(Drive.getInstance());
 		isReset = false;
-
 	}
 
 	@Override
 	public void initAuto() {
-		if (teleopController.thread != null) {
-			teleopController.thread.stop();
-		}
 		isLowGear = false;
-		this.setAutoController(new BlankController(Drive.getInstance()));
+		autoController = new BlankController(Drive.getInstance());
 	}
 
 	public void toVision() {
@@ -137,7 +133,8 @@ public class Drive extends ControlledSubsystem {
 		} else if (Controls.operatorController.getBack()) {
 
 		} else if (Controls.operatorController.getLB() && !isReset) {
-			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(this, this.getAngle());
+			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(Drive.getInstance(),
+					this.getAngle());
 			driveAngleHardCore.setCompletable(false);
 			driveAngleHardCore.turningController.setConstants(6, 0, 16);
 			this.setTeleopController(driveAngleHardCore);
@@ -147,10 +144,9 @@ public class Drive extends ControlledSubsystem {
 		} else {
 			isReset = false;
 			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
-			this.setTeleopController(new DriveCheezyDriveEquation(this));
+			this.setTeleopController(new DriveCheezyDriveEquation(Drive.getInstance()));
 			Controls.driverController.setRumble(0);
 		}
-		
 		Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 
 		if (Controls.driverController.getLB()) {
@@ -161,11 +157,9 @@ public class Drive extends ControlledSubsystem {
 			sol.set(true);
 		}
 		if (teleopController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
-			this.setTeleopController(new DriveCheezyDriveEquation(this));
-			
+			teleopController = new DriveCheezyDriveEquation(Drive.getInstance());
 		}
 		OutputSignal output = teleopController.getOutputSignal();
-		System.out.println("POWER: " + output);
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
 
@@ -218,11 +212,11 @@ public class Drive extends ControlledSubsystem {
 	 */
 
 	public void setSetpoint(double encoders) {
-		this.setTeleopController(new DriveEncodersController(Drive.getInstance(), encoders));
+		teleopController = new DriveEncodersController(Drive.getInstance(), encoders);
 	}
 
 	public void setAngleSetpoint(double goalAngle) {
-		this.setTeleopController(new DriveAngleController(Drive.getInstance(), goalAngle));
+		teleopController = new DriveAngleController(Drive.getInstance(), goalAngle);
 		teleopController.reset();
 		teleopController.setName("Drive Angle Controller");
 	}
@@ -300,7 +294,7 @@ public class Drive extends ControlledSubsystem {
 	 * Stops current running controller and sets motors to zero
 	 */
 	public void stopDrive() {
-		this.setAutoController( new BlankController(Drive.getInstance()));
+		autoController = new BlankController(Drive.getInstance());
 		setLeftRight(0, 0);
 	}
 
@@ -400,21 +394,35 @@ public class Drive extends ControlledSubsystem {
 		return isLowGear;
 	}
 
-	/*
-	 * @Override public void run() { double pastTime =
-	 * System.currentTimeMillis(); while (true) { double startTime =
-	 * System.currentTimeMillis(); if (DriverStation.getInstance().isEnabled())
-	 * { if (!DriverStation.getInstance().isAutonomous()) this.updateTeleop();
-	 * else this.updateAuto(); } // Loop Speed
-	 * 
-	 * double changeInTime = System.currentTimeMillis(); double timeItTook =
-	 * changeInTime - startTime; long overhead = (long) (LOOP_TIME -
-	 * (timeItTook)); // System.out.println("IT TOOK: " + timeItTook); try { if
-	 * (overhead > 2) { // System.out.println("Time for Loop: " + overhead);
-	 * KragerTimer.delayMS(overhead); } else { KragerTimer.delayMS(5);
-	 * System.out.println("Loop Speed too fast!!! " + overhead); } } catch
-	 * (Exception e) { e.printStackTrace(); } }
-	 * 
-	 * }
-	 */
+	@Override
+	public void run() {
+		double pastTime = System.currentTimeMillis();
+		while (true) {
+			double startTime = System.currentTimeMillis();
+			if (DriverStation.getInstance().isEnabled()) {
+				if (!DriverStation.getInstance().isAutonomous())
+					this.updateTeleop();
+				else
+					this.updateAuto();
+			}
+			// Loop Speed
+
+			double changeInTime = System.currentTimeMillis();
+			double timeItTook = changeInTime - startTime;
+			long overhead = (long) (LOOP_TIME - (timeItTook));
+			// System.out.println("IT TOOK: " + timeItTook);
+			try {
+				if (overhead > 2) {
+					// System.out.println("Time for Loop: " + overhead);
+					KragerTimer.delayMS(overhead);
+				} else {
+					KragerTimer.delayMS(5);
+					System.out.println("Loop Speed too fast!!! " + overhead);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
 }

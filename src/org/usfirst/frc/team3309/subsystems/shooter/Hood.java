@@ -38,16 +38,14 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.setTeleopController(new PIDPositionController(this, 0.51, 0.001, .014));
-		this.setAutoController(new PIDPositionController(this, 0.51, 0.001, .014));
+		this.teleopController = new PIDPositionController(this, 0.51, 0.001, .014);
+		this.autoController = new PIDPositionController(this, 0.51, 0.001, .014);
 		((PIDController) this.teleopController).kILimit = .2;
-		//this.teleopController.setLOOP_TIME(40);
 		this.teleopController.setName("Hood Angle");
-		((PIDController) this.teleopController).setTHRESHOLD(.4);
+		((PIDController) this.teleopController).setTHRESHOLD(.6);
 		((PIDController) this.autoController).kILimit = .2;
 		this.autoController.setName("Hood Angle");
-		//this.autoController.setLOOP_TIME(40);
-		((PIDController) this.autoController).setTHRESHOLD(.4);
+		((PIDController) this.autoController).setTHRESHOLD(.6);
 		SmartDashboard.putNumber("Test Angle", 15);
 	}
 
@@ -84,10 +82,10 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				goalAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
 				lastVisionAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
-			} else
+			}else
 				goalAngle = 25;
 			System.out.println("Goal Angle: " + goalAngle);
-		} else {
+		}  else {
 			goalAngle = 7.5;
 		}
 		if (goalAngle >= 0) {
@@ -97,8 +95,7 @@ public class Hood extends ControlledSubsystem {
 		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0) || this.isOnTarget()) {
 			output = 0;
 		}
-
-		System.out.println("HOOD POWER: " + output);
+			
 		this.setHood(output);
 	}
 
