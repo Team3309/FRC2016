@@ -1,5 +1,6 @@
 package org.team3309.lib.controllers.drive;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
@@ -12,65 +13,43 @@ public class DriveAngleController extends PIDPositionController {
 	double startingAngle = 0;
 	double goalAngle = 0;
 
-	public DriveAngleController(double goal) {
-		super(0.166, 0.001, 0.002);
+	public DriveAngleController(ControlledSubsystem subsystem, double goal) {
+		super(subsystem, false, 0.044, 0.00, 0.004);
 		this.setName("Angle");
-		// SmartDashboard.putNumber(this.getName() + " goal(set me)", goal);
+		SmartDashboard.putNumber(this.getName() + " goal(set me)", goal);
 		this.setTHRESHOLD(.5);
-		this.kILimit = .15;
+		this.kILimit = .3;
 
 		startingAngle = Sensors.getAngle();
 		goalAngle = goal;
 	}
 
 	private double lastTime = 0;
-	private final double MIN_POW = .32;
+	private final double MIN_POW = .13;
 
 	public OutputSignal getOutputSignal(InputState inputState) {
 		double error = goalAngle - inputState.getAngularPos();
 		if (Math.abs(error) > 180) {
 			error = -KragerMath.sign(error) * (360 - Math.abs(error));
-			System.out.println("New Error: " + error);
+			//System.out.println("New Error: " + error);
 		}
-		double left = 0;
 		SmartDashboard.putNumber("VISION ErRROR", error);
 		InputState state = new InputState();
 		state.setError(error);
-		/*
-		double left = super.getOutputSignal(state).getMotor();
+		
+		super.update(state);
+		double left = this.lastOutputState.getMotor();
 		if (left < 0) {
 			left -= MIN_POW;
 		} else {
 			left += MIN_POW;
 		}
 		
-		if (Math.abs(left) > .6) {
+		if (Math.abs(left) > 1) {
 			if (left > 0) {
-				left = .6;
+				left = 1;
 			} else {
-				left = -.6;
-			}
-		}*/
-		if (Math.abs(error) < 2.25) {
-			//System.out.println("HERE");
-			left = super.getOutputSignal(state).getMotor();
-		}else if (Math.abs(error) < 5) {
-			if (error < 0) {
-				left = -.42; 
-			}else if (error > 0) {
-				left = .42;
-			}
-		}else if (Math.abs(error) < 15) {
-			if (error < 0) {
-				left = -.42; 
-			}else if (error > 0) {
-				left = .42;
-			}
-		}else if (Math.abs(error) < Integer.MAX_VALUE) {
-			if (error < 0) {
-				left = -.42; 
-			}else if (error > 0) {
-				left = .42;
+				left = -1;
 			}
 		}
 		OutputSignal signal = new OutputSignal();

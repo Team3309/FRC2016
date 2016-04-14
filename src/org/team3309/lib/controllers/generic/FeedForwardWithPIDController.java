@@ -1,5 +1,6 @@
 package org.team3309.lib.controllers.generic;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 
@@ -17,8 +18,9 @@ public class FeedForwardWithPIDController extends PIDController {
 	 * @param kI
 	 * @param kD
 	 */
-	public FeedForwardWithPIDController(double kV, double kA, double kP, double kI, double kD) {
-		super(kP, kI, kD);
+	public FeedForwardWithPIDController(ControlledSubsystem system, double kV, double kA, double kP, double kI,
+			double kD) {
+		super(system, kP, kI, kD);
 		this.kA = kA;
 		this.kV = kV;
 	}
@@ -32,28 +34,67 @@ public class FeedForwardWithPIDController extends PIDController {
 	 * @param kD
 	 * @param kILimit
 	 */
-	public FeedForwardWithPIDController(double kV, double kA, double kP, double kI, double kD, double kILimit) {
-		super(kP, kI, kD, kILimit);
+	public FeedForwardWithPIDController(ControlledSubsystem system, double kV, double kA, double kP, double kI,
+			double kD, double kILimit) {
+		super(system, kP, kI, kD, kILimit);
 		this.kA = kA;
 		this.kV = kV;
 	}
-	
+
+	/**
+	 * 
+	 * @param kV
+	 * @param kA
+	 * @param kP
+	 * @param kI
+	 * @param kD
+	 */
+	public FeedForwardWithPIDController(ControlledSubsystem system, boolean hasSeparateThread, double kV, double kA,
+			double kP, double kI, double kD) {
+		super(system, hasSeparateThread, kP, kI, kD);
+		this.kA = kA;
+		this.kV = kV;
+	}
+
+	/**
+	 * 
+	 * @param kV
+	 * @param kA
+	 * @param kP
+	 * @param kI
+	 * @param kD
+	 * @param kILimit
+	 */
+	public FeedForwardWithPIDController(ControlledSubsystem system, boolean hasSeparateThread, double kV, double kA,
+			double kP, double kI, double kD, double kILimit) {
+		super(system, hasSeparateThread, kP, kI, kD, kILimit);
+		this.kA = kA;
+		this.kV = kV;
+	}
+
 	public void setConstants(double kV, double kA, double kP, double kI, double kD) {
 		super.setConstants(kP, kI, kD);
 		this.kV = kV;
 		this.kA = kA;
 	}
+
 	@Override
 	public void reset() {
 		super.reset();
 	}
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
-		double power = super.getOutputSignal(inputState).getMotor() + this.kA * aimAcc + this.kV * aimVel;
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+
+	@Override
+	public void update(InputState inputState) {
+		super.update(inputState);
+		double power = super.getOutputSignal().getMotor() + this.kA * aimAcc + this.kV * aimVel;
 		OutputSignal signal = new OutputSignal();
 		signal.setMotor(power);
-		return signal;
+		this.lastOutputState = signal;
 	}
 
 	@Override
@@ -99,7 +140,7 @@ public class FeedForwardWithPIDController extends PIDController {
 
 	public void sendToSmartDash() {
 		super.sendToSmartDash();
-		
+
 		kA = SmartDashboard.getNumber(this.getName() + " kA", kA);
 		kV = SmartDashboard.getNumber(this.getName() + " kV", kV);
 		SmartDashboard.putNumber(this.getName() + " aimVel", this.aimVel);

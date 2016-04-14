@@ -32,7 +32,7 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		double startAngle = mDrive.getAngle();
 		IntakePivot.getInstance().toIntakePosition();
 		Sensors.resetDrive();
-		DriveEncodersVelocityController goFast = new DriveEncodersVelocityController(395); // 282,
+		DriveEncodersVelocityController goFast = new DriveEncodersVelocityController(Drive.getInstance(), 395); // 282,
 																							// 340
 		goFast.setRampUp(true);
 		goFast.setMAX_ENCODER_VEL(80);

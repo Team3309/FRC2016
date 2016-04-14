@@ -2,6 +2,7 @@ package org.team3309.lib.controllers.drive;
 
 import java.util.LinkedList;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
@@ -17,10 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveEncodersVelocityController extends Controller {
 
-	private FeedForwardWithPIDController leftSideController = new FeedForwardWithPIDController(.006, 0, .003, .001, 0);
-	private FeedForwardWithPIDController rightSideController = new FeedForwardWithPIDController(.006, 0, .004, .001, 0);
-	private PIDPositionController encodersController = new PIDPositionController(1, 0, 0);
-	private PIDPositionController turningController = new PIDPositionController(.06, 0, 0);
+	private FeedForwardWithPIDController leftSideController = new FeedForwardWithPIDController(Drive.getInstance(), false, .006, 0, .003, .001, 0);
+	private FeedForwardWithPIDController rightSideController = new FeedForwardWithPIDController(Drive.getInstance(), false, .006, 0, .004, .001, 0);
+	private PIDPositionController encodersController = new PIDPositionController(Drive.getInstance(), false, 1, 0, 0);
+	private PIDPositionController turningController = new PIDPositionController(Drive.getInstance(), false, .06, 0, 0);
 	private KragerTimer doneTimer = new KragerTimer(.5);
 	private LinkedList<VelocityChangePoint> encoderChanges = new LinkedList<VelocityChangePoint>();
 	private LinkedList<Operation> operations = new LinkedList<Operation>();
@@ -32,7 +33,8 @@ public class DriveEncodersVelocityController extends Controller {
 	private double MAX_ENCODER_VEL_LEFT = 100;
 	private boolean isRampUp = false;
 
-	public DriveEncodersVelocityController(double encoderGoal) {
+	public DriveEncodersVelocityController(ControlledSubsystem system, double encoderGoal) {
+		super(system);
 		if (Drive.getInstance().isLowGear()) {
 			encodersController.setConstants(2, 0, 1.015);
 			turningController.setConstants(.06, 0, 0);
@@ -65,7 +67,12 @@ public class DriveEncodersVelocityController extends Controller {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+	
+	@Override
+	public void update(InputState inputState) {
 		double currentEncoder = 0;
 		try {
 			currentEncoder = (Math.abs(inputState.getRightPos()) + Math.abs(inputState.getLeftPos())) / 2;
@@ -109,7 +116,8 @@ public class DriveEncodersVelocityController extends Controller {
 		SmartDashboard.putNumber("Goal Angle", goalAngle);
 		InputState state = new InputState();
 		state.setError(error); // sets angle error to be sent in turning PID
-		OutputSignal outputOfTurningController = encodersController.getOutputSignal(state); // outputs
+		encodersController.update(state);
+		OutputSignal outputOfTurningController = encodersController.getOutputSignal(); // outputs
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
@@ -160,7 +168,7 @@ public class DriveEncodersVelocityController extends Controller {
 			leftState.setError(leftAimVel - inputState.getLeftVel());
 			rightState.setError(rightAimVel - inputState.getRightVel());
 		} catch (Exception e) {
-			return new OutputSignal();
+			this.lastOutputState = new OutputSignal();
 		}
 		// leftSideController.setAimVel(dashAimTurnVel);
 		// rightSideController.setAimVel(-dashAimTurnVel);
@@ -168,9 +176,10 @@ public class DriveEncodersVelocityController extends Controller {
 		// rightState.setError(-dashAimTurnVel - inputState.getRightVel());
 		InputState turningState = new InputState();
 		turningState.setError(goalAngle - inputState.getAngularPos());
-
-		double rightSideOutput = rightSideController.getOutputSignal(rightState).getMotor();
-		double leftSideOutput = leftSideController.getOutputSignal(leftState).getMotor();
+		rightSideController.update(rightState);
+		leftSideController.update(leftState);
+		double rightSideOutput = rightSideController.getOutputSignal().getMotor();
+		double leftSideOutput = leftSideController.getOutputSignal().getMotor();
 		// System.out.println("AIM VELs " + leftAimVel + " right Aim Vel " +
 		// -rightAimVel);
 		// SmartDashboard.putString("HardCore Power", "RIGHT: " +
@@ -179,7 +188,8 @@ public class DriveEncodersVelocityController extends Controller {
 			if (Math.abs(inputState.getAngularPos() - goalAngle) > 30) {
 				goalAngle = inputState.getAngularPos();
 			}
-			double turn = turningController.getOutputSignal(turningState).getMotor();
+			turningController.update(turningState);
+			double turn = turningController.getOutputSignal().getMotor();
 			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput + turn, -leftSideOutput - turn);// -
 																									// +
 		} else {
@@ -187,7 +197,7 @@ public class DriveEncodersVelocityController extends Controller {
 		}
 
 		pastAim = rightAimVel;
-		return toBeReturnedSignal;
+		this.lastOutputState = toBeReturnedSignal;
 	}
 
 	public LinkedList<Operation> getOperations() {

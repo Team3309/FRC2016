@@ -1,5 +1,6 @@
 package org.team3309.lib.controllers.drive;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
@@ -13,7 +14,8 @@ public class DriveWhileOnADefenseController extends Controller {
 	private boolean hasGoneOverDefense = false;
 	private double countsOfAfter = 0;
 
-	public DriveWhileOnADefenseController(Controller x) {
+	public DriveWhileOnADefenseController(ControlledSubsystem system, Controller x) {
+		super(system);
 		this.controllerToRun = x;
 	}
 
@@ -23,7 +25,12 @@ public class DriveWhileOnADefenseController extends Controller {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+
+	@Override
+	public void update(InputState inputState) {
 		// IF roll is greater than thresh, start keeping track
 		if (Math.abs(Sensors.getRoll()) > THRESHOLD) {
 			if (hasBeganGoingOverDefense) {
@@ -40,7 +47,8 @@ public class DriveWhileOnADefenseController extends Controller {
 		if (countsOfAfter > 12) {
 			hasGoneOverDefense = true;
 		}
-		return controllerToRun.getOutputSignal(inputState);
+		controllerToRun.update(inputState);
+		this.lastOutputState = controllerToRun.getOutputSignal();
 	}
 
 	@Override

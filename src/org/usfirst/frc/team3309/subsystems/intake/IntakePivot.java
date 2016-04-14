@@ -51,8 +51,8 @@ public class IntakePivot extends ControlledSubsystem {
 		intakePivot.reverseSensor(true);
 		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 
-		teleopController = new PIDPositionController(.012, 0, .005);
-		autoController = new PIDPositionController(.012, 0, .005);
+		teleopController = new PIDPositionController(this, .012, 0, .005);
+		autoController = new PIDPositionController(this, .012, 0, .005);
 		autoController.setName("Pivot");
 		teleopController.setName("Pivot");
 		goalAngle = INTAKE_ANGLE;
@@ -61,7 +61,8 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void initTeleop() {
-		goalAngle = UP_ANGLE;
+		// = UP_ANGLE;
+		this.toUpPosition();
 	}
 
 	@Override
@@ -73,11 +74,12 @@ public class IntakePivot extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		double output = 0;
+		//teleopController.update(getInputState());
 		if (Controls.operatorController.getRB() && !this.isButtonBeingHeld) {
 			this.isButtonBeingHeld = true;
 			if (!this.isAtHighPoint) {
 				goalAngle = this.UP_ANGLE;
-				this.setTeleopController(new PIDPositionController(.019, 0, .009)); // .019,
+				this.setTeleopController(new PIDPositionController(this, .019, 0, .009)); // .019,
 				// 0
 				// ,
 				// .009
@@ -85,15 +87,15 @@ public class IntakePivot extends ControlledSubsystem {
 				((PIDController) this.teleopController).setUseSmartDash(false);
 			} else {
 				goalAngle = this.INTAKE_ANGLE;
-				this.setTeleopController(new PIDPositionController(.0175, 0, .008)); // .007,
+				this.setTeleopController(new PIDPositionController(this, .0175, 0, .008)); // .007,
 				// 0,
 				// .017
 				((PIDController) this.teleopController).setUseSmartDash(false);
 			}
 			isAtHighPoint = !isAtHighPoint;
-			output = -teleopController.getOutputSignal(getInputState()).getMotor();
+			output = -teleopController.getOutputSignal().getMotor();
 		} else if (Controls.operatorController.getRB()) {
-			output = -teleopController.getOutputSignal(getInputState()).getMotor();
+			output = -teleopController.getOutputSignal().getMotor();
 		} else if (Math.abs(KragerMath.threshold(Controls.operatorController.getLeftY())) > .15) {
 			output = KragerMath.threshold(Controls.operatorController.getLeftY());
 			goalAngle = -1000;
@@ -101,12 +103,12 @@ public class IntakePivot extends ControlledSubsystem {
 			if (goalAngle < 0) {
 				output = 0;
 			} else {
-				output = -teleopController.getOutputSignal(getInputState()).getMotor();
+				output = -teleopController.getOutputSignal().getMotor();
 			}
 			this.isButtonBeingHeld = false;
 		}
 		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
-				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
+				|| (this.getPivotAngle() < (this.goalAngle + 12) && this.getPivotAngle() > (this.goalAngle - 12))) {
 			if (this.isAtHighPoint) {
 				output = .08;
 			} else {
@@ -130,7 +132,8 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void updateAuto() {
-		double output = -autoController.getOutputSignal(getInputState()).getMotor();
+		//autoController.update(getInputState());
+		double output = -autoController.getOutputSignal().getMotor();
 		if ((this.getPivotAngle() > 160 && this.goalAngle > -5)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
@@ -164,14 +167,14 @@ public class IntakePivot extends ControlledSubsystem {
 
 	public void toIntakePosition() {
 		goalAngle = this.INTAKE_ANGLE;
-		this.setAutoController(new PIDPositionController(.0175, 0, .008));
+		this.setAutoController(new PIDPositionController(this, .0175, 0, .008));
 		isAtHighPoint = false;
 		((PIDController) this.autoController).setUseSmartDash(false);
 	}
 
 	public void toUpPosition() {
 		goalAngle = this.UP_ANGLE;
-		this.setAutoController(new PIDPositionController(.019, 0, .009));
+		this.setAutoController(new PIDPositionController(this, .019, 0, .009));
 		isAtHighPoint = true;
 		((PIDController) this.autoController).setUseSmartDash(false);
 	}
@@ -192,7 +195,7 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public void setIntakePivot(double power) {
-		this.intakePivot.set(-power);
+		this.intakePivot.set(power);
 	}
 
 	@Override

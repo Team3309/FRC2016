@@ -38,8 +38,8 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.teleopController = new PIDPositionController(0.51, 0.001, .014);
-		this.autoController = new PIDPositionController(0.51, 0.001, .014);
+		this.teleopController = new PIDPositionController(this, 0.51, 0.001, .014);
+		this.autoController = new PIDPositionController(this, 0.51, 0.001, .014);
 		((PIDController) this.teleopController).kILimit = .2;
 		this.teleopController.setName("Hood Angle");
 		((PIDController) this.teleopController).setTHRESHOLD(.6);
@@ -85,13 +85,11 @@ public class Hood extends ControlledSubsystem {
 			}else
 				goalAngle = 25;
 			System.out.println("Goal Angle: " + goalAngle);
-		} else if (Controls.operatorController.getPOV() == 0) {
-			goalAngle = lastVisionAngle;
-		} else {
+		}  else {
 			goalAngle = 7.5;
 		}
 		if (goalAngle >= 0) {
-			output = this.teleopController.getOutputSignal(getInputState()).getMotor();
+			output = this.teleopController.getOutputSignal().getMotor();
 		}
 
 		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0) || this.isOnTarget()) {
@@ -110,7 +108,7 @@ public class Hood extends ControlledSubsystem {
 			return;
 		}
 		if (goalAngle >= 0) {
-			output = this.autoController.getOutputSignal(getInputState()).getMotor();
+			output = this.autoController.getOutputSignal().getMotor();
 		}
 		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0)) {
 			output = 0;

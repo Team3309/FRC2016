@@ -28,7 +28,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		IntakePivot.getInstance().toIntakePosition();
 		double startAngle = mDrive.getAngle();
 		Sensors.resetDrive();
-		DriveEncodersVelocityController goFast = new DriveEncodersVelocityController(282); // 282
+		DriveEncodersVelocityController goFast = new DriveEncodersVelocityController(Drive.getInstance(), 282); // 282
 		goFast.setRampUp(true);
 		goFast.setMAX_ENCODER_VEL(80);
 		LinkedList<VelocityChangePoint> w = new LinkedList<VelocityChangePoint>();
@@ -45,7 +45,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		}
 		mDrive.stopDrive();
 
-		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(mDrive.getAngle() + 63.5);
+		DriveAngleVelocityController turnToGoal = new DriveAngleVelocityController(Drive.getInstance(), mDrive.getAngle() + 63.5);
 		Drive.getInstance().setAutoController(turnToGoal);
 		try {
 			this.waitForController(turnToGoal, 4);
@@ -58,7 +58,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		mDrive.stopDrive();
 		KragerTimer.delayMS(250);
 		Sensors.resetDrive();
-		DriveEncodersVelocityController goTowardsGoal = new DriveEncodersVelocityController(DISTANCE_TO_GOAL);
+		DriveEncodersVelocityController goTowardsGoal = new DriveEncodersVelocityController(Drive.getInstance(), DISTANCE_TO_GOAL);
 		goTowardsGoal.setMAX_ENCODER_VEL(150);
 		Drive.getInstance().setAutoController(goTowardsGoal);
 
@@ -107,7 +107,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 				/ (KragerMath.sinDeg(angleBeforeVision + errorFromStartingVision));
 		Sensors.resetDrive();
 		System.out.println("DISTANCE TO GO BACKL " + distanceToGoBack);
-		DriveEncodersVelocityController goTowardsGoalBack = new DriveEncodersVelocityController(-distanceToGoBack - 5);
+		DriveEncodersVelocityController goTowardsGoalBack = new DriveEncodersVelocityController(Drive.getInstance(), -distanceToGoBack - 5);
 		goTowardsGoalBack.setMAX_ENCODER_VEL(150);
 		Drive.getInstance().setAutoController(goTowardsGoalBack);
 		try {
@@ -117,7 +117,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		}
 		mDrive.stopDrive();
 
-		DriveAngleVelocityController turnToGoalBack = new DriveAngleVelocityController(startAngle);
+		DriveAngleVelocityController turnToGoalBack = new DriveAngleVelocityController(Drive.getInstance(), startAngle);
 		Drive.getInstance().setAutoController(turnToGoalBack);
 
 		try {
@@ -128,7 +128,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		mDrive.stopDrive();
 
 		Sensors.resetDrive();
-		DriveEncodersVelocityController xBack = new DriveEncodersVelocityController(-230);
+		DriveEncodersVelocityController xBack = new DriveEncodersVelocityController(Drive.getInstance(),-230);
 		xBack.setMAX_ENCODER_VEL(90);
 		LinkedList<VelocityChangePoint> a = new LinkedList<VelocityChangePoint>();
 		a.add(new VelocityChangePoint(60, 90));

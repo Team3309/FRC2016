@@ -1,6 +1,7 @@
 
 package org.team3309.lib.controllers.drive.equations;
 
+import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
@@ -11,6 +12,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCheezyDriveEquation extends Controller {
 
+	public DriveCheezyDriveEquation(ControlledSubsystem subsystem) {
+		super(subsystem);
+	}
+
+	public DriveCheezyDriveEquation(ControlledSubsystem subsystem, boolean hasSeparateThread) {
+		super(subsystem, hasSeparateThread);
+	}
+
 	@Override
 	public void reset() {
 	}
@@ -20,7 +29,12 @@ public class DriveCheezyDriveEquation extends Controller {
 	private double wheelDeadband = 0.02;
 
 	@Override
-	public OutputSignal getOutputSignal(InputState inputState) {
+	public OutputSignal getOutputSignal() {
+		return super.getOutputSignal();
+	}
+
+	@Override
+	public void update(InputState inputState) {
 		double throttle = Controls.driverController.getLeftY();
 		double wheel = KragerMath.threshold(Controls.driverController.getRightX());
 		boolean isQuickTurn = Controls.driverController.getRB();
@@ -134,7 +148,7 @@ public class DriveCheezyDriveEquation extends Controller {
 		signal.setRightMotor(rightPwm);
 		SmartDashboard.putNumber("left", leftPwm);
 		SmartDashboard.putNumber("right", rightPwm);
-		return signal;
+		this.lastOutputState = signal;
 	}
 
 	@Override

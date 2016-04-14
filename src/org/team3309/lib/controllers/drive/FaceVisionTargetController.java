@@ -3,16 +3,17 @@ package org.team3309.lib.controllers.drive;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.robot.Sensors;
+import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
 
-public class FaceVisionTargetController extends DriveAngleVelocityController {
+public class FaceVisionTargetController extends DriveAngleController {
 
 	private boolean sendToDash = true;
 	private Shot aimShot;
 
 	public FaceVisionTargetController() {
-		super(Sensors.getAngle());
+		super(Drive.getInstance(), Sensors.getAngle());
 		if (Vision.getInstance().getShotToAimTowards() != null) {
 			aimShot = Vision.getInstance().getShotToAimTowards();
 			this.setName("Turn To Vision");
