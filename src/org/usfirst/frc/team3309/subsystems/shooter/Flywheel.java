@@ -43,8 +43,8 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.teleopController = new FeedForwardWithPIDController(this, .005, 0, .008, 0.000, 0.00);
-		this.autoController = new FeedForwardWithPIDController(this, .005, 0, .008, 0.000, 0.00);
+		this.teleopController = new FeedForwardWithPIDController(.005, 0, .008, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(.005, 0, .008, 0.000, 0.00);
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		this.autoController.setName("Flywheel");
@@ -124,10 +124,9 @@ public class Flywheel extends ControlledSubsystem {
 			} else {
 				aimVelRPS = 140;
 			}
-		} /*
-			 * else if (Controls.operatorController.getPOV() == 0) { aimVelRPS =
-			 * this.lastVisionShot; }
-			 */ else {
+		} else if (Controls.operatorController.getPOV() == 0) {
+			aimVelRPS = this.lastVisionShot;
+		} else {
 			offset = 0;
 			aimVelRPS = 0;
 			aimAccRPS = 0;
@@ -185,7 +184,7 @@ public class Flywheel extends ControlledSubsystem {
 			((FeedForwardWithPIDController) this.teleopController).setAimAcc(aimAccRPS);
 			((FeedForwardWithPIDController) this.teleopController).setAimVel(aimVelRPS + offset);
 		}
-		double output = this.teleopController.getOutputSignal().getMotor();
+		double output = this.teleopController.getOutputSignal(this.getInputState()).getMotor();
 		if (output > 1) {
 			output = 1;
 		} else if (output < 0) {

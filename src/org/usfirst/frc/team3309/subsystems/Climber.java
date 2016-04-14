@@ -33,7 +33,7 @@ public class Climber extends ControlledSubsystem {
 		latches.set(true);
 		rightCarriage.set(Value.kReverse);
 		leftCarriage.set(Value.kReverse);
-		//rightCarriage.s
+		
 	}
 
 	@Override
@@ -52,17 +52,18 @@ public class Climber extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		// System.out.println(Controls.operatorController.getPOV());
-		if (Controls.operatorController.getPOV() == 0) { // Go Up
+		if (Controls.operatorController.getPOV() == 90) { // Go Up
 			latches.set(false);
-			//KragerTimer.delayMS(1000);
+			KragerTimer.delayMS(1000);
 			rightCarriage.set(Value.kForward);
 			leftCarriage.set(Value.kForward);
-		} else if (Controls.operatorController.getPOV() == 90) { // Neutral
+		} else if (Controls.operatorController.getPOV() == 180) { // Neutral
 			latches.set(true);
 			rightCarriage.set(Value.kOff);
 			leftCarriage.set(Value.kOff);
-		} else if (Controls.operatorController.getPOV() == 180) {
+		} else if (Controls.operatorController.getPOV() == 270) {
 			latches.set(true);
+			KragerTimer.delayMS(1000);
 			rightCarriage.set(Value.kReverse);
 			leftCarriage.set(Value.kReverse);
 		}

@@ -1,6 +1,5 @@
 package org.team3309.lib.controllers.drive;
 
-import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.subsystems.Drive;
@@ -19,8 +18,8 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 	private double pastBasePower = 0.0;
 	private boolean isOver = false;
 
-	public DriveEncodersControllerBasePower(ControlledSubsystem system, double goal, double basePower) {
-		super(system, goal);
+	public DriveEncodersControllerBasePower(double goal, double basePower) {
+		super(goal);
 		this.basePower = 0;
 		this.originalBasePower = basePower;
 	}
@@ -30,24 +29,18 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal() {
-		return super.getOutputSignal();
-	}
-	
-	@Override
-	public void update(InputState inputState) {
+	public OutputSignal getOutputSignal(InputState inputState) {
 		double currentDistance = 0;
 		try { // if no encoders, return 0's
 			currentDistance = Drive.getInstance().getDistanceTraveled();
 		} catch (Exception e) {
-			this.lastOutputState = new OutputSignal();
+			return new OutputSignal();
 		}
 		// Input States for the three controllers
 		InputState inputForAng = inputState;
 		// Add the error for each controller from the inputState
 		inputForAng.setError(goalAngle - inputState.getAngularPos());
-		angController.update(inputState);
-		OutputSignal angularOutput = angController.getOutputSignal();
+		OutputSignal angularOutput = angController.getOutputSignal(inputState);
 		// Prepare the output
 		OutputSignal signal = new OutputSignal();
 		if (Math.abs(basePower) < Math.abs(originalBasePower)) {
@@ -63,7 +56,7 @@ public class DriveEncodersControllerBasePower extends DriveEncodersController {
 		System.out.println("GoalAngle: " + goalAngle);
 		signal.setLeftMotor(basePower);
 		signal.setRightMotor(basePower);
-		this.lastOutputState = signal;
+		return signal;
 	}
 
 	private boolean isEncoderClose() {

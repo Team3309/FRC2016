@@ -33,7 +33,7 @@ public class FeedyWheel extends ControlledSubsystem {
 
 	private FeedyWheel(String name) {
 		super("Feedy Wheel");
-		this.teleopController = new PIDPositionController(this, false, 001, 0, 0);
+		this.teleopController = new PIDPositionController(001, 0, 0);
 		teleopController.setName("FW Pos");
 	}
 
@@ -51,9 +51,8 @@ public class FeedyWheel extends ControlledSubsystem {
 	public void updateTeleop() {
 		currentFlex = input.getVoltage();// averageFlex()
 		this.manualControl();
-		// System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
+		System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
 		pastFlex = currentFlex;// averages.getLast();
-
 	}
 
 	private double averageFlex() {

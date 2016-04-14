@@ -20,7 +20,7 @@ public abstract class ControlledSubsystem extends KragerSystem {
 
 	public ControlledSubsystem(String name) {
 		super(name);
-		teleopController = new BlankController(null);
+		teleopController = new BlankController();
 	}
 
 	/*

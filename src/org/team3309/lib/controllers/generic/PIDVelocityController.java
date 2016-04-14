@@ -1,6 +1,5 @@
 package org.team3309.lib.controllers.generic;
 
-import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 
@@ -18,25 +17,20 @@ public class PIDVelocityController extends PIDController {
 	 */
 	private double runningVelocity = 0.0;
 
-	public PIDVelocityController(ControlledSubsystem system, double kP, double kI, double kD) {
-		super(system, kP, kI, kD);
+	public PIDVelocityController(double kP, double kI, double kD) {
+		super(kP, kI, kD);
 	}
 
-	public PIDVelocityController(ControlledSubsystem system, double kP, double kI, double kD, double kILimit) {
-		super(system, kP, kI, kD, kILimit);
+	public PIDVelocityController(double kP, double kI, double kD, double kILimit) {
+		super(kP, kI, kD, kILimit);
 	}
 
+	// Adds the previous velocity with the new PID feedback
 	@Override
-	public OutputSignal getOutputSignal() {
-		return super.getOutputSignal();
-	}
-	
-	@Override
-	public void update(InputState inputState) {
+	public OutputSignal getOutputSignal(InputState inputState) {
 		OutputSignal signal = new OutputSignal();
-		super.update(inputState);
-		runningVelocity += super.getOutputSignal().getMotor();
+		runningVelocity += super.getOutputSignal(inputState).getMotor();
 		signal.setMotor(runningVelocity);
-		this.lastOutputState = signal;
+		return signal;
 	}
 }

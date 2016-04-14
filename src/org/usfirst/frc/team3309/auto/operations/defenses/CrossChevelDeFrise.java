@@ -8,7 +8,6 @@ import org.team3309.lib.controllers.drive.VelocityChangePoint;
 import org.team3309.lib.controllers.generic.OnlyPowerController;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.operations.intakepivot.MoveIntakePivotToHigh;
-import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 
 public class CrossChevelDeFrise extends Operation {
@@ -20,7 +19,7 @@ public class CrossChevelDeFrise extends Operation {
 		this.driveEncoder(-70, -70, 3, true);
 		KragerTimer.delayMS(500);
 
-		OnlyPowerController x = new OnlyPowerController(Drive.getInstance());
+		OnlyPowerController x = new OnlyPowerController();
 		x.setPower(.5);
 		IntakePivot.getInstance().setAutoController(x);
 		IntakePivot.getInstance().setGoalAngle(120);
@@ -31,7 +30,7 @@ public class CrossChevelDeFrise extends Operation {
 		x.setPower(0);
 		IntakePivot.getInstance().setAutoController(x);
 
-		DriveEncodersVelocityController goOverCheval = new DriveEncodersVelocityController(Drive.getInstance(), -200);
+		DriveEncodersVelocityController goOverCheval = new DriveEncodersVelocityController(-200);
 		goOverCheval.setMAX_ENCODER_VEL(-50);
 		goOverCheval.setRampUp(true);
 
