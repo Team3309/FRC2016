@@ -99,7 +99,7 @@ public class RoutineBased {
 
 	public void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> arrayOfVel) {
 		Sensors.resetDrive();
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(Drive.getInstance(), goal);
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
 		x.setMAX_ENCODER_VEL(maxEnc);
 		x.setEncoderChanges(arrayOfVel);
 		Drive.getInstance().setAutoController(x);
@@ -112,7 +112,7 @@ public class RoutineBased {
 
 	public void driveEncoder(double goal, double maxEnc, double timeout) {
 		Sensors.resetDrive();
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(Drive.getInstance(), goal);
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
 		x.setMAX_ENCODER_VEL(maxEnc);
 		Drive.getInstance().setAutoController(x);
 		try {
@@ -124,7 +124,7 @@ public class RoutineBased {
 
 	public void driveEncoder(double goal, double maxEnc, double timeout, boolean rampUp) {
 		Sensors.resetDrive();
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(Drive.getInstance(), goal);
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
 		x.setMAX_ENCODER_VEL(maxEnc);
 		x.setRampUp(rampUp);
 		Drive.getInstance().setAutoController(x);
@@ -138,7 +138,7 @@ public class RoutineBased {
 	protected void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> w,
 			LinkedList<Operation> operations, boolean rampUp) {
 		Sensors.resetDrive();
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(Drive.getInstance(), goal);
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
 		x.setMAX_ENCODER_VEL(maxEnc);
 		x.setRampUp(rampUp);
 		x.setOperations(operations);
@@ -155,7 +155,7 @@ public class RoutineBased {
 	public void driveEncoder(double goal, double maxEnc, double timeout, LinkedList<VelocityChangePoint> arrayOfVel,
 			LinkedList<Operation> operations) {
 		Sensors.resetDrive();
-		DriveEncodersVelocityController x = new DriveEncodersVelocityController(Drive.getInstance(), goal);
+		DriveEncodersVelocityController x = new DriveEncodersVelocityController(goal);
 		x.setMAX_ENCODER_VEL(maxEnc);
 		x.setEncoderChanges(arrayOfVel);
 		x.setOperations(operations);
@@ -168,7 +168,7 @@ public class RoutineBased {
 	}
 
 	public void turnToAngle(double goal, double timeout) {
-		DriveAngleVelocityController x = new DriveAngleVelocityController(Drive.getInstance(), goal);
+		DriveAngleVelocityController x = new DriveAngleVelocityController(goal);
 		Drive.getInstance().setAutoController(x);
 		try {
 			this.waitForController(x, timeout);

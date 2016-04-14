@@ -53,7 +53,10 @@ public class Sensors {
 	}
 
 	public static double getAngularVel() {
+<<<<<<< HEAD
 		// navX.get
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 		return navX.getRate();
 	}
 
@@ -71,11 +74,14 @@ public class Sensors {
 	}
 
 	public static double getRightDrive() throws SensorDoesNotReturnException {
-		double curEncoder = rightDrive.get() / 100.0;
+		double curEncoder = rightDrive.get() / 100;
 		if (Math.abs(curEncoder - pastRightEncoder) > 5 && Drive.getInstance().getRightPower() > .7) {
 			rightBadCounts++;
+<<<<<<< HEAD
 		} else {
 			rightBadCounts = 0;
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 		}
 		if (rightBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
@@ -88,15 +94,18 @@ public class Sensors {
 		if (rightBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
 		}
-		return rightDrive.getRate() / 100.0;
+		return rightDrive.getRate() / 100;
 	}
 
 	public static double getLeftDrive() throws SensorDoesNotReturnException {
-		double curEncoder = leftDrive.get() / 100.0;
+		double curEncoder = leftDrive.get() / 100;
 		if (Math.abs(curEncoder - pastLeftEncoder) > 5 && Drive.getInstance().getLeftPower() > .7) {
 			leftBadCounts++;
+<<<<<<< HEAD
 		} else {
 			leftBadCounts = 0;
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 		}
 		if (leftBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
@@ -109,7 +118,7 @@ public class Sensors {
 		if (leftBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
 		}
-		return -leftDrive.getRate() / 100.0;
+		return -leftDrive.getRate() / 100;
 	}
 
 	// Shooter

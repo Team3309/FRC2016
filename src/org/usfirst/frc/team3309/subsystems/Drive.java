@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
-import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
@@ -41,8 +40,6 @@ public class Drive extends ControlledSubsystem {
 	 */
 	private static final double DRIVE_GYRO_LENIENCY = .5;
 
-	private int LOOP_TIME = 20;
-
 	private static Drive instance;
 	// Actuators
 	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
@@ -55,8 +52,11 @@ public class Drive extends ControlledSubsystem {
 	public boolean lowGearInAuto = false;
 	boolean isReset = false;
 
+<<<<<<< HEAD
 	private static boolean isLocked = false;
 
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 	/**
 	 * Singleton Pattern
 	 * 
@@ -72,18 +72,27 @@ public class Drive extends ControlledSubsystem {
 
 	private Drive(String name) {
 		super(name);
+<<<<<<< HEAD
 
 		this.print("What ");
 		this.setTeleopController(new DriveCheezyDriveEquation(this));
 		this.setAutoController(new BlankController(this));
+=======
+		teleopController = new DriveCheezyDriveEquation();
+		autoController = new BlankController();
+>>>>>>> parent of 887d793... restructured for separate loops
 	}
 
 	@Override
 	public void initTeleop() {
+<<<<<<< HEAD
 		if (autoController.thread != null) {
 			autoController.thread.stop();
 		}
 		this.setTeleopController(new DriveCheezyDriveEquation(Drive.getInstance()));
+=======
+		teleopController = new DriveCheezyDriveEquation();
+>>>>>>> parent of 887d793... restructured for separate loops
 		isReset = false;
 
 	}
@@ -94,25 +103,22 @@ public class Drive extends ControlledSubsystem {
 			teleopController.thread.stop();
 		}
 		isLowGear = false;
+<<<<<<< HEAD
 		this.setAutoController(new BlankController(Drive.getInstance()));
+=======
+		autoController = new BlankController();
+>>>>>>> parent of 887d793... restructured for separate loops
 	}
 
 	public void toVision() {
 		this.desiredShot = Vision.getInstance().getShotToAimTowards();
-		// if (this.desiredShot != null) {
-		// revert this poop
-		if (true) {
-
-			double offset = SmartDashboard.getNumber("ANGLE I AM TURNING ( ADDED TO OTHER)");
-			// mDrive.setHighGear(true);
-			DriveAngleController angleVel = new DriveAngleController(Drive.getInstance(), this.getAngle() + offset);
-			angleVel.setCompletable(false);
+		if (this.desiredShot != null) {
 			FaceVisionTargetController x = new FaceVisionTargetController();
 			x.setName("VISION");
 			x.reset();
 			x.setCompletable(false);
 
-			// System.out.println("Vision started");
+			System.out.println("Vision started");
 			if (DriverStation.getInstance().isAutonomous())
 				this.setAutoController(x);
 			else
@@ -126,18 +132,22 @@ public class Drive extends ControlledSubsystem {
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShotToAimTowards();
 			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
-			if (this.desiredShot != null && !isReset) {
-				// System.out.println("ACQUIRE NEW ANGLE");
+			if (this.desiredShot != null) {
+				System.out.println("ACQUIRE NEW ANGLE");
 				toVision();
 				Controls.driverController.setRumble(1);
 			} else {
-				// System.out.println("Vision does not see anything");
+				System.out.println("Vision does not see anything");
 				isReset = false;
 			}
 		} else if (Controls.operatorController.getBack()) {
 
 		} else if (Controls.operatorController.getLB() && !isReset) {
+<<<<<<< HEAD
 			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(this, this.getAngle());
+=======
+			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(this.getAngle());
+>>>>>>> parent of 887d793... restructured for separate loops
 			driveAngleHardCore.setCompletable(false);
 			driveAngleHardCore.turningController.setConstants(6, 0, 16);
 			this.setTeleopController(driveAngleHardCore);
@@ -147,7 +157,11 @@ public class Drive extends ControlledSubsystem {
 		} else {
 			isReset = false;
 			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
+<<<<<<< HEAD
 			this.setTeleopController(new DriveCheezyDriveEquation(this));
+=======
+			this.setTeleopController(new DriveCheezyDriveEquation());
+>>>>>>> parent of 887d793... restructured for separate loops
 			Controls.driverController.setRumble(0);
 		}
 		
@@ -161,17 +175,23 @@ public class Drive extends ControlledSubsystem {
 			sol.set(true);
 		}
 		if (teleopController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
+<<<<<<< HEAD
 			this.setTeleopController(new DriveCheezyDriveEquation(this));
 			
 		}
 		OutputSignal output = teleopController.getOutputSignal();
 		System.out.println("POWER: " + output);
+=======
+			teleopController = new DriveCheezyDriveEquation();
+		}
+		OutputSignal output = teleopController.getOutputSignal(getInputState());
+>>>>>>> parent of 887d793... restructured for separate loops
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
 
 	public void updateAuto() {
 		// System.out.println("DRIVE ANDLE: " + this.getAngle());
-		OutputSignal output = autoController.getOutputSignal();
+		OutputSignal output = autoController.getOutputSignal(getInputState());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
 	}
 
@@ -218,11 +238,19 @@ public class Drive extends ControlledSubsystem {
 	 */
 
 	public void setSetpoint(double encoders) {
+<<<<<<< HEAD
 		this.setTeleopController(new DriveEncodersController(Drive.getInstance(), encoders));
 	}
 
 	public void setAngleSetpoint(double goalAngle) {
 		this.setTeleopController(new DriveAngleController(Drive.getInstance(), goalAngle));
+=======
+		teleopController = new DriveEncodersController(encoders);
+	}
+
+	public void setAngleSetpoint(double goalAngle) {
+		teleopController = new DriveAngleController(goalAngle);
+>>>>>>> parent of 887d793... restructured for separate loops
 		teleopController.reset();
 		teleopController.setName("Drive Angle Controller");
 	}
@@ -300,7 +328,11 @@ public class Drive extends ControlledSubsystem {
 	 * Stops current running controller and sets motors to zero
 	 */
 	public void stopDrive() {
+<<<<<<< HEAD
 		this.setAutoController( new BlankController(Drive.getInstance()));
+=======
+		autoController = new BlankController();
+>>>>>>> parent of 887d793... restructured for separate loops
 		setLeftRight(0, 0);
 	}
 
@@ -351,14 +383,11 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-
-		if (!DriverStation.getInstance().isAutonomous()) {
-			teleopController.sendToSmartDash();
-		} else {
-
-			autoController.sendToSmartDash();
-		}
-
+		/*
+		 * if (!DriverStation.getInstance().isAutonomous())
+		 * teleopController.sendToSmartDash(); else {
+		 * autoController.sendToSmartDash(); }
+		 */
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
@@ -369,8 +398,6 @@ public class Drive extends ControlledSubsystem {
 			SmartDashboard.putNumber(this.getName() + " Left Encoder", Sensors.getLeftDrive());
 			SmartDashboard.putNumber(this.getName() + " Left Rate", Sensors.getLeftDriveVel());
 		} catch (Exception e) {
-			System.out.println("BAD");
-			e.printStackTrace();
 			SmartDashboard.putNumber(this.getName() + " Left Encoder", 0);
 			SmartDashboard.putNumber(this.getName() + " Left Rate", 0);
 		}
@@ -378,8 +405,6 @@ public class Drive extends ControlledSubsystem {
 			SmartDashboard.putNumber(this.getName() + " Right Encoder", Sensors.getRightDrive());
 			SmartDashboard.putNumber(this.getName() + " Right Rate", Sensors.getRightDriveVel());
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("BAD");
 			SmartDashboard.putNumber(this.getName() + " Right Encoder", 0);
 			SmartDashboard.putNumber(this.getName() + " Right Rate", 0);
 		}
@@ -399,6 +424,7 @@ public class Drive extends ControlledSubsystem {
 	public boolean isLowGear() {
 		return isLowGear;
 	}
+<<<<<<< HEAD
 
 	/*
 	 * @Override public void run() { double pastTime =
@@ -417,4 +443,6 @@ public class Drive extends ControlledSubsystem {
 	 * 
 	 * }
 	 */
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 }

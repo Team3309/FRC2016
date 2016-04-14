@@ -16,7 +16,7 @@ public class LowSpeedCrossAutoIntakeUp extends AutoRoutine {
 		// DriveEncodersControllerBasePower x = new
 		// DriveEncodersControllerBasePower(25000, 4);
 		// Drive.getInstance().setController(x);
-		OnlyPowerController x = new OnlyPowerController(Drive.getInstance());
+		OnlyPowerController x = new OnlyPowerController();
 		x.setLeftPower(.4);
 		x.setRightPower(.42);
 		Drive.getInstance().setTeleopController(x);

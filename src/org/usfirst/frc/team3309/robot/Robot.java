@@ -64,7 +64,6 @@ public class Robot extends IterativeRobot {
 		System.out.println("Robot INIT");
 		Sensors.init();
 		System.out.println("Sensors INIT");
-		SmartDashboard.putNumber("ANGLE I AM TURNING ( ADDED TO OTHER)", 0);
 		try {
 
 		} catch (Exception e) {
@@ -110,7 +109,10 @@ public class Robot extends IterativeRobot {
 		Shooter.getInstance();
 		System.out.println("SHOOTER");
 		Drive.getInstance();
+<<<<<<< HEAD
 		System.out.println("DRIVE");
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 		Vision.getInstance().start();
 	}
 
@@ -199,12 +201,12 @@ public class Robot extends IterativeRobot {
 
 		List<Goal> goals = Vision.getInstance().getGoals();
 		if (goals.size() > 0) {
-			// System.out.println("Y: " + goals.get(0).y);
+			System.out.println("Y: " + goals.get(0).y);
 			SmartDashboard.putNumber("Y Value", goals.get(0).y);
 		}
 
 		// Update the subsystems
-		//Drive.getInstance().updateTeleop();
+		Drive.getInstance().updateTeleop();
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateTeleop();
 		Shooter.getInstance().sendToSmartDash();

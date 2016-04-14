@@ -1,11 +1,7 @@
 package org.team3309.lib.controllers;
 
-import org.team3309.lib.ControlledSubsystem;
-import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * The basis of any Controller. A Controller can be made to calculate values
@@ -14,9 +10,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author TheMkrage
  * 
  */
-public abstract class Controller implements Runnable {
+public abstract class Controller {
 
 	private String name = "Default";
+<<<<<<< HEAD
 	protected OutputSignal lastOutputState = new OutputSignal();
 	private double LOOP_TIME = 15;
 	
@@ -46,6 +43,8 @@ public abstract class Controller implements Runnable {
 			this.start();
 		this.update(subsystem.getInputState());
 	}
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 
 	/**
 	 * Resets the Controller. For example, reseting the integral term back to
@@ -57,18 +56,11 @@ public abstract class Controller implements Runnable {
 	 * Should be ran one time each loop, tells the subsystem what to do based
 	 * off of the controller.
 	 * 
-	 * @return The signal sent to the ControlledSubsystem
-	 */
-	public OutputSignal getOutputSignal() {
-		return lastOutputState;
-	}
-
-	/**
-	 * 
 	 * @param inputState
 	 *            The state of the ControlledSubsystem
+	 * @return The signal sent to the ControlledSubsystem
 	 */
-	public abstract void update(InputState inputState);
+	public abstract OutputSignal getOutputSignal(InputState inputState);
 
 	/**
 	 * Tells if the controller is done executed its specified task.
@@ -94,6 +86,7 @@ public abstract class Controller implements Runnable {
 	public void print(String print) {
 		System.out.println(this.getName() + " " + print);
 	}
+<<<<<<< HEAD
 
 	private void start() {
 		try {
@@ -132,4 +125,6 @@ public abstract class Controller implements Runnable {
 		}
 
 	}
+=======
+>>>>>>> parent of 887d793... restructured for separate loops
 }

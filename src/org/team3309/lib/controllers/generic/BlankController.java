@@ -1,6 +1,5 @@
 package org.team3309.lib.controllers.generic;
 
-import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
@@ -14,11 +13,6 @@ import org.team3309.lib.controllers.statesandsignals.OutputSignal;
  */
 public class BlankController extends Controller {
 
-	public BlankController(ControlledSubsystem subsystem) {
-		super(subsystem);
-		// TODO Auto-generated constructor stub
-	}
-
 	private double power = 0;
 
 	@Override
@@ -27,16 +21,11 @@ public class BlankController extends Controller {
 	}
 
 	@Override
-	public OutputSignal getOutputSignal() {
-		return super.getOutputSignal();
-	}
-	
-	@Override
-	public void update(InputState inputState) {
+	public OutputSignal getOutputSignal(InputState inputState) {
 		OutputSignal signal = new OutputSignal();
 		signal.setLeftRightMotor(power, power);
 		signal.setMotor(power);
-		this.lastOutputState = signal; // Returns only zeros for everything
+		return signal; // Returns only zeros for everything
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class HighSpeedCrossAutoIntakeDownMode extends AutoRoutine {
 	@Override
 	public void routine() throws TimedOutException, InterruptedException {
 		IntakePivot.getInstance().toIntakePosition();
-		OnlyPowerController x = new OnlyPowerController(Drive.getInstance());
+		OnlyPowerController x = new OnlyPowerController();
 		x.setLeftPower(.4);
 		x.setRightPower(.4);
 		Drive.getInstance().setTeleopController(x);

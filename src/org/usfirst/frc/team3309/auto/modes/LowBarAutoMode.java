@@ -13,11 +13,11 @@ public class LowBarAutoMode extends AutoRoutine {
 	public void routine() throws TimedOutException, InterruptedException {
 		IntakePivot.getInstance().toIntakePosition();
 		mDrive.setHighGear(true);
-		// KragerTimer.delayMS(1000);
+		//KragerTimer.delayMS(1000);
 		// BlankController blankController = new BlankController();
 		// blankController.setPower(.4);
 
-		DriveEncodersControllerBasePower x = new DriveEncodersControllerBasePower(Drive.getInstance(), 23000, .5);
+		DriveEncodersControllerBasePower x = new DriveEncodersControllerBasePower(23000, .5);
 		mDrive.setTeleopController(x);
 
 		IntakePivot.getInstance().toIntakePosition();
@@ -30,7 +30,7 @@ public class LowBarAutoMode extends AutoRoutine {
 		 * KragerTimer.delayMS(6000); x.setLeftPower(0); x.setRightPower(0);
 		 * mDrive.setController(x);
 		 */
-		// mDrive.stopDrive();
+		//mDrive.stopDrive();
 
 		try {
 			this.waitForDrive(6000);
@@ -39,7 +39,7 @@ public class LowBarAutoMode extends AutoRoutine {
 			e.printStackTrace();
 		}
 
-		// IntakePivot.getInstance().toUpPosition();
+		//IntakePivot.getInstance().toUpPosition();
 
 		// blankController.setPower(0);
 		// mDrive.setController(blankController);
