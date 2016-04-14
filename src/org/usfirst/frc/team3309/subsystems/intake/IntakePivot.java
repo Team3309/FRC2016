@@ -51,10 +51,10 @@ public class IntakePivot extends ControlledSubsystem {
 		intakePivot.reverseSensor(true);
 		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 
-		teleopController = new PIDPositionController(this, .012, 0, .005);
-		autoController = new PIDPositionController(this, .012, 0, .005);
-		autoController.setName("Pivot");
-		teleopController.setName("Pivot");
+		this.setTeleopController(new PIDPositionController(this, .012, 0, .005));
+		this.setAutoController(new PIDPositionController(this, .012, 0, .005));
+		autoController.setName("Pivot Auto");
+		teleopController.setName("Pivot Teleop");
 		goalAngle = INTAKE_ANGLE;
 		// intakePivot.
 	}
@@ -74,7 +74,7 @@ public class IntakePivot extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		double output = 0;
-		//teleopController.update(getInputState());
+		// teleopController.update(getInputState());
 		if (Controls.operatorController.getRB() && !this.isButtonBeingHeld) {
 			this.isButtonBeingHeld = true;
 			if (!this.isAtHighPoint) {
@@ -132,7 +132,7 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void updateAuto() {
-		//autoController.update(getInputState());
+		// autoController.update(getInputState());
 		double output = -autoController.getOutputSignal().getMotor();
 		if ((this.getPivotAngle() > 160 && this.goalAngle > -5)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {

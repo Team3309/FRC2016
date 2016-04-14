@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3309.robot;
 
+import java.util.LinkedList;
+
 import org.usfirst.frc.team3309.subsystems.Drive;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -29,6 +31,7 @@ public class Sensors {
 	private static Counter flywheelEncoder;
 	private static Counter hoodEncoder;
 	private static double pastFlywheelRPS = 0.0;
+	private static LinkedList<Double> averagesForHoodSamples = new LinkedList<Double>();
 
 	private static PowerDistributionPanel pdp = new PowerDistributionPanel();
 
@@ -50,7 +53,7 @@ public class Sensors {
 	}
 
 	public static double getAngularVel() {
-		//navX.get
+		// navX.get
 		return navX.getRate();
 	}
 
@@ -71,7 +74,7 @@ public class Sensors {
 		double curEncoder = rightDrive.get() / 100.0;
 		if (Math.abs(curEncoder - pastRightEncoder) > 5 && Drive.getInstance().getRightPower() > .7) {
 			rightBadCounts++;
-		}else {
+		} else {
 			rightBadCounts = 0;
 		}
 		if (rightBadCounts > 100) {
@@ -92,8 +95,8 @@ public class Sensors {
 		double curEncoder = leftDrive.get() / 100.0;
 		if (Math.abs(curEncoder - pastLeftEncoder) > 5 && Drive.getInstance().getLeftPower() > .7) {
 			leftBadCounts++;
-		}else {
-			leftBadCounts =0;
+		} else {
+			leftBadCounts = 0;
 		}
 		if (leftBadCounts > 100) {
 			throw new SensorDoesNotReturnException();
@@ -134,6 +137,16 @@ public class Sensors {
 			}
 			counts++;
 		}
-		return hoodAngle;
+
+		averagesForHoodSamples.addFirst(hoodAngle);
+		double sum = 0;
+		if (averagesForHoodSamples.size() > 15)
+			averagesForHoodSamples.removeLast();
+		for (int i = 0; i < averagesForHoodSamples.size(); i++) {
+			sum += averagesForHoodSamples.get(i);
+		}
+		return (sum / (double) averagesForHoodSamples.size());
+
+		// return hoodAngle;
 	}
 }

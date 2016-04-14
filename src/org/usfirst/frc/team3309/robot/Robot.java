@@ -106,9 +106,11 @@ public class Robot extends IterativeRobot {
 		defenseAutoChooser.addObject("Sally Port", new CrossSallyPort());
 		SmartDashboard.putData("Defense", defenseAutoChooser);
 		Intake.getInstance();
+		System.out.println("INTAKE");
 		Shooter.getInstance();
+		System.out.println("SHOOTER");
 		Drive.getInstance();
-		Drive.getInstance().start();
+		System.out.println("DRIVE");
 		Vision.getInstance().start();
 	}
 
@@ -163,7 +165,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		time.start();
 		time.reset();
-		//Drive.getInstance().updateAuto();
+		Drive.getInstance().updateAuto();
 		Drive.getInstance().sendToSmartDash();
 		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();

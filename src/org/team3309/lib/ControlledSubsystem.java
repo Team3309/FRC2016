@@ -20,7 +20,7 @@ public abstract class ControlledSubsystem extends KragerSystem {
 
 	public ControlledSubsystem(String name) {
 		super(name);
-		teleopController = new BlankController(null);
+		System.out.println("Controlled: " + name);
 	}
 
 	/*
@@ -39,10 +39,23 @@ public abstract class ControlledSubsystem extends KragerSystem {
 	public abstract InputState getInputState();
 
 	public void setTeleopController(Controller mController) {
+		try {
+			if (this.teleopController.thread != null) {
+				this.teleopController.thread.stop();
+			}
+		} catch (Exception e) {
+
+		}
 		this.teleopController = mController;
 	}
 
 	public void setAutoController(Controller mController) {
+		try {
+			if (this.autoController.thread != null)
+				this.autoController.thread.stop();
+		} catch (Exception e) {
+
+		}
 		this.autoController = mController;
 	}
 
