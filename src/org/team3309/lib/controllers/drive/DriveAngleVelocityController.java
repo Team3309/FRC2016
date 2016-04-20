@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveAngleVelocityController extends Controller {
 	private FeedForwardWithPIDController leftSideController = new FeedForwardWithPIDController(.006, 0, .003, .001, 0);
 	private FeedForwardWithPIDController rightSideController = new FeedForwardWithPIDController(.006, 0, .003, .001, 0);
-	public PIDPositionController turningController = new PIDPositionController(3, 0, 16.015);
+	public PIDPositionController turningController = new PIDPositionController(3, 0.5, 16.015);
 	private KragerTimer doneTimer = new KragerTimer(.5);
 	protected double goalAngle = 0;
 	private boolean isCompletable = true;
@@ -30,13 +30,14 @@ public class DriveAngleVelocityController extends Controller {
 		} else {
 			leftSideController.setConstants(.006, 0, .009, .001, 0);
 			rightSideController.setConstants(.006, 0, .009, .001, 0);
-			turningController.setConstants(3, 0, 16.015);
+			turningController.setConstants(3, 0.5, 16.015);
 		}
 		this.leftSideController.setName("LEFT IDE VEL CONTROLER");
 		this.rightSideController.setName("RIGHT IDE VEL CONTROLER");
 		this.turningController.setName("Turning Angle Controller");
 		leftSideController.kILimit = .3;
 		rightSideController.kILimit = .3;
+		this.turningController.kILimit = 10;
 		goalAngle = aimAngle;
 
 		SmartDashboard.putNumber(this.getName() + " Vel to Turn At", 0);

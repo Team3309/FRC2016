@@ -68,39 +68,39 @@ public class Sensors {
 
 	public static double getRightDrive() throws SensorDoesNotReturnException {
 		double curEncoder = rightDrive.get() / 100;
-		if (Math.abs(curEncoder - pastRightEncoder) > 5 && Drive.getInstance().getRightPower() > .7) {
-			rightBadCounts++;
-		}
-		if (rightBadCounts > 100) {
-			throw new SensorDoesNotReturnException();
-		}
+		//if (Math.abs(curEncoder - pastRightEncoder) > 5 && Drive.getInstance().getRightPower() > .7) {
+		//	rightBadCounts++;
+		//}
+		//if (rightBadCounts > 100) {
+		//	throw new SensorDoesNotReturnException();
+		//}
 		pastRightEncoder = curEncoder;
 		return curEncoder;
 	}
 
 	public static double getRightDriveVel() throws SensorDoesNotReturnException {
-		if (rightBadCounts > 100) {
-			throw new SensorDoesNotReturnException();
-		}
+		//if (rightBadCounts > 100) {
+		//	throw new SensorDoesNotReturnException();
+		//}
 		return rightDrive.getRate() / 100;
 	}
 
 	public static double getLeftDrive() throws SensorDoesNotReturnException {
 		double curEncoder = leftDrive.get() / 100;
-		if (Math.abs(curEncoder - pastLeftEncoder) > 5 && Drive.getInstance().getLeftPower() > .7) {
-			leftBadCounts++;
-		}
-		if (leftBadCounts > 100) {
-			throw new SensorDoesNotReturnException();
-		}
+		//if (Math.abs(curEncoder - pastLeftEncoder) > 5 && Drive.getInstance().getLeftPower() > .7) {
+		//	leftBadCounts++;
+		//}
+		//if (leftBadCounts > 100) {
+		//	throw new SensorDoesNotReturnException();
+		//}
 		pastLeftEncoder = curEncoder;
 		return curEncoder;
 	}
 
 	public static double getLeftDriveVel() throws SensorDoesNotReturnException {
-		if (leftBadCounts > 100) {
-			throw new SensorDoesNotReturnException();
-		}
+		//if (leftBadCounts > 100) {
+		//	throw new SensorDoesNotReturnException();
+		//}
 		return -leftDrive.getRate() / 100;
 	}
 

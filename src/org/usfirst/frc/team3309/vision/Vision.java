@@ -37,10 +37,21 @@ public class Vision implements Runnable {
 	 * Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(180,
 	 * 42.4, -.702), new Shot(180, 46, -.777), new Shot(180, 42.5, -.94555) };
 	 */
-	private static Shot[] shots = { new Shot(120, 29, .681), new Shot(120, 31.4, 0.450), new Shot(120, 33.4, 0.308),
-			new Shot(120, 35.4, .148), new Shot(120, 36.4, -.004), new Shot(140, 38.5, -.005),
-			new Shot(140, 40.0, -.140), new Shot(140, 42.4, -.279), new Shot(140, 44, -.4), new Shot(140, 45.3, -.490),
-			new Shot(160, 46.3, -.491), new Shot(160, 47.4, -.59), new Shot(160, 50.9, -.94555) };
+	private static Shot[] shots = { new Shot(120, 26, .59), new Shot(120, 29, .346), new Shot(120, 32, .227),
+			new Shot(120, 33.6, .09), new Shot(120, 34.6, -.037), new Shot(120, 35.7, -.148), new Shot(120, 36.7, -.25),
+			new Shot(120, 37.7, -.329), new Shot(120, 38.6, -.4), new Shot(130, 41.9, -.401),
+			new Shot(130, 42.3, -.479), new Shot(130, 43, -.562), new Shot(130, 43.7, -.615),
+			new Shot(130, 44.7, -.735), new Shot(130, 45.1, -.812), new Shot(140, 48.7, -.813),
+			new Shot(140, 49.1, -.98) };
+
+	/*
+	 * private static Shot[] shots = { new Shot(120, 29, .681), new Shot(120,
+	 * 31.4, 0.450), new Shot(120, 33.4, 0.308), new Shot(120, 35.4, .148), new
+	 * Shot(120, 36.4, -.004), new Shot(140, 38.5, -.005), new Shot(140, 40.0,
+	 * -.140), new Shot(140, 42.4, -.279), new Shot(140, 44, -.4), new Shot(140,
+	 * 45.3, -.490), new Shot(160, 46.3, -.491), new Shot(160, 47.4, -.59), new
+	 * Shot(160, 50.9, -.94555) };
+	 */
 	// new Shot(goalRPS, goalHood, y)
 
 	private static Vision instance;
@@ -130,21 +141,29 @@ public class Vision implements Runnable {
 						// make an equation
 						// y = slope * x + b
 						if (currentY > shot.getYCoordinate()) {
+							System.out.println("I am at " + currentY + "looking at " + shot.getYCoordinate()
+									+ "which is lower than me");
 							if (i != 0) {
 								Shot previousShot = shots[i - 1];
 								double slope = (previousShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
 										/ (previousShot.getYCoordinate() - shot.getYCoordinate());
+								System.out.println("m = (" + previousShot.getGoalHoodAngle() + " - "
+										+ shot.getGoalHoodAngle() + " )/( " + previousShot.getYCoordinate() + " - "
+										+ shot.getYCoordinate());
 								double b = previousShot.getGoalHoodAngle() - (slope * previousShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
+								System.out.println(slope + " " + currentY + " + " + b);
 								shotToBeSet.setGoalHoodAngle(newOutput);
 							}
 						} else {
 							if (i != shots.length - 1) {
 								Shot upperShot = shots[i + 1];
+								
 								double slope = (upperShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
 										/ (upperShot.getYCoordinate() - shot.getYCoordinate());
 								double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
+								System.out.println(slope + " " + currentY + " + " + b);
 								shotToBeSet.setGoalHoodAngle(newOutput);
 							}
 						}
@@ -152,6 +171,13 @@ public class Vision implements Runnable {
 				}
 				shotToBeSet.setYCoordinate(currentY);
 				currentShotToAimTowards = shotToBeSet;
+				System.out.println(shotToBeSet + " \n");
+			}
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

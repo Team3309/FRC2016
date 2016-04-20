@@ -39,13 +39,13 @@ public class GoForwardStraightAutoMode extends AutoRoutine {
 		LinkedList<VelocityChangePoint> w = new LinkedList<VelocityChangePoint>();
 		w.add(new VelocityChangePoint(50, 100));
 		w.add(new VelocityChangePoint(150, 150));
-		w.add(new VelocityChangePoint(80, 150, 230));
+		w.add(new VelocityChangePoint(80, 150, 235));
 		w.add(new VelocityChangePoint(150, 330));
 		goFast.setEncoderChanges(w);
 
 		LinkedList<Operation> operations = new LinkedList<Operation>();
 		operations.add(new SetRPSAndHoodOperation(200, 140, 30));
-		operations.add(new MoveIntakePivotToHigh(150, true));
+		//operations.add(new MoveIntakePivotToHigh(150, true));
 		goFast.setOperations(operations);
 
 		Drive.getInstance().setAutoController(goFast);

@@ -113,7 +113,7 @@ public class Drive extends ControlledSubsystem {
 			}
 		} else if (Controls.operatorController.getBack()) {
 
-		} else if (Controls.operatorController.getLB() && !isReset) {
+		} else if (Controls.driverController.getLB() && !isReset) {
 			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(this.getAngle());
 			driveAngleHardCore.setCompletable(false);
 			driveAngleHardCore.turningController.setConstants(6, 0, 16);
@@ -325,11 +325,13 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void sendToSmartDash() {
-		/*
-		 * if (!DriverStation.getInstance().isAutonomous())
-		 * teleopController.sendToSmartDash(); else {
-		 * autoController.sendToSmartDash(); }
-		 */
+
+		if (!DriverStation.getInstance().isAutonomous())
+			teleopController.sendToSmartDash();
+		else {
+			autoController.sendToSmartDash();
+		}
+
 		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
 		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());

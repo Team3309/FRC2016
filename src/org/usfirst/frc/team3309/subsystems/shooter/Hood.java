@@ -20,9 +20,10 @@ public class Hood extends ControlledSubsystem {
 	private static Hood mHood = new Hood("Hood");
 	private Spark hoodSpark = new Spark(RobotMap.HOOD_MOTOR);
 	private double curAngle = 0;
-	private double goalAngle = 7.5;
+	private final double HOOD_DOWN_ANGLE = 4;
+	private double goalAngle = HOOD_DOWN_ANGLE;
 
-	private double lastVisionAngle = 7.5;
+	private double lastVisionAngle = HOOD_DOWN_ANGLE;
 
 	/**
 	 * Singleton Pattern
@@ -51,12 +52,12 @@ public class Hood extends ControlledSubsystem {
 
 	@Override
 	public void initTeleop() {
-		goalAngle = 7.5;
+		goalAngle = HOOD_DOWN_ANGLE;
 	}
 
 	@Override
 	public void initAuto() {
-		goalAngle = 7.5;
+		goalAngle = HOOD_DOWN_ANGLE;
 	}
 
 	@Override
@@ -82,22 +83,24 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				goalAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
 				lastVisionAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
-			}else
+			} else
 				goalAngle = 25;
 			System.out.println("Goal Angle: " + goalAngle);
 		} else if (Controls.operatorController.getPOV() == 0) {
 			goalAngle = lastVisionAngle;
 		} else {
-			goalAngle = 7.5;
+			goalAngle = HOOD_DOWN_ANGLE;
 		}
 		if (goalAngle >= 0) {
 			output = this.teleopController.getOutputSignal(getInputState()).getMotor();
 		}
 
-		if ((curAngle > 59 && output > -1) || (curAngle < -20 && output < 0) || this.isOnTarget()) {
+		if ((curAngle > 50 && output > -1) || (curAngle < 4 && output < 0) || this.isOnTarget()) {
 			output = 0;
+			//if ((curAngle < 4 && output < 0))
+				//((PIDController) this.teleopController).reset();
 		}
-			
+
 		this.setHood(output);
 	}
 

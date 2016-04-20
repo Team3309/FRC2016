@@ -13,9 +13,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Climber extends ControlledSubsystem {
 	private static Climber instance;
 
-	private Solenoid latches = new Solenoid(RobotMap.CLIMBER_LATCHES);
+	private DoubleSolenoid latches = new DoubleSolenoid(RobotMap.CLIMBER_RIGHT_DOWN, RobotMap.CLIMBER_RIGHT_UP);;
 	private DoubleSolenoid leftCarriage = new DoubleSolenoid(RobotMap.CLIMBER_LEFT_UP, RobotMap.CLIMBER_LEFT_DOWN);
-	private DoubleSolenoid rightCarriage = new DoubleSolenoid(RobotMap.CLIMBER_RIGHT_UP, RobotMap.CLIMBER_RIGHT_DOWN);
 
 	/**
 	 * Singleton Pattern
@@ -30,20 +29,19 @@ public class Climber extends ControlledSubsystem {
 
 	private Climber(String name) {
 		super(name);
-		latches.set(true);
-		rightCarriage.set(Value.kReverse);
+		latches.set(Value.kForward);
 		leftCarriage.set(Value.kReverse);
-		
+
 	}
 
 	@Override
 	public void initTeleop() {
-		latches.set(true);
-		rightCarriage.set(Value.kReverse);
+		latches.set(Value.kForward);
 		leftCarriage.set(Value.kReverse);
 	}
 
 	@Override
+
 	public void initAuto() {
 		// TODO Auto-generated method stub
 
@@ -52,19 +50,16 @@ public class Climber extends ControlledSubsystem {
 	@Override
 	public void updateTeleop() {
 		// System.out.println(Controls.operatorController.getPOV());
-		if (Controls.operatorController.getPOV() == 90) { // Go Up
-			latches.set(false);
-			KragerTimer.delayMS(1000);
-			rightCarriage.set(Value.kForward);
+		if (Controls.operatorController.getPOV() == 0) { // Go Up
+			latches.set(Value.kOff);
+			KragerTimer.delayMS(500);
 			leftCarriage.set(Value.kForward);
-		} else if (Controls.operatorController.getPOV() == 180) { // Neutral
-			latches.set(true);
-			rightCarriage.set(Value.kOff);
+		} else if (Controls.operatorController.getPOV() == 90) { // Neutral
+			latches.set(Value.kReverse);
 			leftCarriage.set(Value.kOff);
-		} else if (Controls.operatorController.getPOV() == 270) {
-			latches.set(true);
-			KragerTimer.delayMS(1000);
-			rightCarriage.set(Value.kReverse);
+		} else if (Controls.operatorController.getPOV() == 180) {
+			latches.set(Value.kForward);
+			KragerTimer.delayMS(500);
 			leftCarriage.set(Value.kReverse);
 		}
 	}

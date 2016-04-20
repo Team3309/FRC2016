@@ -51,7 +51,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	public void updateTeleop() {
 		currentFlex = input.getVoltage();// averageFlex()
 		this.manualControl();
-		System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
+		//System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
 		pastFlex = currentFlex;// averages.getLast();
 	}
 

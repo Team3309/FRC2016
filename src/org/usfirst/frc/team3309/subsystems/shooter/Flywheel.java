@@ -43,8 +43,9 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.teleopController = new FeedForwardWithPIDController(.005, 0, .008, 0.000, 0.00);
-		this.autoController = new FeedForwardWithPIDController(.005, 0, .008, 0.000, 0.00);
+		this.teleopController = new FeedForwardWithPIDController(.005, 0, .018, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(.005, 0, .018, 0.000, 0.00);
+		
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		this.autoController.setName("Flywheel");
@@ -191,7 +192,7 @@ public class Flywheel extends ControlledSubsystem {
 			output = 0;
 		}
 		if (aimVelRPS != 0 && !hasGoneBack) {
-			FeedyWheel.getInstance().setFeedyWheel(-.5);
+			FeedyWheel.getInstance().setFeedyWheel(-.7);
 			KragerTimer.delayMS(120);
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;

@@ -19,7 +19,7 @@ public class IntakePivot extends ControlledSubsystem {
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
 	private double UP_ANGLE = 1;
-	private double INTAKE_ANGLE = 90.3309;
+	private double INTAKE_ANGLE = 88.3309;
 	// up = 4, intake_angle = 92;
 	private double goalAngle = INTAKE_ANGLE;
 
@@ -61,12 +61,11 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void initTeleop() {
-		goalAngle = UP_ANGLE;
+		this.toUpPosition();
 	}
 
 	@Override
 	public void initAuto() {
-		goalAngle = INTAKE_ANGLE;
 		this.toIntakePosition();
 	}
 
@@ -113,10 +112,11 @@ public class IntakePivot extends ControlledSubsystem {
 				output = .08;
 			}
 		}
-		if (Controls.driverController.getA()) {
+		if (Controls.operatorController.getLB()) {
 			intakePivot.setEncPosition(0);
 			intakePivot.setPosition(0);
 			intakePivot.setPulseWidthPosition(0);
+			this.goalAngle = 0;
 
 		}
 		if (Math.abs(output) > .5) {

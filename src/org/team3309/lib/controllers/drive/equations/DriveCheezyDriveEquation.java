@@ -59,7 +59,7 @@ public class DriveCheezyDriveEquation extends Controller {
 		if (isHighGear) {
 
 			negInertiaScalar = 5.0;
-			sensitivity = .75;
+			sensitivity = .6;
 		} else {
 			if (wheel * negInertia > 0) {
 				negInertiaScalar = 1.75;
@@ -70,7 +70,7 @@ public class DriveCheezyDriveEquation extends Controller {
 					negInertiaScalar = 3.0;
 				}
 			}
-			sensitivity = .75;
+			sensitivity = .6;
 		}
 		double negInertiaPower = negInertia * negInertiaScalar;
 		negInertiaAccumulator += negInertiaPower;
