@@ -51,7 +51,7 @@ public class Flywheel extends ControlledSubsystem {
 		this.autoController.setName("Flywheel");
 		((FeedForwardWithPIDController) this.teleopController).setTHRESHOLD(10);
 		((FeedForwardWithPIDController) this.autoController).setTHRESHOLD(10);
-		SmartDashboard.putNumber("TEST RPS", 110);
+		SmartDashboard.putNumber("TEST RPS", 93);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class Flywheel extends ControlledSubsystem {
 		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
-			aimVelRPS = 120;
+			aimVelRPS = 93;
 		} else if (Controls.operatorController.getB()) {
 			aimVelRPS = 120;
 		} else if (Controls.operatorController.getXBut()) {
@@ -126,7 +126,7 @@ public class Flywheel extends ControlledSubsystem {
 				aimVelRPS = 140;
 			}
 		} else if (Controls.operatorController.getPOV() == 0) {
-			aimVelRPS = this.lastVisionShot;
+			//aimVelRPS = this.lastVisionShot;
 		} else {
 			offset = 0;
 			aimVelRPS = 0;

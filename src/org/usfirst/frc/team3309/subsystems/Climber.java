@@ -51,15 +51,15 @@ public class Climber extends ControlledSubsystem {
 	public void updateTeleop() {
 		// System.out.println(Controls.operatorController.getPOV());
 		if (Controls.operatorController.getPOV() == 0) { // Go Up
-			latches.set(Value.kOff);
-			KragerTimer.delayMS(500);
+			latches.set(Value.kReverse);
+			KragerTimer.delayMS(100);
 			leftCarriage.set(Value.kForward);
 		} else if (Controls.operatorController.getPOV() == 90) { // Neutral
 			latches.set(Value.kReverse);
 			leftCarriage.set(Value.kOff);
-		} else if (Controls.operatorController.getPOV() == 180) {
+		} else if (Controls.operatorController.getPOV() == 180) { // Down
 			latches.set(Value.kForward);
-			KragerTimer.delayMS(500);
+			//KragerTimer.delayMS(500);
 			leftCarriage.set(Value.kReverse);
 		}
 	}

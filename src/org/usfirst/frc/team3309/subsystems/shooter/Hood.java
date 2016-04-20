@@ -47,7 +47,7 @@ public class Hood extends ControlledSubsystem {
 		((PIDController) this.autoController).kILimit = .2;
 		this.autoController.setName("Hood Angle");
 		((PIDController) this.autoController).setTHRESHOLD(.6);
-		SmartDashboard.putNumber("Test Angle", 15);
+		SmartDashboard.putNumber("Test Angle", 19);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class Hood extends ControlledSubsystem {
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
-			goalAngle = 18.7;
+			goalAngle = 19;
 		} else if (Controls.operatorController.getB()) {
 			goalAngle = 35.5;
 		} else if (Controls.operatorController.getXBut()) {

@@ -37,12 +37,20 @@ public class Vision implements Runnable {
 	 * Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(180,
 	 * 42.4, -.702), new Shot(180, 46, -.777), new Shot(180, 42.5, -.94555) };
 	 */
-	private static Shot[] shots = { new Shot(120, 26, .59), new Shot(120, 29, .346), new Shot(120, 32, .227),
+	private static Shot[] shots = { new Shot(120, 25, .59), new Shot(120, 28, .346), new Shot(120, 31, .227),
+			new Shot(120, 32.1, .09), new Shot(120, 33.1, -.037), new Shot(120, 34.2, -.148), new Shot(120, 35.2, -.25),
+			new Shot(120, 35.7, -.329), new Shot(120, 36.6, -.4), new Shot(130, 39.9, -.401),
+			new Shot(130, 39.8, -.479), new Shot(130, 40.5, -.562), new Shot(130, 41.2, -.615),
+			new Shot(130, 41.7, -.735), new Shot(130, 42.1, -.812), new Shot(140, 45.7, -.813),
+			new Shot(140, 46.1, -.98) };
+	
+	/*	private static Shot[] shots = { new Shot(120, 26, .59), new Shot(120, 29, .346), new Shot(120, 32, .227),
 			new Shot(120, 33.6, .09), new Shot(120, 34.6, -.037), new Shot(120, 35.7, -.148), new Shot(120, 36.7, -.25),
 			new Shot(120, 37.7, -.329), new Shot(120, 38.6, -.4), new Shot(130, 41.9, -.401),
 			new Shot(130, 42.3, -.479), new Shot(130, 43, -.562), new Shot(130, 43.7, -.615),
 			new Shot(130, 44.7, -.735), new Shot(130, 45.1, -.812), new Shot(140, 48.7, -.813),
 			new Shot(140, 49.1, -.98) };
+**/
 
 	/*
 	 * private static Shot[] shots = { new Shot(120, 29, .681), new Shot(120,
@@ -160,6 +168,7 @@ public class Vision implements Runnable {
 								Shot upperShot = shots[i + 1];
 								
 								double slope = (upperShot.getGoalHoodAngle() - shot.getGoalHoodAngle())
+				
 										/ (upperShot.getYCoordinate() - shot.getYCoordinate());
 								double b = upperShot.getGoalHoodAngle() - (slope * upperShot.getYCoordinate());
 								double newOutput = slope * currentY + b;
@@ -170,6 +179,7 @@ public class Vision implements Runnable {
 					}
 				}
 				shotToBeSet.setYCoordinate(currentY);
+				shotToBeSet.setGoalHoodAngle(shotToBeSet.getGoalHoodAngle() - 1);
 				currentShotToAimTowards = shotToBeSet;
 				System.out.println(shotToBeSet + " \n");
 			}
