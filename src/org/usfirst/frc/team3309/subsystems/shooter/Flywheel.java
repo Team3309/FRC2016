@@ -43,15 +43,15 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.teleopController = new FeedForwardWithPIDController(.005, 0, .018, 0.000, 0.00);
-		this.autoController = new FeedForwardWithPIDController(.005, 0, .018, 0.000, 0.00);
+		this.teleopController = new FeedForwardWithPIDController(.006, 0, .025, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(.006, 0, .025, 0.000, 0.00); // .018
 		
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
 		this.autoController.setName("Flywheel");
 		((FeedForwardWithPIDController) this.teleopController).setTHRESHOLD(10);
 		((FeedForwardWithPIDController) this.autoController).setTHRESHOLD(10);
-		SmartDashboard.putNumber("TEST RPS", 93);
+		SmartDashboard.putNumber("TEST RPS", 140);
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class Flywheel extends ControlledSubsystem {
 		} else if (Controls.operatorController.getB()) {
 			aimVelRPS = 120;
 		} else if (Controls.operatorController.getXBut()) {
-			aimVelRPS = 160;
-		} else if (Controls.operatorController.getYBut()) {
+			aimVelRPS = 120;
+		} else if (Controls.driverController.getYBut()) {
 			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 			// aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
@@ -192,8 +192,8 @@ public class Flywheel extends ControlledSubsystem {
 			output = 0;
 		}
 		if (aimVelRPS != 0 && !hasGoneBack) {
-			FeedyWheel.getInstance().setFeedyWheel(-.7);
-			KragerTimer.delayMS(120);
+			FeedyWheel.getInstance().setFeedyWheel(-.6);
+			KragerTimer.delayMS(85);
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
 		}

@@ -8,11 +8,11 @@ public class Pos2ToCenter extends Operation {
 	@Override
 	public void perform() throws InterruptedException, TimedOutException {
 		mDrive.setHighGear(true);
-		this.driveEncoder(95, 150, 5, true);
+		/*this.driveEncoder(95, 150, 5, true);
 		KragerTimer.delayMS(500);
 		this.turnToAngle(mDrive.getAngle() + 20, 4);
 		this.driveEncoder(20, 100, 5, true);
-		this.turnToAngle(mDrive.getAngle() - 20, 4);
-		this.toVision(100);
+		this.turnToAngle(mDrive.getAngle() - 20, 4);*/
+		this.toVisionLong(2000);
 	}
 }

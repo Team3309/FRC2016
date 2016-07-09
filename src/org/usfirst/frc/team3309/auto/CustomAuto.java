@@ -16,9 +16,9 @@ public class CustomAuto extends AutoRoutine {
 		KragerTimer.delayMS(200);
 		
 		mDrive.setHighGear(true);
-		Hood.getInstance().setGoalAngle(30);
-		Flywheel.getInstance().setAimVelRPSAuto(140);
-		KragerTimer.delayMS(750);
+		Hood.getInstance().setGoalAngle(40.3);
+		Flywheel.getInstance().setAimVelRPSAuto(130);
+		KragerTimer.delayMS(200);
 		startingPosition.perform();
 		mDrive.stopDrive();
 	}

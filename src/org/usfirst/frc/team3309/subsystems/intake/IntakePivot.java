@@ -19,7 +19,7 @@ public class IntakePivot extends ControlledSubsystem {
 	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
 	private double UP_ANGLE = 1;
-	private double INTAKE_ANGLE = 88.3309;
+	private double INTAKE_ANGLE = 87;
 	// up = 4, intake_angle = 92;
 	private double goalAngle = INTAKE_ANGLE;
 
@@ -107,9 +107,9 @@ public class IntakePivot extends ControlledSubsystem {
 		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
-				output = .08;
+				output = 0;
 			} else {
-				output = .08;
+				output = 0;
 			}
 		}
 		if (Controls.operatorController.getLB()) {
@@ -134,9 +134,9 @@ public class IntakePivot extends ControlledSubsystem {
 		if ((this.getPivotAngle() > 160 && this.goalAngle > -5)
 				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
 			if (this.isAtHighPoint) {
-				output = .04;
+				output = .0;
 			} else {
-				output = .08;
+				output = .0;
 			}
 		}
 		if (Math.abs(output) > .5) {
@@ -145,13 +145,13 @@ public class IntakePivot extends ControlledSubsystem {
 			else if (output < 0)
 				output = -.5;
 		}
-		this.setIntakePivot(-output);
+		//this.setIntakePivot(-output);
 	}
 
 	public double getPivotAngle() {
-		// double curAngle = Constants.getPivotTopValue()
+		 //double curAngle = Constants.getPivotTopValue()
 		// - ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
-		double curAngle = -(intakePivot.getEncPosition() * (360.0 / 4096.0)) / 250;
+		double curAngle = -(intakePivot.getEncPosition() * (360.0 / 4096.0)) / 210;
 		// System.out.println("INTAKE PIVOT: " + curAngle);
 		while (curAngle > 360) {
 			curAngle -= 360;
@@ -192,7 +192,7 @@ public class IntakePivot extends ControlledSubsystem {
 	}
 
 	public void setIntakePivot(double power) {
-		this.intakePivot.set(-power);
+		this.intakePivot.set(power);
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos2ToLeft;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos3ToCenter;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos3ToRight;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos4ToCenter;
+import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos5ToCenter;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos5ToRight;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
@@ -91,7 +92,9 @@ public class Robot extends IterativeRobot {
 		startingPositionAutoChooser.addObject("3-Center", new Pos3ToCenter());
 		startingPositionAutoChooser.addObject("3-Right", new Pos3ToRight());
 		startingPositionAutoChooser.addObject("4", new Pos4ToCenter());
-		startingPositionAutoChooser.addObject("5", new Pos5ToRight());
+		startingPositionAutoChooser.addObject("5-Center ", new Pos5ToCenter());
+		startingPositionAutoChooser.addObject("5-Right", new Pos5ToRight());
+		
 		SmartDashboard.putData("Starting Position", startingPositionAutoChooser);
 		// Add Defenses in SendableChooser
 		defenseAutoChooser.addDefault("Low Bar", new CrossLowBar());
@@ -131,6 +134,7 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		Vision.getInstance().setLight(0);
 		Drive.getInstance().setHighGear(false);
+		Climber.getInstance().retract();
 	}
 
 	// Called repeatedly in disabled mode
@@ -192,6 +196,7 @@ public class Robot extends IterativeRobot {
 
 		time.start();
 		time.reset();
+		
 
 		List<Goal> goals = Vision.getInstance().getGoals();
 		if (goals.size() > 0) {

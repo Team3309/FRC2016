@@ -177,6 +177,58 @@ public class RoutineBased {
 		}
 		mDrive.stopDrive();
 	}
+	
+	public void toVisionLong(double timeout) throws TimedOutException {
+		Shot shot = Vision.getInstance().getShotToAimTowards();
+		Timer waitTimer = new Timer();
+		waitTimer.start();
+		while (shot == null && DriverStation.getInstance().isAutonomous()) {
+			if (waitTimer.get() > timeout)
+				throw new TimedOutException();
+			shot = Vision.getInstance().getShotToAimTowards();
+			System.out.println("LOOKING");
+		}
+
+		mDrive.toVision();
+		System.out.println("RPS: " + shot.getGoalRPS() + " angle: " + shot.getGoalHoodAngle());
+
+		try {
+			shot = Vision.getInstance().getShotToAimTowards();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			KragerTimer.delayMS(2000);
+			mDrive.toVision();
+			shot = Vision.getInstance().getShotToAimTowards();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			KragerTimer.delayMS(1000);
+			mDrive.toVision();
+			shot = Vision.getInstance().getShotToAimTowards();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			KragerTimer.delayMS(1000);
+			mDrive.toVision();
+			shot = Vision.getInstance().getShotToAimTowards();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+			KragerTimer.delayMS(500);
+			mDrive.toVision();
+			shot = Vision.getInstance().getShotToAimTowards();
+			Flywheel.getInstance().setAimVelRPSAuto(shot.getGoalRPS());
+			Hood.getInstance().setGoalAngle(shot.getGoalHoodAngle());
+		} catch (Exception e) {
+
+		}
+
+		KragerTimer.delayMS(800);
+		System.out.println("BANG BANG");
+		FeedyWheel.getInstance().setFeedyWheel(1);
+
+		KragerTimer.delayMS(500);
+		FeedyWheel.getInstance().setFeedyWheel(0);
+		Flywheel.getInstance().setAimVelRPSAuto(0);
+		Hood.getInstance().setGoalAngle(4);
+	}
 
 	public void toVision(double timeout) throws TimedOutException {
 		Shot shot = Vision.getInstance().getShotToAimTowards();

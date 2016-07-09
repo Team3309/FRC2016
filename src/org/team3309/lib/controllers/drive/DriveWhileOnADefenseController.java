@@ -7,7 +7,7 @@ import org.usfirst.frc.team3309.robot.Sensors;
 
 public class DriveWhileOnADefenseController extends Controller {
 
-	private final double THRESHOLD = 8;
+	private final double THRESHOLD = 7;
 	private Controller controllerToRun;
 	private boolean hasBeganGoingOverDefense = false;
 	private boolean hasGoneOverDefense = false;
@@ -37,7 +37,7 @@ public class DriveWhileOnADefenseController extends Controller {
 			}
 		}
 
-		if (countsOfAfter > 12) {
+		if (countsOfAfter > 15) {
 			hasGoneOverDefense = true;
 		}
 		return controllerToRun.getOutputSignal(inputState);

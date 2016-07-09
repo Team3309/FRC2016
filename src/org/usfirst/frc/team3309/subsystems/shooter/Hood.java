@@ -39,18 +39,19 @@ public class Hood extends ControlledSubsystem {
 
 	private Hood(String name) {
 		super(name);
-		this.teleopController = new PIDPositionController(0.51, 0.001, .014);
-		this.autoController = new PIDPositionController(0.51, 0.001, .014);
+		this.teleopController = new PIDPositionController(0.55, 0.001, .014); // .51
+		this.autoController = new PIDPositionController(0.55, 0.001, .014);
 		((PIDController) this.teleopController).kILimit = .2;
 		this.teleopController.setName("Hood Angle");
 		((PIDController) this.teleopController).setTHRESHOLD(.6);
 		((PIDController) this.autoController).kILimit = .2;
 		this.autoController.setName("Hood Angle");
 		((PIDController) this.autoController).setTHRESHOLD(.6);
-		SmartDashboard.putNumber("Test Angle", 19);
+		SmartDashboard.putNumber("Test Angle", 39.5);
 	}
 
 	@Override
+
 	public void initTeleop() {
 		goalAngle = HOOD_DOWN_ANGLE;
 	}
@@ -60,6 +61,8 @@ public class Hood extends ControlledSubsystem {
 		goalAngle = HOOD_DOWN_ANGLE;
 	}
 
+	private boolean pressBegan = false;
+	private double offset = 0;
 	@Override
 	public void updateTeleop() {
 		try {
@@ -71,12 +74,12 @@ public class Hood extends ControlledSubsystem {
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
-			goalAngle = 19;
+			goalAngle = 6;
 		} else if (Controls.operatorController.getB()) {
-			goalAngle = 35.5;
+			goalAngle = 23.7;
 		} else if (Controls.operatorController.getXBut()) {
-			goalAngle = 50;
-		} else if (Controls.operatorController.getYBut()) {
+			goalAngle = 35.5;
+		} else if (Controls.driverController.getYBut()) {
 			// goalAngle = 28.6;
 			goalAngle = SmartDashboard.getNumber("Test Angle");
 		} else if (Controls.operatorController.getStart()) {
@@ -89,16 +92,31 @@ public class Hood extends ControlledSubsystem {
 		} else if (Controls.operatorController.getPOV() == 0) {
 			goalAngle = lastVisionAngle;
 		} else {
+			offset = 0;
 			goalAngle = HOOD_DOWN_ANGLE;
 		}
+		goalAngle += offset;
 		if (goalAngle >= 0) {
 			output = this.teleopController.getOutputSignal(getInputState()).getMotor();
 		}
 
 		if ((curAngle > 50 && output > -1) || (curAngle < 4 && output < 0) || this.isOnTarget()) {
 			output = 0;
-			//if ((curAngle < 4 && output < 0))
-				//((PIDController) this.teleopController).reset();
+			// if ((curAngle < 4 && output < 0))
+			// ((PIDController) this.teleopController).reset();
+		}
+		if (Controls.operatorController.getPOV() == 90 && !pressBegan) {
+			pressBegan = true;
+			offset += .5;
+		} else if (Controls.operatorController.getPOV() == 270 && !pressBegan) {
+			pressBegan = true;
+			offset -= .5;
+		} else if (pressBegan
+				&& (Controls.operatorController.getPOV() == 270 || Controls.operatorController.getPOV() == 90)) {
+			
+		} else {
+			pressBegan = false;
+			
 		}
 
 		this.setHood(output);

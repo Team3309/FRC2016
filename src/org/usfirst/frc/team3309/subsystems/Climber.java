@@ -8,6 +8,7 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Climber extends ControlledSubsystem {
@@ -47,20 +48,33 @@ public class Climber extends ControlledSubsystem {
 
 	}
 
+	public void retract() {
+		// latches.set(Value.kForward);
+		// KragerTimer.delayMS(500);
+		leftCarriage.set(Value.kReverse);
+	}
+
+	boolean hasPressed = false;
+
 	@Override
 	public void updateTeleop() {
 		// System.out.println(Controls.operatorController.getPOV());
 		if (Controls.operatorController.getPOV() == 0) { // Go Up
 			latches.set(Value.kReverse);
-			KragerTimer.delayMS(100);
-			leftCarriage.set(Value.kForward);
-		} else if (Controls.operatorController.getPOV() == 90) { // Neutral
-			latches.set(Value.kReverse);
-			leftCarriage.set(Value.kOff);
-		} else if (Controls.operatorController.getPOV() == 180) { // Down
-			latches.set(Value.kForward);
-			//KragerTimer.delayMS(500);
-			leftCarriage.set(Value.kReverse);
+
+		} else if (Controls.operatorController.getPOV() == 180 && !hasPressed && latches.get().equals(Value.kReverse)) { // Down
+			hasPressed = true;
+			if (leftCarriage.get().equals(Value.kForward)) {
+				leftCarriage.set(Value.kReverse);
+			} else if (leftCarriage.get().equals(Value.kReverse)) {
+				leftCarriage.set(Value.kForward);
+			}
+		} else if (Controls.operatorController.getPOV() == 180 && hasPressed) {
+		} else {
+			hasPressed = false;
+		}
+		if (DriverStation.getInstance().isFMSAttached() && DriverStation.getInstance().getMatchTime() < 1.5) {
+			retract();
 		}
 	}
 

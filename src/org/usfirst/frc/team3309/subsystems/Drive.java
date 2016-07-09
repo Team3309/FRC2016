@@ -113,13 +113,13 @@ public class Drive extends ControlledSubsystem {
 			}
 		} else if (Controls.operatorController.getBack()) {
 
-		} else if (Controls.driverController.getLB() && !isReset) {
+		} else if (Controls.driverController.getA() && !isReset) {
 			DriveAngleVelocityController driveAngleHardCore = new DriveAngleVelocityController(this.getAngle());
 			driveAngleHardCore.setCompletable(false);
 			driveAngleHardCore.turningController.setConstants(6, 0, 16);
 			this.setTeleopController(driveAngleHardCore);
 			isReset = true;
-		} else if (Controls.operatorController.getLB()) {
+		} else if (Controls.operatorController.getA()) {
 
 		} else {
 			isReset = false;

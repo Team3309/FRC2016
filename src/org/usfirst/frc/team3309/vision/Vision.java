@@ -37,12 +37,19 @@ public class Vision implements Runnable {
 	 * Shot(160, 40.1, -.46458), new Shot(160, 41.6, -.56041), new Shot(180,
 	 * 42.4, -.702), new Shot(180, 46, -.777), new Shot(180, 42.5, -.94555) };
 	 */
-	private static Shot[] shots = { new Shot(120, 25, .59), new Shot(120, 28, .346), new Shot(120, 31, .227),
-			new Shot(120, 32.1, .09), new Shot(120, 33.1, -.037), new Shot(120, 34.2, -.148), new Shot(120, 35.2, -.25),
-			new Shot(120, 35.7, -.329), new Shot(120, 36.6, -.4), new Shot(130, 39.9, -.401),
+	// -.479
+	private static Shot[] shots = { new Shot(120, 22.4, .509), new Shot(120, 23.6, .417), new Shot(120, 23.9, .346),
+			new Shot(120, 25.8, .231), new Shot(120, 26.6, .029), new Shot(120, 27.6, -.059), new Shot(120, 28.6, -.15),
+			new Shot(120, 29.1, -.28), new Shot(130, 34.8, -.281), new Shot(130, 35.3, -.365),
+			new Shot(130, 37.9, -.454), new Shot(130, 38.3, -.540), new Shot(130, 38.5, -.579),
+			new Shot(130, 39.1, -.637), new Shot(130, 39.5, -.68), new Shot(130, 40.3, -.725),
+			new Shot(130, 41.1, -.98) };
+	/*private static Shot[] shots = { new Shot(120, 24.85, .59), new Shot(120, 27.85, .346), new Shot(120, 30.85, .227),
+			new Shot(120, 31.95, .09), new Shot(120, 32.95, -.037), new Shot(120, 34.05, -.148), new Shot(120, 35.05, -.25),
+			new Shot(120, 35.55, -.329), new Shot(120, 35.5, -.4), new Shot(130, 36.4, -.401),
 			new Shot(130, 39.8, -.479), new Shot(130, 40.5, -.562), new Shot(130, 41.2, -.615),
 			new Shot(130, 41.7, -.735), new Shot(130, 42.1, -.812), new Shot(140, 45.7, -.813),
-			new Shot(140, 46.1, -.98) };
+			new Shot(140, 46.1, -.98) };*/
 	
 	/*	private static Shot[] shots = { new Shot(120, 26, .59), new Shot(120, 29, .346), new Shot(120, 32, .227),
 			new Shot(120, 33.6, .09), new Shot(120, 34.6, -.037), new Shot(120, 35.7, -.148), new Shot(120, 36.7, -.25),
