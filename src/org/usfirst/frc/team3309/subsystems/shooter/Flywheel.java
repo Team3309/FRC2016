@@ -109,7 +109,7 @@ public class Flywheel extends ControlledSubsystem {
 		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
-			aimVelRPS = 93;
+			aimVelRPS = 90;
 		} else if (Controls.operatorController.getB()) {
 			aimVelRPS = 120;
 		} else if (Controls.operatorController.getXBut()) {
@@ -141,6 +141,12 @@ public class Flywheel extends ControlledSubsystem {
 	 * Raw power values
 	 */
 	public void manualControl() {
+		try {
+			curVel = this.getRPS();
+		} catch (SensorDoesNotReturnException e) {
+			// this.manualControl();
+			// return;
+		}
 		if (Controls.operatorController.getA()) {
 			power = .7;
 		} else if (Controls.operatorController.getB()) {
@@ -159,7 +165,7 @@ public class Flywheel extends ControlledSubsystem {
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
 		}
-		this.rightSpark.set(power);
+		//this.rightSpark.set(power);
 		this.leftSpark.set(power);
 	}
 
@@ -272,6 +278,11 @@ public class Flywheel extends ControlledSubsystem {
 
 	private void setShooter(double power) {
 		leftSpark.set(power);
+		if (power < 0) {
+			power = power + .04;
+		}else if (power > 0) {
+			power = power - .04;
+		}
 		rightSpark.set(power);
 	}
 

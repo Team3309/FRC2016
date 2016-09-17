@@ -70,6 +70,8 @@ public class Climber extends ControlledSubsystem {
 				leftCarriage.set(Value.kForward);
 			}
 		} else if (Controls.operatorController.getPOV() == 180 && hasPressed) {
+		} else if (Controls.operatorController.getPOV() == 270) {
+			latches.set(Value.kForward);
 		} else {
 			hasPressed = false;
 		}

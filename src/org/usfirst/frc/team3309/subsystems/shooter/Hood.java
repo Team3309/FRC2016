@@ -74,9 +74,9 @@ public class Hood extends ControlledSubsystem {
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
-			goalAngle = 6;
+			goalAngle = 40;
 		} else if (Controls.operatorController.getB()) {
-			goalAngle = 23.7;
+			goalAngle = 22.0;
 		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 35.5;
 		} else if (Controls.driverController.getYBut()) {
