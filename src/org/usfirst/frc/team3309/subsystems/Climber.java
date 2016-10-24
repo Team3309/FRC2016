@@ -38,6 +38,7 @@ public class Climber extends ControlledSubsystem {
 	@Override
 	public void initTeleop() {
 		latches.set(Value.kForward);
+		// ONLY IF NOT USING CLIMBER
 		leftCarriage.set(Value.kReverse);
 	}
 
@@ -45,12 +46,12 @@ public class Climber extends ControlledSubsystem {
 
 	public void initAuto() {
 		// TODO Auto-generated method stub
-
+		leftCarriage.set(Value.kReverse);
 	}
 
 	public void retract() {
 		// latches.set(Value.kForward);
-		// KragerTimer.delayMS(500);
+		KragerTimer.delayMS(50);
 		leftCarriage.set(Value.kReverse);
 	}
 
@@ -64,22 +65,21 @@ public class Climber extends ControlledSubsystem {
 
 		} else if (Controls.operatorController.getPOV() == 180 && !hasPressed && latches.get().equals(Value.kReverse)) { // Down
 			hasPressed = true;
-			if (leftCarriage.get().equals(Value.kForward)) {
-				leftCarriage.set(Value.kReverse);
-			} else if (leftCarriage.get().equals(Value.kReverse)) {
-				leftCarriage.set(Value.kForward);
-			}
+			leftCarriage.set(Value.kForward);
 		} else if (Controls.operatorController.getPOV() == 180 && hasPressed) {
 		} else if (Controls.operatorController.getPOV() == 270) {
-			latches.set(Value.kForward);
+			//latches.set(Value.kForward);
 		} else {
 			hasPressed = false;
 		}
 		if (DriverStation.getInstance().isFMSAttached() && DriverStation.getInstance().getMatchTime() < 1.5) {
-			retract();
+			//retract();
+		}
+		if (Controls.operatorController.getPOV() == 90) {
+			leftCarriage.set(Value.kReverse);
 		}
 	}
-
+	
 	@Override
 	public void updateAuto() {
 

@@ -13,11 +13,11 @@ public class DriveAngleController extends PIDPositionController {
 	double goalAngle = 0;
 
 	public DriveAngleController(double goal) {
-		super(0.166, 0.003, 0.002);
+		super(4.6, 0.2, 3.502);
 		this.setName("Angle");
 		// SmartDashboard.putNumber(this.getName() + " goal(set me)", goal);
 		this.setTHRESHOLD(.5);
-		this.kILimit = .15;
+		this.kILimit = .55;
 
 		startingAngle = Sensors.getAngle();
 		goalAngle = goal;
@@ -27,52 +27,39 @@ public class DriveAngleController extends PIDPositionController {
 	private final double MIN_POW = .32;
 
 	public OutputSignal getOutputSignal(InputState inputState) {
-		double error = goalAngle - inputState.getAngularPos();
+		// this.kI = this.kI/100.0;
+		double error = (goalAngle - inputState.getAngularPos());
 		if (Math.abs(error) > 180) {
 			error = -KragerMath.sign(error) * (360 - Math.abs(error));
 			System.out.println("New Error: " + error);
 		}
+		error *= .01;
 		double left = 0;
 		SmartDashboard.putNumber("VISION ErRROR", error);
 		InputState state = new InputState();
 		state.setError(error);
+		left = super.getOutputSignal(state).getMotor();
 		/*
-		double left = super.getOutputSignal(state).getMotor();
-		if (left < 0) {
-			left -= MIN_POW;
-		} else {
-			left += MIN_POW;
-		}
-		
-		if (Math.abs(left) > .6) {
-			if (left > 0) {
-				left = .6;
-			} else {
-				left = -.6;
-			}
-		}*/
-		if (Math.abs(error) < 2.25) {
-			//System.out.println("HERE");
-			left = super.getOutputSignal(state).getMotor();
-		}else if (Math.abs(error) < 5) {
-			if (error < 0) {
-				left = -.42; 
-			}else if (error > 0) {
-				left = .42;
-			}
-		}else if (Math.abs(error) < 15) {
-			if (error < 0) {
-				left = -.42; 
-			}else if (error > 0) {
-				left = .42;
-			}
-		}else if (Math.abs(error) < Integer.MAX_VALUE) {
-			if (error < 0) {
-				left = -.42; 
-			}else if (error > 0) {
-				left = .42;
-			}
-		}
+		 * if (Math.abs(error) > .15) { if (left < 0) { left = -.275; } else {
+		 * left = .275; } }
+		 */
+		/*
+		 * double left = super.getOutputSignal(state).getMotor(); if (left < 0)
+		 * { left -= MIN_POW; } else { left += MIN_POW; }
+		 * 
+		 * if (Math.abs(left) > .6) { if (left > 0) { left = .6; } else { left =
+		 * -.6; } }
+		 */
+		/*
+		 * if (Math.abs(error) < 2.25) { //System.out.println("HERE"); left =
+		 * super.getOutputSignal(state).getMotor(); }else if (Math.abs(error) <
+		 * 5) { if (error < 0) { left = -.42; }else if (error > 0) { left = .42;
+		 * } }else if (Math.abs(error) < 15) { if (error < 0) { left = -.42;
+		 * }else if (error > 0) { left = .42; } }else if (Math.abs(error) <
+		 * Integer.MAX_VALUE) { if (error < 0) { left = -.42; }else if (error >
+		 * 0) { left = .42; } }
+		 */
+
 		OutputSignal signal = new OutputSignal();
 		signal.setLeftRightMotor(left, -left);
 		// System.out.println("Time: " + (System.currentTimeMillis() -

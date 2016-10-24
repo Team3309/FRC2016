@@ -186,7 +186,7 @@ public class RoutineBased {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
 			shot = Vision.getInstance().getShotToAimTowards();
-			System.out.println("LOOKING");
+			//System.out.println("LOOKING");
 		}
 
 		mDrive.toVision();
@@ -238,7 +238,7 @@ public class RoutineBased {
 			if (waitTimer.get() > timeout)
 				throw new TimedOutException();
 			shot = Vision.getInstance().getShotToAimTowards();
-			System.out.println("LOOKING");
+			//System.out.println("LOOKING");
 		}
 
 		mDrive.toVision();
@@ -257,14 +257,14 @@ public class RoutineBased {
 
 		}
 
-		KragerTimer.delayMS(1100);
-		System.out.println("BANG BANG");
-		FeedyWheel.getInstance().setFeedyWheel(1);
+		//KragerTimer.delayMS(1100);
+		//System.out.println("BANG BANG");
+		//FeedyWheel.getInstance().setFeedyWheel(1);
 
-		KragerTimer.delayMS(500);
-		FeedyWheel.getInstance().setFeedyWheel(0);
-		Flywheel.getInstance().setAimVelRPSAuto(0);
-		Hood.getInstance().setGoalAngle(4);
+		//KragerTimer.delayMS(500);
+		//FeedyWheel.getInstance().setFeedyWheel(0);
+		//Flywheel.getInstance().setAimVelRPSAuto(0);
+		//Hood.getInstance().setGoalAngle(4);
 	}
 
 	public void waitForEndOfAuto() {

@@ -47,7 +47,7 @@ public abstract class PIDController extends Controller {
 	/**
 	 * Running Integral term to use between loops.
 	 */
-	private double mIntegral = 0;
+	public double mIntegral = 0;
 	/**
 	 * Tells if Controller ends when it maintains a low error for a certain
 	 * amount of time.

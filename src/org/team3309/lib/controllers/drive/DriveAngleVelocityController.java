@@ -35,9 +35,9 @@ public class DriveAngleVelocityController extends Controller {
 		this.leftSideController.setName("LEFT IDE VEL CONTROLER");
 		this.rightSideController.setName("RIGHT IDE VEL CONTROLER");
 		this.turningController.setName("Turning Angle Controller");
-		leftSideController.kILimit = .3;
-		rightSideController.kILimit = .3;
-		this.turningController.kILimit = 10;
+		leftSideController.kILimit = .2;
+		rightSideController.kILimit = .2;
+		this.turningController.kILimit = 100;
 		goalAngle = aimAngle;
 
 		SmartDashboard.putNumber(this.getName() + " Vel to Turn At", 0);
@@ -72,7 +72,8 @@ public class DriveAngleVelocityController extends Controller {
 																							// to
 																							// send
 		SmartDashboard.putNumber("DRIVE ANGLE VEL Output", outputOfTurningController.getMotor());
-		System.out.println("OUTPUT FOR TURNING: " + outputOfTurningController.getMotor());
+		// System.out.println("OUTPUT FOR TURNING: " +
+		// outputOfTurningController.getMotor());
 		OutputSignal toBeReturnedSignal = new OutputSignal();
 		InputState leftState = new InputState();
 		InputState rightState = new InputState();
@@ -81,6 +82,8 @@ public class DriveAngleVelocityController extends Controller {
 		// leftSideController.printConstants();
 		// rightSideController.printConstants();
 		// System.out.println("HERE IS THE AIM VEL " + dashAimTurnVel);
+		// /if (Math.abs(outputOfTurningController.getMotor()) < 4)
+		// outputOfTurningController.setMotor(0);
 		try {
 			leftState.setError(-outputOfTurningController.getMotor() - inputState.getLeftVel());
 			rightState.setError(-outputOfTurningController.getMotor() - inputState.getRightVel());
@@ -93,10 +96,28 @@ public class DriveAngleVelocityController extends Controller {
 		// rightSideController.setAimVel(dashAimTurnVel);
 		// leftState.setError(dashAimTurnVel - inputState.getLeftVel());
 		// rightState.setError(dashAimTurnVel - inputState.getRightVel());
-		toBeReturnedSignal.setLeftRightMotor(-leftSideController.getOutputSignal(leftState).getMotor(),
-				rightSideController.getOutputSignal(rightState).getMotor());
-		System.out.println("left: " + leftSideController.getOutputSignal(leftState).getMotor() + " right: "
-				+ rightSideController.getOutputSignal(rightState).getMotor());
+
+		double leftSide = leftSideController.getOutputSignal(leftState).getMotor();
+		double rightSide = rightSideController.getOutputSignal(rightState).getMotor();
+		if (Math.abs(leftSide) > .5) {
+			if (leftSide < 0) {
+				leftSide = -.5;
+			} else if (leftSide > 0) {
+				leftSide = .5;
+			}
+		}
+		if (Math.abs(rightSide) > .5) {
+			if (rightSide < 0) {
+				rightSide = -.5;
+			} else if (rightSide > 0) {
+				rightSide = .5;
+			}
+		}
+
+		toBeReturnedSignal.setLeftRightMotor(-leftSide, rightSide);
+		// System.out.println("left: " +
+		// leftSideController.getOutputSignal(leftState).getMotor() + " right: "
+		// + rightSideController.getOutputSignal(rightState).getMotor());
 		return toBeReturnedSignal;
 	}
 

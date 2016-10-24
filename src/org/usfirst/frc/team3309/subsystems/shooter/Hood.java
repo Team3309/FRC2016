@@ -63,6 +63,8 @@ public class Hood extends ControlledSubsystem {
 
 	private boolean pressBegan = false;
 	private double offset = 0;
+	private boolean printed = false;
+
 	@Override
 	public void updateTeleop() {
 		try {
@@ -74,9 +76,9 @@ public class Hood extends ControlledSubsystem {
 		double output = 0;
 		// Find aim angle
 		if (Controls.operatorController.getA()) {
-			goalAngle = 40;
+			goalAngle = 10.35;
 		} else if (Controls.operatorController.getB()) {
-			goalAngle = 22.0;
+			goalAngle = 25.0;
 		} else if (Controls.operatorController.getXBut()) {
 			goalAngle = 35.5;
 		} else if (Controls.driverController.getYBut()) {
@@ -86,13 +88,21 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				goalAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
 				lastVisionAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
+				if (!printed && FeedyWheel.getInstance().feedyWheelSpark.get() < 0) {
+					System.out.println("\n SHOOTING --------------- ");
+					System.out.println("HOOD: " + goalAngle + " VISION: "
+							+ Vision.getInstance().getShotToAimTowards().getYCoordinate());
+					System.out.println("--------\n");
+					printed = true;
+				}
 			} else
-				goalAngle = 25;
-			System.out.println("Goal Angle: " + goalAngle);
+				goalAngle = 22;
+			// System.out.println("Goal Angle: " + goalAngle);
 		} else if (Controls.operatorController.getPOV() == 0) {
 			goalAngle = lastVisionAngle;
 		} else {
 			offset = 0;
+			printed = false;
 			goalAngle = HOOD_DOWN_ANGLE;
 		}
 		goalAngle += offset;
@@ -105,18 +115,15 @@ public class Hood extends ControlledSubsystem {
 			// if ((curAngle < 4 && output < 0))
 			// ((PIDController) this.teleopController).reset();
 		}
-		if (Controls.operatorController.getPOV() == 90 && !pressBegan) {
+		if (Controls.operatorController.getRB() && !pressBegan) {
 			pressBegan = true;
 			offset += .5;
-		} else if (Controls.operatorController.getPOV() == 270 && !pressBegan) {
+		} else if (Controls.operatorController.getLB() && !pressBegan) {
 			pressBegan = true;
 			offset -= .5;
-		} else if (pressBegan
-				&& (Controls.operatorController.getPOV() == 270 || Controls.operatorController.getPOV() == 90)) {
-			
-		} else {
+		} else if (!Controls.operatorController.getLB() && !Controls.operatorController.getRB()) {
 			pressBegan = false;
-			
+
 		}
 
 		this.setHood(output);

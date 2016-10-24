@@ -51,6 +51,7 @@ public class Drive extends ControlledSubsystem {
 
 	public boolean lowGearInAuto = false;
 	boolean isReset = false;
+	public boolean isVision;
 
 	/**
 	 * Singleton Pattern
@@ -100,12 +101,14 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void updateTeleop() {
+		//System.out.println("ROOLLL: " + Sensors.getRoll());
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShotToAimTowards();
 			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 			if (this.desiredShot != null) {
 				System.out.println("ACQUIRE NEW ANGLE");
 				toVision();
+
 				Controls.driverController.setRumble(1);
 			} else {
 				System.out.println("Vision does not see anything");
@@ -136,8 +139,10 @@ public class Drive extends ControlledSubsystem {
 			isLowGear = false;
 			sol.set(true);
 		}
-		if (teleopController.isCompleted() && !DriverStation.getInstance().isAutonomous()) {
+		if (teleopController.isCompleted() && !DriverStation.getInstance().isAutonomous()
+				&& !Controls.operatorController.getBack()) {
 			teleopController = new DriveCheezyDriveEquation();
+			System.out.println("FDAFAD");
 		}
 		OutputSignal output = teleopController.getOutputSignal(getInputState());
 		setLeftRight(output.getLeftMotor(), output.getRightMotor());
@@ -287,6 +292,7 @@ public class Drive extends ControlledSubsystem {
 	 *            rightMotorSpeed
 	 */
 	public void setLeftRight(double left, double right) {
+		// System.out.println("Drive CLass LEFT: " + left + " RIht: " + right);
 		setRightLeft(right, left);
 	}
 
@@ -299,6 +305,7 @@ public class Drive extends ControlledSubsystem {
 	 *            leftMotorSpeed
 	 */
 	public void setRightLeft(double right, double left) {
+		// System.out.println("Drive CLass LEFT: " + left + " RIht: " + right);
 		setLeft(left);
 		setRight(right);
 	}

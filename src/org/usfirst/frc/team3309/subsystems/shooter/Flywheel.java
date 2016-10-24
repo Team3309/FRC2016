@@ -43,8 +43,8 @@ public class Flywheel extends ControlledSubsystem {
 
 	private Flywheel(String name) {
 		super(name);
-		this.teleopController = new FeedForwardWithPIDController(.006, 0, .025, 0.000, 0.00);
-		this.autoController = new FeedForwardWithPIDController(.006, 0, .025, 0.000, 0.00); // .018
+		this.teleopController = new FeedForwardWithPIDController(.006, 0, .035, 0.000, 0.00);
+		this.autoController = new FeedForwardWithPIDController(.006, 0, .035, 0.000, 0.00); // .018
 		
 		this.teleopController.setName("Flywheel");
 		this.rightSpark.setInverted(true);
@@ -109,12 +109,15 @@ public class Flywheel extends ControlledSubsystem {
 		}
 		// Find our base aim vel
 		if (Controls.operatorController.getA()) {
-			aimVelRPS = 90;
+			aimVelRPS = 150;
 		} else if (Controls.operatorController.getB()) {
 			aimVelRPS = 120;
 		} else if (Controls.operatorController.getXBut()) {
 			aimVelRPS = 120;
 		} else if (Controls.driverController.getYBut()) {
+			this.setShooter(-1);
+			KragerTimer.delayMS(1000);
+			this.setShooter(0);
 			aimVelRPS = SmartDashboard.getNumber("TEST RPS");
 			// aimVelRPS = 120;
 		} else if (Controls.operatorController.getStart()) {
@@ -123,7 +126,7 @@ public class Flywheel extends ControlledSubsystem {
 				this.lastVisionShot = Vision.getInstance().getShotToAimTowards().getGoalRPS();
 				// aimVelRPS = 140;
 			} else {
-				aimVelRPS = 140;
+				aimVelRPS = 120;
 			}
 		} else if (Controls.operatorController.getPOV() == 0) {
 			//aimVelRPS = this.lastVisionShot;

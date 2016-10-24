@@ -9,11 +9,13 @@ public class Pos3ToCenter extends Operation {
 	@Override
 	public void perform() throws InterruptedException, TimedOutException {
 		mDrive.setHighGear(true);
-		/*this.driveEncoder(72, 150, 5, true);
+
+		this.driveEncoder(72, 150, 5, true);
 		KragerTimer.delayMS(500);
 		this.turnToAngle(mDrive.getAngle() + 15, 4);
-		this.toVision(100);*/
+		this.toVision(100);
 		this.toVision(2000);
+
 	}
 
 }

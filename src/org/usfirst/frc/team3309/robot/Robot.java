@@ -40,6 +40,9 @@ import org.usfirst.frc.team3309.subsystems.Climber;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.Intake;
 import org.usfirst.frc.team3309.subsystems.Shooter;
+import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
+import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
+import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 import org.usfirst.frc.team3309.vision.Goal;
 import org.usfirst.frc.team3309.vision.IndicatingLights;
 import org.usfirst.frc.team3309.vision.Vision;
@@ -94,7 +97,7 @@ public class Robot extends IterativeRobot {
 		startingPositionAutoChooser.addObject("4", new Pos4ToCenter());
 		startingPositionAutoChooser.addObject("5-Center ", new Pos5ToCenter());
 		startingPositionAutoChooser.addObject("5-Right", new Pos5ToRight());
-		
+
 		SmartDashboard.putData("Starting Position", startingPositionAutoChooser);
 		// Add Defenses in SendableChooser
 		defenseAutoChooser.addDefault("Low Bar", new CrossLowBar());
@@ -114,20 +117,14 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void manageLoopSpeed() {
-		// Loop Speed
-		double timeItTook = time.get();
-		long overhead = (long) (LOOP_SPEED_MS - (1000 * timeItTook));
-		try {
-			if (overhead > 5) {
-
-				KragerTimer.delayMS(overhead);
-			} else {
-				KragerTimer.delayMS(5);
-				System.out.println("Loop Speed too fast!!! " + overhead);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		/*
+		 * // Loop Speed double timeItTook = time.get(); long overhead = (long)
+		 * (LOOP_SPEED_MS - (1000 * timeItTook)); try { if (overhead > 5) {
+		 * 
+		 * KragerTimer.delayMS(overhead); } else { KragerTimer.delayMS(5);
+		 * System.out.println("Loop Speed too fast!!! " + overhead); } } catch
+		 * (Exception e) { e.printStackTrace(); }
+		 */
 	}
 
 	// When first put into disabled mode
@@ -146,6 +143,8 @@ public class Robot extends IterativeRobot {
 	// Init to Auto
 	public void autonomousInit() {
 		Sensors.resetDrive();
+		time.start();
+		time.reset();
 		Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
 		// Find out what to run based off of mainAutoChooser and act accordingly
 		if (mainAutoChooser.getSelected() instanceof CustomAuto) { // Custom
@@ -163,21 +162,37 @@ public class Robot extends IterativeRobot {
 
 	// This function is called periodically during autonomous
 	public void autonomousPeriodic() {
-		time.start();
-		time.reset();
+
 		Drive.getInstance().updateAuto();
 		Drive.getInstance().sendToSmartDash();
+		System.out.println("AFTER DRIVE " + time.get());
 		Shooter.getInstance().updateAuto();
 		Shooter.getInstance().sendToSmartDash();
+		System.out.println("AFTER SHOOTER " + time.get());
 		Intake.getInstance().updateAuto();
 		Intake.getInstance().sendToSmartDash();
-		IndicatingLights.getInstance().update();
-
+		System.out.println("AFTER INTAKE " + time.get());
+		// IndicatingLights.getInstance().update();
+		System.out.println("TIME: " + time.get());
+		if (time.get() > 14.5) {
+			FeedyWheel.getInstance().setFeedyWheel(1.0);
+			try {
+				Thread.sleep(500);
+				Hood.getInstance().setGoalAngle(0);
+			//	Flywheel.getInstance().setAimVelRPS(0);
+				Flywheel.getInstance().setAimVelRPSAuto(0);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		manageLoopSpeed();
 	}
 
 	// Init to Tele
 	public void teleopInit() {
+		time.reset();
+		time.start();
 		Drive.getInstance().initTeleop();
 		Shooter.getInstance().initTeleop();
 		Intake.getInstance().initTeleop();
@@ -196,11 +211,10 @@ public class Robot extends IterativeRobot {
 
 		time.start();
 		time.reset();
-		
 
 		List<Goal> goals = Vision.getInstance().getGoals();
 		if (goals.size() > 0) {
-			System.out.println("Y: " + goals.get(0).y);
+			// System.out.println("Y: " + goals.get(0).y);
 			SmartDashboard.putNumber("Y Value", goals.get(0).y);
 		}
 

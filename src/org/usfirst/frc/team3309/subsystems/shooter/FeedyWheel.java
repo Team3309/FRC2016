@@ -19,7 +19,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	private static FeedyWheel instance;
 	private AnalogInput input = new AnalogInput(RobotMap.FLEX_SENSORS_ANALOG);
 	private double autoPower = 0;
-	private Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_MOTOR);
+	public Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_MOTOR);
 	private double currentFlex = 0;
 	private LinkedList<Double> averagesForFlexSamples = new LinkedList<Double>();
 	private double pastFlex = currentFlex;

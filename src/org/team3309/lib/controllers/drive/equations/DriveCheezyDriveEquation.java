@@ -93,9 +93,9 @@ public class DriveCheezyDriveEquation extends Controller {
 			}
 			overPower = 1.0;
 			if (isHighGear) {
-				sensitivity = .9;
+				sensitivity = .455;
 			} else {
-				sensitivity = .9;
+				sensitivity = .455;
 			}
 			angularPower = wheel * sensitivity;
 			if (wheel == 1 && wheel == -1) {

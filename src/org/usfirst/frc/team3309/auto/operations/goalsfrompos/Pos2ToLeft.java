@@ -9,7 +9,7 @@ public class Pos2ToLeft extends Operation{
 	@Override
 	public void perform() throws InterruptedException, TimedOutException {
 		mDrive.setHighGear(true);
-		this.driveEncoder(95, 150, 5, true);
+		this.driveEncoder(150, 150, 5, true);
 		KragerTimer.delayMS(500);
 		this.turnToAngle(mDrive.getAngle() + 45, 4);
 		this.toVision(100);

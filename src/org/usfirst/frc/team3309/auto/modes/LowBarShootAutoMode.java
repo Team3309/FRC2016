@@ -9,6 +9,8 @@ import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
+import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
+import org.usfirst.frc.team3309.auto.operations.intakepivot.MoveIntakePivotToHigh;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
@@ -36,6 +38,10 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		w.add(new VelocityChangePoint(150, 150));
 		// w.add(new VelocityChangePoint(50, 100, 282));
 		goFast.setEncoderChanges(w);
+		LinkedList<Operation> operations = new LinkedList<Operation>();
+		//operations.add(new SetRPSAndHoodOperation(200, 140, 30));
+		operations.add(new MoveIntakePivotToHigh(150, true));
+		goFast.setOperations(operations);
 
 		Drive.getInstance().setAutoController(goFast);
 		try {
@@ -73,7 +79,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		Shot shot = Vision.getInstance().getShotToAimTowards();
 		while (shot == null) {
 			shot = Vision.getInstance().getShotToAimTowards();
-			System.out.println("LOOKING");
+			//System.out.println("LOOKING");
 		}
 		double angleBeforeVision = mDrive.getAngle();
 
@@ -106,6 +112,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 		double distanceToGoBack = (KragerMath.sinDeg(angleBeforeVision) * this.DISTANCE_TO_GOAL)
 				/ (KragerMath.sinDeg(angleBeforeVision + errorFromStartingVision));
 		Sensors.resetDrive();
+		/*
 		System.out.println("DISTANCE TO GO BACKL " + distanceToGoBack);
 		DriveEncodersVelocityController goTowardsGoalBack = new DriveEncodersVelocityController(-distanceToGoBack - 5);
 		goTowardsGoalBack.setMAX_ENCODER_VEL(150);
@@ -138,7 +145,7 @@ public class LowBarShootAutoMode extends AutoRoutine {
 			this.waitForController(xBack, 7);
 		} catch (Exception e) {
 
-		}
+		}*/
 		mDrive.stopDrive();
 
 	}

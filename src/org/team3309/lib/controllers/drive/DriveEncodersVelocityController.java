@@ -10,9 +10,11 @@ import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
+import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
 import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveEncodersVelocityController extends Controller {
@@ -64,8 +66,11 @@ public class DriveEncodersVelocityController extends Controller {
 		turningController.reset();
 	}
 
+	Timer time = new Timer();
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
+		time.reset();
+		time.start();
 		double currentEncoder = 0;
 		try {
 			currentEncoder = (Math.abs(inputState.getRightPos()) + Math.abs(inputState.getLeftPos())) / 2;
@@ -95,12 +100,13 @@ public class DriveEncodersVelocityController extends Controller {
 				}
 			}
 		}
+		System.out.println(" 1 : " + time.get());
 		if (currentOperation != null) {
-			try {
+			/*try {
 				currentOperation.perform();
 			} catch (InterruptedException | TimedOutException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
 		this.setMAX_ENCODER_VEL(currentVelocityPoint.rightVelocity, currentVelocityPoint.leftVelocity);
 		double error = goalEncoder - currentEncoder;
@@ -120,6 +126,7 @@ public class DriveEncodersVelocityController extends Controller {
 				outputOfTurningController.setMotor(-MAX_ENCODER_VEL_LEFT);
 			}
 		}
+		System.out.println(" 2 : " + time.get());
 		double rightAimVel = outputOfTurningController.getMotor();
 		double leftAimVel = outputOfTurningController.getMotor();
 		System.out.println("CODE SAYS RIGHT AIM " + rightAimVel + " LEFT AIM: " + leftAimVel);
@@ -137,7 +144,7 @@ public class DriveEncodersVelocityController extends Controller {
 				leftAimVel = -MAX_ENCODER_VEL_LEFT;
 			}
 		}
-		System.out.println("AFTER, CODE SAYS RIGHT AIM " + rightAimVel + " LEFT AIM: " + leftAimVel);
+		System.out.println(" 3 : " + time.get());
 		if (isRampUp) {
 			if (rightAimVel < 0)
 				rightAimVel = pastAim - MAX_ACC;
@@ -153,9 +160,19 @@ public class DriveEncodersVelocityController extends Controller {
 			}
 		}
 		leftAimVel = -leftAimVel;
+		System.out.println("AFTER, CODE SAYS RIGHT AIM " + rightAimVel + " LEFT AIM: " + leftAimVel);
 		SmartDashboard.putNumber("DRIVE Encoder VEL Output", outputOfTurningController.getMotor());
 		SmartDashboard.putNumber("DRIVE ENCODER RIGHT", rightAimVel);
 		SmartDashboard.putNumber("DRIVE ENCODER LEFT", leftAimVel);
+		try {
+			System.out.println("LEFT VEL: " + inputState.getLeftVel() + " right vel: " + inputState.getRightVel());
+			System.out.println("Left Error: " + (leftAimVel - inputState.getLeftVel()) + " Right Error: "
+					+ (rightAimVel - inputState.getRightVel()));
+		} catch (SensorDoesNotReturnException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println(" 4 : " + time.get());
 		try { // if encoders are broken
 			leftState.setError(leftAimVel - inputState.getLeftVel());
 			rightState.setError(rightAimVel - inputState.getRightVel());
@@ -175,18 +192,22 @@ public class DriveEncodersVelocityController extends Controller {
 		// -rightAimVel);
 		// SmartDashboard.putString("HardCore Power", "RIGHT: " +
 		// rightSideOutput + " LEFT " +leftSideOutput);
+		System.out.println(" 5 : " + time.get());
 		if (this.MAX_ENCODER_VEL_LEFT == this.MAX_ENCODER_VEL_RIGHT) {
 			if (Math.abs(inputState.getAngularPos() - goalAngle) > 30) {
 				goalAngle = inputState.getAngularPos();
 			}
 			double turn = turningController.getOutputSignal(turningState).getMotor();
+			System.out.println("Setting " + (-leftSideOutput + turn) + " right " + (rightSideOutput - turn));
 			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput + turn, -leftSideOutput - turn);// -
 																									// +
 		} else {
+			System.out.println("Setting " + -leftSideOutput + " right " + rightSideOutput);
 			toBeReturnedSignal.setLeftRightMotor(-leftSideOutput, rightSideOutput);
 		}
 
 		pastAim = rightAimVel;
+		System.out.println(" 6 : " + time.get());
 		return toBeReturnedSignal;
 	}
 

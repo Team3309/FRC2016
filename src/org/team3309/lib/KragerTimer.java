@@ -35,7 +35,7 @@ public class KragerTimer extends Timer {
 				return true;
 			} else if (!isConditionMaintained) {
 				this.start();
-				System.out.println("STARTING");
+			//	System.out.println("STARTING");
 				isConditionMaintained = true;
 			}
 		} else {

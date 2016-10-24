@@ -53,8 +53,10 @@ public class Shooter extends KragerSystem {
 		mFlywheel.updateTeleop();
 		mHood.updateTeleop();
 		mFeedyWheel.updateTeleop();
-		if (mFlywheel.isShooterInRange()  && mFlywheel.getAimVelRPS() != 0) {
-			Controls.operatorController.setRumble((float) 0.9);
+		if (mFlywheel.isShooterInRange() && mFlywheel.getAimVelRPS() != 0 && !Drive.getInstance().isOnTarget()) {
+			Controls.operatorController.setRumble((float) 1.0);
+		} else if (Drive.getInstance().isOnTarget()) {
+			Controls.operatorController.setRumble((float) 1.0);
 		} else {
 			Controls.operatorController.setRumble((float) 0);
 		}

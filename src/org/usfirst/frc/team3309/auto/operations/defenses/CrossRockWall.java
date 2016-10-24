@@ -16,17 +16,17 @@ public class CrossRockWall extends Operation {
 		LinkedList<VelocityChangePoint> a = new LinkedList<VelocityChangePoint>();
 		a.add(new VelocityChangePoint(400, 40));
 		a.add(new VelocityChangePoint(400, 50));
-		a.add(new VelocityChangePoint(400, 60));
+		a.add(new VelocityChangePoint(400, 90));
 		DriveEncodersVelocityController x = new DriveEncodersVelocityController(800);
 		x.setMAX_ENCODER_VEL(150);
 		x.setEncoderChanges(a);
 		DriveWhileOnADefenseController driveOverWall = new DriveWhileOnADefenseController(x);
 		mDrive.setAutoController(driveOverWall);
 		try {
-			this.waitForController(driveOverWall, 50);
+			this.waitForController(driveOverWall, 3);
 		} catch (Exception e) {
 		}
-		this.driveEncoder(20, 40, 1); // stopping effect
+		this.driveEncoder(80, 70, 3); // stopping effect
 		//super.driveEncoder(800, 150, 50, a);
 	}
 

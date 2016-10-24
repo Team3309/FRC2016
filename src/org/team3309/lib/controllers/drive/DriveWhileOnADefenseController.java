@@ -7,7 +7,7 @@ import org.usfirst.frc.team3309.robot.Sensors;
 
 public class DriveWhileOnADefenseController extends Controller {
 
-	private final double THRESHOLD = 7;
+	private final double THRESHOLD = .05;
 	private Controller controllerToRun;
 	private boolean hasBeganGoingOverDefense = false;
 	private boolean hasGoneOverDefense = false;
@@ -25,19 +25,16 @@ public class DriveWhileOnADefenseController extends Controller {
 	@Override
 	public OutputSignal getOutputSignal(InputState inputState) {
 		// IF roll is greater than thresh, start keeping track
-		if (Math.abs(Sensors.getRoll()) > THRESHOLD) {
-			if (hasBeganGoingOverDefense) {
-				// Do nothing
-			} else {
-				hasBeganGoingOverDefense = true;
-			}
+		System.out.println("ROOLLL: " + Sensors.getRoll());
+		if (Sensors.getRoll() > THRESHOLD) {
+			hasBeganGoingOverDefense = true;
 		} else {
 			if (hasBeganGoingOverDefense) {
 				countsOfAfter++;
 			}
 		}
 
-		if (countsOfAfter > 15) {
+		if (countsOfAfter > 50) {
 			hasGoneOverDefense = true;
 		}
 		return controllerToRun.getOutputSignal(inputState);

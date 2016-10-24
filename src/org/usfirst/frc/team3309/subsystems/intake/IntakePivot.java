@@ -20,6 +20,7 @@ public class IntakePivot extends ControlledSubsystem {
 	private static IntakePivot instance;
 	private double UP_ANGLE = 1;
 	private double INTAKE_ANGLE = 87;
+	private double pastPower = 0;
 	// up = 4, intake_angle = 92;
 	private double goalAngle = INTAKE_ANGLE;
 
@@ -61,57 +62,49 @@ public class IntakePivot extends ControlledSubsystem {
 
 	@Override
 	public void initTeleop() {
-		this.toUpPosition();
+		// this.toUpPosition();
 	}
 
 	@Override
 	public void initAuto() {
-		this.toIntakePosition();
+		//this.toIntakePosition();
 	}
 
 	@Override
 	public void updateTeleop() {
 		double output = 0;
-		if (Controls.operatorController.getRB() && !this.isButtonBeingHeld) {
-			this.isButtonBeingHeld = true;
-			if (!this.isAtHighPoint) {
-				goalAngle = this.UP_ANGLE;
-				this.setTeleopController(new PIDPositionController(.019, 0, .009)); // .019,
-				// 0
-				// ,
-				// .009
-
-				((PIDController) this.teleopController).setUseSmartDash(false);
-			} else {
-				goalAngle = this.INTAKE_ANGLE;
-				this.setTeleopController(new PIDPositionController(.0175, 0, .008)); // .007,
-				// 0,
-				// .017
-				((PIDController) this.teleopController).setUseSmartDash(false);
-			}
-			isAtHighPoint = !isAtHighPoint;
-			output = -teleopController.getOutputSignal(getInputState()).getMotor();
-		} else if (Controls.operatorController.getRB()) {
-			output = -teleopController.getOutputSignal(getInputState()).getMotor();
-		} else if (Math.abs(KragerMath.threshold(Controls.operatorController.getLeftY())) > .15) {
-			output = KragerMath.threshold(Controls.operatorController.getLeftY());
+		/*
+		 * if (Controls.operatorController.getRB() && !this.isButtonBeingHeld) {
+		 * this.isButtonBeingHeld = true; if (!this.isAtHighPoint) { goalAngle =
+		 * this.UP_ANGLE; this.setTeleopController(new
+		 * PIDPositionController(.019, 0, .009)); // .019, // 0 // , // .009
+		 * 
+		 * ((PIDController) this.teleopController).setUseSmartDash(false); }
+		 * else { goalAngle = this.INTAKE_ANGLE; this.setTeleopController(new
+		 * PIDPositionController(.0175, 0, .008)); // .007, // 0, // .017
+		 * ((PIDController) this.teleopController).setUseSmartDash(false); }
+		 * isAtHighPoint = !isAtHighPoint; output =
+		 * -teleopController.getOutputSignal(getInputState()).getMotor(); } else
+		 * if (Controls.operatorController.getRB()) { output =
+		 * -teleopController.getOutputSignal(getInputState()).getMotor(); } else
+		 */
+		if (Math.abs(KragerMath.threshold(Controls.operatorController.getLeftY())) > .15) {
+			output = KragerMath.threshold(Controls.operatorController.getLeftY()) * .75;
 			goalAngle = -1000;
 		} else {
-			if (goalAngle < 0) {
-				output = 0;
-			} else {
-				output = -teleopController.getOutputSignal(getInputState()).getMotor();
-			}
+			output = 0;
+			/*
+			 * if (goalAngle < 0) { output = 0; } else { output =
+			 * -teleopController.getOutputSignal(getInputState()).getMotor(); }
+			 */
 			this.isButtonBeingHeld = false;
 		}
-		if ((this.getPivotAngle() > 160 && this.goalAngle > 0)
-				|| (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle() > (this.goalAngle - 8))) {
-			if (this.isAtHighPoint) {
-				output = 0;
-			} else {
-				output = 0;
-			}
-		}
+		/*
+		 * if ((this.getPivotAngle() > 160 && this.goalAngle > 0) ||
+		 * (this.getPivotAngle() < (this.goalAngle + 8) && this.getPivotAngle()
+		 * > (this.goalAngle - 8))) { if (this.isAtHighPoint) { output = 0; }
+		 * else { output = 0; } }
+		 */
 		if (Controls.operatorController.getLB()) {
 			intakePivot.setEncPosition(0);
 			intakePivot.setPosition(0);
@@ -119,11 +112,17 @@ public class IntakePivot extends ControlledSubsystem {
 			this.goalAngle = 0;
 
 		}
-		if (Math.abs(output) > .5) {
-			if (output > 0)
-				output = .5;
-			else if (output < 0)
-				output = -.5;
+		if ((pastPower > 0 && output == 0) || (output == .1)) {
+			output = .1;
+		}
+		pastPower = output;
+		if (Controls.operatorController.getLeftStickButton() || Controls.driverController.getA()) {
+			if (Math.abs(output) > .5) {
+				if (output > 0)
+					output = .5;
+				else if (output < 0)
+					output = -.5;
+			}
 		}
 		this.setIntakePivot(-output);
 	}
@@ -145,11 +144,14 @@ public class IntakePivot extends ControlledSubsystem {
 			else if (output < 0)
 				output = -.5;
 		}
-		//this.setIntakePivot(-output);
+		if (this.isAtHighPoint) {
+			this.setIntakePivot(-.1);
+		}
+		// this.setIntakePivot(-output);
 	}
 
 	public double getPivotAngle() {
-		 //double curAngle = Constants.getPivotTopValue()
+		// double curAngle = Constants.getPivotTopValue()
 		// - ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
 		double curAngle = -(intakePivot.getEncPosition() * (360.0 / 4096.0)) / 210;
 		// System.out.println("INTAKE PIVOT: " + curAngle);
@@ -164,9 +166,18 @@ public class IntakePivot extends ControlledSubsystem {
 
 	public void toIntakePosition() {
 		goalAngle = this.INTAKE_ANGLE;
+
 		this.setAutoController(new PIDPositionController(.0175, 0, .008));
 		isAtHighPoint = false;
 		((PIDController) this.autoController).setUseSmartDash(false);
+		this.setIntakePivot(.5);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.setIntakePivot(0);
 	}
 
 	public void toUpPosition() {
@@ -174,6 +185,14 @@ public class IntakePivot extends ControlledSubsystem {
 		this.setAutoController(new PIDPositionController(.019, 0, .009));
 		isAtHighPoint = true;
 		((PIDController) this.autoController).setUseSmartDash(false);
+		this.setIntakePivot(-.75);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.setIntakePivot(-.1);
 	}
 
 	@Override

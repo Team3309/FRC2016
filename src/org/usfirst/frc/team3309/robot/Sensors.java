@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 
 /**
@@ -41,7 +42,8 @@ public class Sensors {
 				false);
 		leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
 		flywheelEncoder = new Counter(RobotMap.SHOOTER_OPTICAL_SENSOR);
-		navX = new AHRS(SerialPort.Port.kMXP);
+		//navX = new AHRS(SerialPort.Port.kMXP);
+		navX = new AHRS(SPI.Port.kMXP);
 		hoodEncoder = new Counter(new DigitalInput(RobotMap.HOOD_ABS));
 		hoodEncoder.setSemiPeriodMode(true);
 		hoodEncoder.setReverseDirection(false);
@@ -54,11 +56,12 @@ public class Sensors {
 	}
 
 	public static double getAngle() {
-		return navX.getYaw();
+		//return navX.getYaw();
+		return navX.getFusedHeading();
 	}
 
 	public static double getRoll() {
-		return navX.getRoll();
+		return navX.getRoll(); 
 	}
 
 	public static void resetDrive() {
@@ -109,6 +112,7 @@ public class Sensors {
 		double currentShooter = (1 / flywheelEncoder.getPeriod());
 		if (Math.abs(1 / flywheelEncoder.getPeriod()) - (pastFlywheelRPS) > 350)
 			throw new SensorDoesNotReturnException();
+		
 		pastFlywheelRPS = currentShooter;
 		return currentShooter;
 	}
