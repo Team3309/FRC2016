@@ -2,7 +2,6 @@ package org.usfirst.frc.team3309.robot;
 
 import java.util.List;
 
-import org.team3309.lib.KragerTimer;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
@@ -34,6 +33,7 @@ import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos3ToRight;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos4ToCenter;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos5ToCenter;
 import org.usfirst.frc.team3309.auto.operations.goalsfrompos.Pos5ToRight;
+import org.usfirst.frc.team3309.communications.BlackBox;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.driverstation.XboxController;
 import org.usfirst.frc.team3309.subsystems.Climber;
@@ -48,7 +48,9 @@ import org.usfirst.frc.team3309.vision.IndicatingLights;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,9 +66,12 @@ public class Robot extends IterativeRobot {
 	private final double LOOP_SPEED_MS = 40;
 
 	// Runs when Robot is turned on
-	public void robotInit() {
+	public void robotInit() 
+	{
 		System.out.println("Robot INIT");
 		Sensors.init();
+		String[] headers = {"TimeStamp", "Volts",  "Amps", "Power"};
+		BlackBox.initializeLog(headers, DriverStation.getInstance().isFMSAttached(), false);
 		System.out.println("Sensors INIT");
 		try {
 
@@ -227,7 +232,11 @@ public class Robot extends IterativeRobot {
 		Intake.getInstance().sendToSmartDash();
 		Climber.getInstance().updateTeleop();
 		IndicatingLights.getInstance().update();
-
+		PowerDistributionPanel pdp = new PowerDistributionPanel();
+		BlackBox.logThis("Volts", pdp.getVoltage());
+		BlackBox.logThis("Amps", pdp.getTotalCurrent());
+		BlackBox.logThis("Power", pdp.getTotalPower());
+		BlackBox.writeLog();
 		manageLoopSpeed();
 	}
 }
