@@ -1,0 +1,3 @@
+[submodule "FRCLibrary"]
+	path = FRCLibrary
+	url = https://github.com/Team3309/FRCLibrary
