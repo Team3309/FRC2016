@@ -68,11 +68,10 @@ public class Robot extends IterativeRobot {
 	private final double LOOP_SPEED_MS = 40;
 
 	// Runs when Robot is turned on
-	public void robotInit() 
-	{
+	public void robotInit() {
 		System.out.println("Robot INIT");
 		Sensors.init();
-		String[] headers = {"TimeStamp", "Volts",  "Amps", "Power"};
+		String[] headers = { "TimeStamp", "Volts", "Amps", "Power" };
 		BlackBox.initializeLog(headers, DriverStation.getInstance().isFMSAttached(), false);
 		System.out.println("Sensors INIT");
 		try {
@@ -186,7 +185,7 @@ public class Robot extends IterativeRobot {
 			try {
 				Thread.sleep(500);
 				Hood.getInstance().setGoalAngle(0);
-			//	Flywheel.getInstance().setAimVelRPS(0);
+				// Flywheel.getInstance().setAimVelRPS(0);
 				Flywheel.getInstance().setAimVelRPSAuto(0);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -237,10 +236,10 @@ public class Robot extends IterativeRobot {
 		IndicatingLights.getInstance().update();
 		PowerDistributionPanel pdp = new PowerDistributionPanel();
 		Actuators.actuate();
-		//BlackBox.logThis("Volts", pdp.getVoltage());
-		//BlackBox.logThis("Amps", pdp.getTotalCurrent());
-		//BlackBox.logThis("Power", pdp.getTotalPower());
-		//BlackBox.writeLog();
+		// BlackBox.logThis("Volts", pdp.getVoltage());
+		// BlackBox.logThis("Amps", pdp.getTotalCurrent());
+		// BlackBox.logThis("Power", pdp.getTotalPower());
+		// BlackBox.writeLog();
 		manageLoopSpeed();
 	}
 }
