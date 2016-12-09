@@ -8,10 +8,10 @@ import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.auto.TimedOutException;
 import org.usfirst.frc.team3309.auto.operations.defenses.Operation;
 import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
-import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.Timer;

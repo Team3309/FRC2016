@@ -2,13 +2,14 @@ package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
+import org.team3309.lib.actuators.SparkMC;
 import org.team3309.lib.controllers.generic.PIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
-import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Hood extends ControlledSubsystem {
 
 	private static Hood mHood = new Hood("Hood");
-	private Spark hoodSpark = new Spark(RobotMap.HOOD_MOTOR);
+	private SparkMC hoodSpark = new SparkMC(RobotMap.HOOD_MOTOR);
 	private double curAngle = 0;
 	private final double HOOD_DOWN_ANGLE = 4;
 	private double goalAngle = HOOD_DOWN_ANGLE;
@@ -88,7 +89,7 @@ public class Hood extends ControlledSubsystem {
 			if (Vision.getInstance().getShotToAimTowards() != null) {
 				goalAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
 				lastVisionAngle = Vision.getInstance().getShotToAimTowards().getGoalHoodAngle();
-				if (!printed && FeedyWheel.getInstance().feedyWheelSpark.get() < 0) {
+				if (!printed && FeedyWheel.getInstance().feedyWheelSpark.getDesiredOutput() < 0) {
 					System.out.println("\n SHOOTING --------------- ");
 					System.out.println("HOOD: " + goalAngle + " VISION: "
 							+ Vision.getInstance().getShotToAimTowards().getYCoordinate());
@@ -158,7 +159,7 @@ public class Hood extends ControlledSubsystem {
 			SmartDashboard.putNumber(this.getName() + " angle", -100000);
 		}
 		SmartDashboard.putNumber(this.getName() + " goal angle", goalAngle);
-		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.get());
+		SmartDashboard.putNumber(this.getName() + " power", this.hoodSpark.getDesiredOutput());
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public class Hood extends ControlledSubsystem {
 	}
 
 	public void setHood(double power) {
-		this.hoodSpark.set(power);
+		this.hoodSpark.setDesiredOutput(power);
 	}
 
 	@Override

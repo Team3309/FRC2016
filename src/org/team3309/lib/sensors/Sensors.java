@@ -1,5 +1,13 @@
-package org.usfirst.frc.team3309.robot;
+package org.team3309.lib.sensors;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.team3309.lib.actuators.Actuator;
+import org.team3309.lib.actuators.Actuators;
+import org.usfirst.frc.team3309.robot.Constants;
+import org.usfirst.frc.team3309.robot.RobotMap;
+import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
 import org.usfirst.frc.team3309.subsystems.Drive;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -18,17 +26,28 @@ import edu.wpi.first.wpilibj.SerialPort;
  *
  */
 public class Sensors {
+	private static List<Sensor> sensors = new LinkedList<Sensor>();
+
+	public static void read() {
+		for (Sensor x : sensors)
+			x.read();
+	}
+
+	public static void addSensor(Sensor act) {
+		Sensors.sensors.add(act);
+	}
+
 	// Drive
-	private static Encoder leftDrive;
-	private static Encoder rightDrive;
+	private static EncoderSensor leftDrive;
+	private static EncoderSensor rightDrive;
 	private static double pastLeftEncoder = 0.0;
 	private static double pastRightEncoder = 0.0;
 	private static double rightBadCounts = 0;
 	private static double leftBadCounts = 0;
-	private static AHRS navX;
+	private static NavX navX;
 	// Shooter
-	private static Counter flywheelEncoder;
-	private static Counter hoodEncoder;
+	private static CounterSensor flywheelEncoder;
+	private static CounterSensor hoodEncoder;
 	private static double pastFlywheelRPS = 0.0;
 
 	private static PowerDistributionPanel pdp = new PowerDistributionPanel();
@@ -38,30 +57,31 @@ public class Sensors {
 
 	static {
 		System.out.println("STARTING INIT");
-		rightDrive = new Encoder(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL,
+		rightDrive = new EncoderSensor(RobotMap.ENCODERS_A_RIGHT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_RIGHT_DRIVE_DIGITAL,
 				false);
-		leftDrive = new Encoder(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL, false);
-		flywheelEncoder = new Counter(RobotMap.SHOOTER_OPTICAL_SENSOR);
-		//navX = new AHRS(SerialPort.Port.kMXP);
-		navX = new AHRS(SPI.Port.kMXP);
-		hoodEncoder = new Counter(new DigitalInput(RobotMap.HOOD_ABS));
-		hoodEncoder.setSemiPeriodMode(true);
-		hoodEncoder.setReverseDirection(false);
-		hoodEncoder.reset();
+		leftDrive = new EncoderSensor(RobotMap.ENCODERS_A_LEFT_DRIVE_DIGITAL, RobotMap.ENCODERS_B_LEFT_DRIVE_DIGITAL,
+				false);
+		flywheelEncoder = new CounterSensor(RobotMap.SHOOTER_OPTICAL_SENSOR);
+		// navX = new AHRS(SerialPort.Port.kMXP);
+		navX = new NavX();
+		hoodEncoder = new CounterSensor(new DigitalInput(RobotMap.HOOD_ABS));
+		hoodEncoder.counter.setSemiPeriodMode(true);
+		hoodEncoder.counter.setReverseDirection(false);
+		hoodEncoder.counter.reset();
 		pdp = new PowerDistributionPanel();
 	}
 
 	public static double getAngularVel() {
-		return navX.getRate();
+		return navX.getAngularVel();
 	}
 
 	public static double getAngle() {
-		//return navX.getYaw();
-		return navX.getFusedHeading();
+		// return navX.getYaw();
+		return navX.getAngle();
 	}
 
 	public static double getRoll() {
-		return navX.getRoll(); 
+		return navX.getRoll();
 	}
 
 	public static void resetDrive() {
@@ -70,40 +90,42 @@ public class Sensors {
 	}
 
 	public static double getRightDrive() throws SensorDoesNotReturnException {
-		double curEncoder = rightDrive.get() / 100;
-		//if (Math.abs(curEncoder - pastRightEncoder) > 5 && Drive.getInstance().getRightPower() > .7) {
-		//	rightBadCounts++;
-		//}
-		//if (rightBadCounts > 100) {
-		//	throw new SensorDoesNotReturnException();
-		//}
+		double curEncoder = rightDrive.getPosition() / 100;
+		// if (Math.abs(curEncoder - pastRightEncoder) > 5 &&
+		// Drive.getInstance().getRightPower() > .7) {
+		// rightBadCounts++;
+		// }
+		// if (rightBadCounts > 100) {
+		// throw new SensorDoesNotReturnException();
+		// }
 		pastRightEncoder = curEncoder;
 		return curEncoder;
 	}
 
 	public static double getRightDriveVel() throws SensorDoesNotReturnException {
-		//if (rightBadCounts > 100) {
-		//	throw new SensorDoesNotReturnException();
-		//}
+		// if (rightBadCounts > 100) {
+		// throw new SensorDoesNotReturnException();
+		// }
 		return rightDrive.getRate() / 100;
 	}
 
 	public static double getLeftDrive() throws SensorDoesNotReturnException {
-		double curEncoder = leftDrive.get() / 100;
-		//if (Math.abs(curEncoder - pastLeftEncoder) > 5 && Drive.getInstance().getLeftPower() > .7) {
-		//	leftBadCounts++;
-		//}
-		//if (leftBadCounts > 100) {
-		//	throw new SensorDoesNotReturnException();
-		//}
+		double curEncoder = leftDrive.getPosition() / 100;
+		// if (Math.abs(curEncoder - pastLeftEncoder) > 5 &&
+		// Drive.getInstance().getLeftPower() > .7) {
+		// leftBadCounts++;
+		// }
+		// if (leftBadCounts > 100) {
+		// throw new SensorDoesNotReturnException();
+		// }
 		pastLeftEncoder = curEncoder;
 		return curEncoder;
 	}
 
 	public static double getLeftDriveVel() throws SensorDoesNotReturnException {
-		//if (leftBadCounts > 100) {
-		//	throw new SensorDoesNotReturnException();
-		//}
+		// if (leftBadCounts > 100) {
+		// throw new SensorDoesNotReturnException();
+		// }
 		return -leftDrive.getRate() / 100;
 	}
 
@@ -112,7 +134,7 @@ public class Sensors {
 		double currentShooter = (1 / flywheelEncoder.getPeriod());
 		if (Math.abs(1 / flywheelEncoder.getPeriod()) - (pastFlywheelRPS) > 350)
 			throw new SensorDoesNotReturnException();
-		
+
 		pastFlywheelRPS = currentShooter;
 		return currentShooter;
 	}

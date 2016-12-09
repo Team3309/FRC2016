@@ -2,21 +2,18 @@ package org.usfirst.frc.team3309.subsystems.intake;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
+import org.team3309.lib.actuators.TalonSRXMC;
 import org.team3309.lib.controllers.generic.PIDController;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
-import org.usfirst.frc.team3309.robot.Constants;
 import org.usfirst.frc.team3309.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakePivot extends ControlledSubsystem {
 
-	private CANTalon intakePivot = new CANTalon(RobotMap.INTAKE_PIVOT_ID);
+	private TalonSRXMC intakePivot = new TalonSRXMC(RobotMap.INTAKE_PIVOT_ID);
 	private static IntakePivot instance;
 	private double UP_ANGLE = 1;
 	private double INTAKE_ANGLE = 87;
@@ -49,8 +46,8 @@ public class IntakePivot extends ControlledSubsystem {
 		// aBS
 		// intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		// Relative
-		intakePivot.reverseSensor(true);
-		intakePivot.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		intakePivot.setReversed(true);
+		//intakePivot.;
 
 		teleopController = new PIDPositionController(.012, 0, .005);
 		autoController = new PIDPositionController(.012, 0, .005);
@@ -106,9 +103,9 @@ public class IntakePivot extends ControlledSubsystem {
 		 * else { output = 0; } }
 		 */
 		if (Controls.operatorController.getLB()) {
-			intakePivot.setEncPosition(0);
-			intakePivot.setPosition(0);
-			intakePivot.setPulseWidthPosition(0);
+			intakePivot.getTalon().setEncPosition(0);
+			intakePivot.getTalon().setPosition(0);
+			intakePivot.getTalon().setPulseWidthPosition(0);
 			this.goalAngle = 0;
 
 		}
@@ -153,7 +150,7 @@ public class IntakePivot extends ControlledSubsystem {
 	public double getPivotAngle() {
 		// double curAngle = Constants.getPivotTopValue()
 		// - ((double) intakePivot.getPulseWidthPosition()) * (360.0 / 4096.0);
-		double curAngle = -(intakePivot.getEncPosition() * (360.0 / 4096.0)) / 210;
+		double curAngle = -(intakePivot.getTalon().getEncPosition() * (360.0 / 4096.0)) / 210;
 		// System.out.println("INTAKE PIVOT: " + curAngle);
 		while (curAngle > 360) {
 			curAngle -= 360;
@@ -207,11 +204,11 @@ public class IntakePivot extends ControlledSubsystem {
 
 		SmartDashboard.putNumber(this.getName() + " goal angle", this.goalAngle);
 		SmartDashboard.putNumber(this.getName() + " current angle", this.getPivotAngle());
-		SmartDashboard.putNumber(this.getName() + " power", this.intakePivot.get());
+		SmartDashboard.putNumber(this.getName() + " power", this.intakePivot.getTalon().get());
 	}
 
 	public void setIntakePivot(double power) {
-		this.intakePivot.set(power);
+		this.intakePivot.setDesiredOutput(power);
 	}
 
 	@Override

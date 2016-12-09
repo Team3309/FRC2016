@@ -3,9 +3,9 @@ package org.usfirst.frc.team3309.auto.modes;
 import org.team3309.lib.KragerTimer;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.TimedOutException;
-import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 
 public class SpyBotAutoMode extends AutoRoutine {

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
-import org.usfirst.frc.team3309.robot.Sensors;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.subsystems.Drive;
 import org.usfirst.frc.team3309.subsystems.shooter.FeedyWheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;

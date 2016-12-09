@@ -2,6 +2,8 @@ package org.usfirst.frc.team3309.robot;
 
 import java.util.List;
 
+import org.team3309.lib.actuators.Actuators;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.auto.AutoRoutine;
 import org.usfirst.frc.team3309.auto.CustomAuto;
 import org.usfirst.frc.team3309.auto.modes.GoForwardStraightAutoMode;
@@ -216,6 +218,7 @@ public class Robot extends IterativeRobot {
 
 		time.start();
 		time.reset();
+		Sensors.read();
 
 		List<Goal> goals = Vision.getInstance().getGoals();
 		if (goals.size() > 0) {
@@ -233,10 +236,11 @@ public class Robot extends IterativeRobot {
 		Climber.getInstance().updateTeleop();
 		IndicatingLights.getInstance().update();
 		PowerDistributionPanel pdp = new PowerDistributionPanel();
-		BlackBox.logThis("Volts", pdp.getVoltage());
-		BlackBox.logThis("Amps", pdp.getTotalCurrent());
-		BlackBox.logThis("Power", pdp.getTotalPower());
-		BlackBox.writeLog();
+		Actuators.actuate();
+		//BlackBox.logThis("Volts", pdp.getVoltage());
+		//BlackBox.logThis("Amps", pdp.getTotalCurrent());
+		//BlackBox.logThis("Power", pdp.getTotalPower());
+		//BlackBox.writeLog();
 		manageLoopSpeed();
 	}
 }

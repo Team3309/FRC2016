@@ -6,8 +6,8 @@ import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersVelocityController;
 import org.team3309.lib.controllers.drive.DriveWhileOnADefenseController;
 import org.team3309.lib.controllers.drive.VelocityChangePoint;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.auto.TimedOutException;
-import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.subsystems.intake.IntakePivot;
 
 public class CrossRamparts extends Operation {

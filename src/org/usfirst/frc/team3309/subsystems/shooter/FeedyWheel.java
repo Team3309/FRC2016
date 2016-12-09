@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerMath;
+import org.team3309.lib.actuators.SparkMC;
 import org.team3309.lib.controllers.generic.PIDPositionController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.usfirst.frc.team3309.driverstation.Controls;
@@ -11,7 +12,6 @@ import org.usfirst.frc.team3309.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FeedyWheel extends ControlledSubsystem {
@@ -19,7 +19,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	private static FeedyWheel instance;
 	private AnalogInput input = new AnalogInput(RobotMap.FLEX_SENSORS_ANALOG);
 	private double autoPower = 0;
-	public Spark feedyWheelSpark = new Spark(RobotMap.FEEDY_WHEEL_MOTOR);
+	public SparkMC feedyWheelSpark = new SparkMC(RobotMap.FEEDY_WHEEL_MOTOR);
 	private double currentFlex = 0;
 	private LinkedList<Double> averagesForFlexSamples = new LinkedList<Double>();
 	private double pastFlex = currentFlex;
@@ -51,7 +51,7 @@ public class FeedyWheel extends ControlledSubsystem {
 	public void updateTeleop() {
 		currentFlex = input.getVoltage();// averageFlex()
 		this.manualControl();
-		//System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
+		// System.out.println("ERROR: " + Math.abs(currentFlex - pastFlex));
 		pastFlex = currentFlex;// averages.getLast();
 	}
 
@@ -80,14 +80,14 @@ public class FeedyWheel extends ControlledSubsystem {
 	@Override
 	public void sendToSmartDash() {
 		this.teleopController.sendToSmartDash();
-		SmartDashboard.putNumber(this.getName() + " Power", this.feedyWheelSpark.get());
+		SmartDashboard.putNumber(this.getName() + " Power", this.feedyWheelSpark.getDesiredOutput());
 		SmartDashboard.putNumber(this.getName() + " Flex", currentFlex);
 	}
 
 	public void setFeedyWheel(double power) {
 		if (DriverStation.getInstance().isAutonomous())
 			autoPower = power;
-		this.feedyWheelSpark.set(-power);
+		this.feedyWheelSpark.setDesiredOutput(-power);
 	}
 
 	@Override

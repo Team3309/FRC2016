@@ -3,7 +3,7 @@ package org.team3309.lib.controllers.drive;
 import org.team3309.lib.controllers.Controller;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
-import org.usfirst.frc.team3309.robot.Sensors;
+import org.team3309.lib.sensors.Sensors;
 
 public class DriveWhileOnADefenseController extends Controller {
 

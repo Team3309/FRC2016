@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3309.subsystems;
 
 import org.team3309.lib.ControlledSubsystem;
+import org.team3309.lib.actuators.SparkMC;
 import org.team3309.lib.controllers.drive.DriveAngleController;
 import org.team3309.lib.controllers.drive.DriveAngleVelocityController;
 import org.team3309.lib.controllers.drive.DriveEncodersController;
@@ -9,16 +10,15 @@ import org.team3309.lib.controllers.drive.equations.DriveCheezyDriveEquation;
 import org.team3309.lib.controllers.generic.BlankController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
 import org.team3309.lib.controllers.statesandsignals.OutputSignal;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
-import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Shot;
 import org.usfirst.frc.team3309.vision.Vision;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -42,8 +42,8 @@ public class Drive extends ControlledSubsystem {
 
 	private static Drive instance;
 	// Actuators
-	private Spark left = new Spark(RobotMap.LEFT_DRIVE);
-	private Spark right = new Spark(RobotMap.RIGHT_DRIVE);
+	private SparkMC left = new SparkMC(RobotMap.LEFT_DRIVE);
+	private SparkMC right = new SparkMC(RobotMap.RIGHT_DRIVE);
 	private Solenoid sol = new Solenoid(RobotMap.SHIFTER);
 
 	private Shot desiredShot;
@@ -101,7 +101,7 @@ public class Drive extends ControlledSubsystem {
 
 	@Override
 	public void updateTeleop() {
-		//System.out.println("ROOLLL: " + Sensors.getRoll());
+		// System.out.println("ROOLLL: " + Sensors.getRoll());
 		if (Controls.operatorController.getBack() && !isReset) {
 			this.desiredShot = Vision.getInstance().getShotToAimTowards();
 			Vision.getInstance().setLight(Vision.getInstance().BRIGHTNESS);
@@ -225,11 +225,11 @@ public class Drive extends ControlledSubsystem {
 	}
 
 	public double getLeftPower() {
-		return this.left.get();
+		return this.left.getDesiredOutput();
 	}
 
 	public double getRightPower() {
-		return this.right.get();
+		return this.right.getDesiredOutput();
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class Drive extends ControlledSubsystem {
 	 *            rightMotorSpeed
 	 */
 	public void setRight(double right) {
-		this.right.set(-right);
+		this.right.setDesiredOutput(-right);
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class Drive extends ControlledSubsystem {
 	 *            leftMotorSpeed
 	 */
 	public void setLeft(double left) {
-		this.left.set(left);
+		this.left.setDesiredOutput(left);
 	}
 
 	@Override
@@ -339,8 +339,8 @@ public class Drive extends ControlledSubsystem {
 			autoController.sendToSmartDash();
 		}
 
-		SmartDashboard.putNumber(this.getName() + " Left Side Pow", left.get());
-		SmartDashboard.putNumber(this.getName() + " Right Side Pow", right.get());
+		SmartDashboard.putNumber(this.getName() + " Left Side Pow", getLeftPower());
+		SmartDashboard.putNumber(this.getName() + " Right Side Pow", getRightPower());
 		SmartDashboard.putNumber(this.getName() + " Angle", Sensors.getAngle());
 		SmartDashboard.putNumber(this.getName() + " Anglular Vel", Sensors.getAngularVel());
 		SmartDashboard.putNumber(this.getName() + " Roll", Sensors.getRoll());

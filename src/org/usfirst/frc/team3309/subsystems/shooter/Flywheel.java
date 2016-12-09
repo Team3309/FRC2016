@@ -2,15 +2,15 @@ package org.usfirst.frc.team3309.subsystems.shooter;
 
 import org.team3309.lib.ControlledSubsystem;
 import org.team3309.lib.KragerTimer;
+import org.team3309.lib.actuators.SparkMC;
 import org.team3309.lib.controllers.generic.FeedForwardWithPIDController;
 import org.team3309.lib.controllers.statesandsignals.InputState;
+import org.team3309.lib.sensors.Sensors;
 import org.usfirst.frc.team3309.driverstation.Controls;
 import org.usfirst.frc.team3309.robot.RobotMap;
 import org.usfirst.frc.team3309.robot.SensorDoesNotReturnException;
-import org.usfirst.frc.team3309.robot.Sensors;
 import org.usfirst.frc.team3309.vision.Vision;
 
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Flywheel extends ControlledSubsystem {
-	private Spark leftSpark = new Spark(RobotMap.LEFT_SHOOTER_MOTOR);
-	private Spark rightSpark = new Spark(RobotMap.RIGHT_SHOOTER_MOTOR);
+	private SparkMC leftSpark = new SparkMC(RobotMap.LEFT_SHOOTER_MOTOR);
+	private SparkMC rightSpark = new SparkMC(RobotMap.RIGHT_SHOOTER_MOTOR);
 
 	private double maxAccRPS = 31.0;
 	private double aimVelRPS = 0.0;
@@ -45,9 +45,9 @@ public class Flywheel extends ControlledSubsystem {
 		super(name);
 		this.teleopController = new FeedForwardWithPIDController(.006, 0, .035, 0.000, 0.00);
 		this.autoController = new FeedForwardWithPIDController(.006, 0, .035, 0.000, 0.00); // .018
-		
+
 		this.teleopController.setName("Flywheel");
-		this.rightSpark.setInverted(true);
+		this.rightSpark.setReversed(true);
 		this.autoController.setName("Flywheel");
 		((FeedForwardWithPIDController) this.teleopController).setTHRESHOLD(10);
 		((FeedForwardWithPIDController) this.autoController).setTHRESHOLD(10);
@@ -129,7 +129,7 @@ public class Flywheel extends ControlledSubsystem {
 				aimVelRPS = 120;
 			}
 		} else if (Controls.operatorController.getPOV() == 0) {
-			//aimVelRPS = this.lastVisionShot;
+			// aimVelRPS = this.lastVisionShot;
 		} else {
 			offset = 0;
 			aimVelRPS = 0;
@@ -168,8 +168,8 @@ public class Flywheel extends ControlledSubsystem {
 			FeedyWheel.getInstance().setFeedyWheel(0);
 			hasGoneBack = true;
 		}
-		//this.rightSpark.set(power);
-		this.leftSpark.set(power);
+		// this.rightSpark.set(power);
+		this.leftSpark.setDesiredOutput(power);
 	}
 
 	/**
@@ -240,12 +240,13 @@ public class Flywheel extends ControlledSubsystem {
 		SmartDashboard.putNumber(this.getName() + " RPM", curVel * 60);
 		SmartDashboard.putNumber(this.getName() + " RPS", curVel);
 		SmartDashboard.putNumber(this.getName() + " Goal", this.aimVelRPS);
-		SmartDashboard.putNumber(this.getName() + " Left", leftSpark.getSpeed());
-		SmartDashboard.putNumber(this.getName() + " Right", rightSpark.getSpeed());
+		SmartDashboard.putNumber(this.getName() + " Left", leftSpark.getDesiredOutput());
+		SmartDashboard.putNumber(this.getName() + " Right", rightSpark.getDesiredOutput());
 	}
 
 	private double getRPS() throws SensorDoesNotReturnException {
 		pastVel = Sensors.getShooterRPS();
+
 		return Sensors.getShooterRPS();
 	}
 
@@ -280,13 +281,13 @@ public class Flywheel extends ControlledSubsystem {
 	}
 
 	private void setShooter(double power) {
-		leftSpark.set(power);
+		leftSpark.setDesiredOutput(power);
 		if (power < 0) {
 			power = power + .04;
-		}else if (power > 0) {
+		} else if (power > 0) {
 			power = power - .04;
 		}
-		rightSpark.set(power);
+		rightSpark.setDesiredOutput(power);
 	}
 
 }

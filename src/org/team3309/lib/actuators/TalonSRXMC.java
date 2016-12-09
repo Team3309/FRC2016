@@ -1,15 +1,16 @@
 package org.team3309.lib.actuators;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.TalonSRX;
 
 public class TalonSRXMC extends Actuator {
 
-	private TalonSRX talon;
+	private CANTalon talon;
 	private boolean isReversed = false;
 	private double desiredOutput = 0.0;
 
 	public TalonSRXMC(int port) {
-		talon = new TalonSRX(port);
+		talon = new CANTalon(port);
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class TalonSRXMC extends Actuator {
 		this.desiredOutput = desiredOutput;
 	}
 
-	public TalonSRX getTalon() {
+	public CANTalon getTalon() {
 		return talon;
 	}
 
