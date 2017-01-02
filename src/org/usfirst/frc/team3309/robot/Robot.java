@@ -47,7 +47,9 @@ import org.usfirst.frc.team3309.subsystems.shooter.Flywheel;
 import org.usfirst.frc.team3309.subsystems.shooter.Hood;
 import org.usfirst.frc.team3309.vision.Goal;
 import org.usfirst.frc.team3309.vision.IndicatingLights;
+import org.usfirst.frc.team3309.vision.TargetInfo;
 import org.usfirst.frc.team3309.vision.Vision;
+import org.usfirst.frc.team3309.vision.VisionServer;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -119,7 +121,7 @@ public class Robot extends IterativeRobot {
 		Intake.getInstance();
 		Shooter.getInstance();
 		Drive.getInstance();
-		Vision.getInstance().start();
+		VisionServer.getInstance();
 	}
 
 	private void manageLoopSpeed() {
@@ -219,10 +221,12 @@ public class Robot extends IterativeRobot {
 		time.reset();
 		Sensors.read();
 
-		List<Goal> goals = Vision.getInstance().getGoals();
+		List<TargetInfo> goals = VisionServer.getInstance().targets;
 		if (goals.size() > 0) {
-			// System.out.println("Y: " + goals.get(0).y);
-			SmartDashboard.putNumber("Y Value", goals.get(0).y);
+			for (TargetInfo x : goals) {
+				System.out.println("y: " + x.getY() + " z:" + x.getZ());
+			}
+			// SmartDashboard.putNumber("Y Value", goals.get(0).y);
 		}
 
 		// Update the subsystems
