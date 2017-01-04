@@ -12,7 +12,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class VisionServer extends Thread {
+public class VisionServer implements Runnable {
 
 	private AdbBridge adb = new AdbBridge();
 	private ServerSocket serverSocket;
@@ -33,13 +33,15 @@ public class VisionServer extends Thread {
 
 			serverSocket = new ServerSocket(PORT);
 			adb.start();
+			adb.runCommand("devices");
 			adb.reversePortForward(PORT, PORT);
-			String useJavaTime = System.getenv("USE_JAVA_TIME");
+			adb.runCommand("devices");
+			System.out.println("RUN");
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		new Thread(this).start();
+
 	}
 
 	public void generateFromJsonString(String updateString) {
@@ -84,23 +86,27 @@ public class VisionServer extends Thread {
 	}
 
 	public void run() {
+		System.out.println("Starting Run fmd,ahfkjlx");
 		while (true) {
 			if (serverSocket == null) {
+				System.out.println("BREAK");
 				return;
 			}
 			try {
-
-				Socket socket = serverSocket.accept();
+				System.out.println("before serverSocket");
+				socket = serverSocket.accept();
+				System.out.println("ACCEPT");
 				InputStream is = socket.getInputStream();
 				byte[] buffer = new byte[2048];
 				int read;
 				while (socket.isConnected() && (read = is.read(buffer)) != -1) {
-
+					// System.out.println("Got Connection");
 					String messageRaw = new String(buffer, 0, read);
 					String[] messages = messageRaw.split("\n");
 					for (String message : messages) {
 						OffWireMessage parsedMessage = new OffWireMessage(message);
 						if (parsedMessage.isValid()) {
+
 							handleMessage(parsedMessage);
 						}
 					}

@@ -1,6 +1,8 @@
 package org.usfirst.frc.team3309.vision;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -29,13 +31,19 @@ public class AdbBridge {
 		bin_location_ = location;
 	}
 
-	private boolean runCommand(String args) {
+	public boolean runCommand(String args) {
 		Runtime r = Runtime.getRuntime();
 		String cmd = bin_location_.toString() + " " + args;
 
 		try {
 			Process p = r.exec(cmd);
+			String line;
+			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			while ((line = in.readLine()) != null) {
+				System.out.println(line);
+			}
 			p.waitFor();
+
 		} catch (IOException e) {
 			System.err.println("AdbBridge: Could not run command " + cmd);
 			e.printStackTrace();
@@ -45,12 +53,13 @@ public class AdbBridge {
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
 	}
 
 	public void start() {
 		System.out.println("Starting adb");
-		runCommand("start-server");
+		runCommand("start");
 	}
 
 	public void stop() {

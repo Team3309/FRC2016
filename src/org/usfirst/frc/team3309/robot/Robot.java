@@ -121,7 +121,8 @@ public class Robot extends IterativeRobot {
 		Intake.getInstance();
 		Shooter.getInstance();
 		Drive.getInstance();
-		VisionServer.getInstance();
+		new Thread(VisionServer.getInstance()).start();
+
 	}
 
 	private void manageLoopSpeed() {
@@ -210,6 +211,7 @@ public class Robot extends IterativeRobot {
 		compressor.setClosedLoopControl(true);
 		compressor.start();
 		System.out.println("Teleop INIT");
+		VisionServer.getInstance();
 	}
 
 	Timer time = new Timer();
